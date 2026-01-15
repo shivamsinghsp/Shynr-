@@ -1,92 +1,109 @@
 "use client"
 
 import Link from "next/link"
+import { Mail, Phone } from "lucide-react"
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0a0a0a] text-white border-t border-gray-900">
-
-      {/* Main Grid */}
-      <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-
-        {/* Brand */}
-        <div>
-          <h2 className="text-3xl font-bold mb-4">
-            Shynr<span style={{ color: "#39FF14" }}>.</span>
-          </h2>
-          <p className="text-gray-400 leading-relaxed text-sm">
-            Talent & Career Solution Platform. Building scalable, compliant, and high-performance workforces across India.
-          </p>
-        </div>
-
-        {/* Company */}
-        <div>
-          <h3 className="font-bold text-lg mb-5 text-white">Company</h3>
-          <ul className="space-y-3 text-gray-400 text-sm">
-            <li><Link href="/about/company" className="hover:text-[#39FF14] transition-colors">About Us</Link></li>
-            <li><Link href="/about/leadership" className="hover:text-[#39FF14] transition-colors">Leadership Team</Link></li>
-            <li><Link href="/media" className="hover:text-[#39FF14] transition-colors">Media Centre</Link></li>
-            <li><Link href="/jobs" className="hover:text-[#39FF14] transition-colors">Jobs</Link></li>
-            <li><Link href="/contactUs" className="hover:text-[#39FF14] transition-colors">Contact Us</Link></li>
-          </ul>
-        </div>
-
-        {/* Services */}
-        <div>
-          <h3 className="font-bold text-lg mb-5 text-white">Services</h3>
-          <ul className="space-y-3 text-gray-400 text-sm">
-            <li><Link href="/services/general_staffing" className="hover:text-[#39FF14] transition-colors">General Staffing</Link></li>
-            <li><Link href="/services/professional_staffing" className="hover:text-[#39FF14] transition-colors">Professional Staffing</Link></li>
-            <li><Link href="/services/digital_platform" className="hover:text-[#39FF14] transition-colors">Digital Platform</Link></li>
-            <li><Link href="/about/csr" className="hover:text-[#39FF14] transition-colors">CSR Initiatives</Link></li>
-          </ul>
-        </div>
-
-        {/* Subscribe */}
-        <div>
-          <h3 className="font-bold text-lg mb-5 text-white">Stay Connected</h3>
-          <p className="text-gray-400 text-sm mb-4">
-            Get hiring updates and job alerts in your inbox.
-          </p>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              alert("Subscribed!")
-            }}
-            className="flex flex-col gap-3"
-          >
-            <input
-              type="email"
-              required
-              placeholder="Enter your email"
-              className="w-full px-4 py-3 rounded-lg bg-[#111] border border-gray-800 text-white outline-none focus:border-[#39FF14] transition-colors"
-            />
-
-            <button
-              type="submit"
-              className="py-3 rounded-lg font-bold text-[#0a0a0a] transition-all hover:scale-105"
-              style={{ backgroundColor: "#39FF14", boxShadow: "0 0 10px rgba(57,255,20,0.3)" }}
-            >
-              Subscribe now
-            </button>
-          </form>
-        </div>
-
+    <footer className="w-full">
+      {/* CTA Section */}
+      <div
+        className="py-20 px-6 text-center"
+        style={{ backgroundColor: "#022c22" }} // Deep Green
+      >
+        <h2 className="text-3xl md:text-5xl font-bold text-white mb-8">
+          Ready to transform your workforce?
+        </h2>
+        <Link
+          href="/contactUs"
+          className="inline-block px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 border border-transparent hover:border-[#39FF14] bg-[#39FF14] text-[#0a0a0a] hover:bg-black hover:text-[#39FF14] shadow-[0_0_20px_rgba(57,255,20,0.4)] hover:shadow-[0_0_30px_rgba(57,255,20,0.6)]"
+        >
+          Partner With SHYNR
+        </Link>
       </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t border-gray-900 bg-[#050505]">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 gap-4">
-          <span>© 2025 SHYNR Private Limited | All Rights Reserved</span>
+      {/* Main Footer Content */}
+      <div
+        className="pt-20 pb-10 border-t border-[#39FF14]/20"
+        style={{ backgroundColor: "#011a12" }} // Very Dark Green
+      >
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
 
-          <div className="flex gap-6">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms & Conditions</Link>
+          {/* Brand */}
+          <div className="space-y-6">
+            <h2 className="text-3xl font-bold text-white">
+              Shynr<span className="text-[#39FF14]">.</span>
+            </h2>
+            <p className="text-gray-400 leading-relaxed text-sm pr-4">
+              Talent & Career Solution Platform. Building scalable, compliant, and high-performance workforces across India.
+            </p>
+          </div>
+
+          {/* Company Links */}
+          <div>
+            <h3 className="font-bold text-lg mb-6 text-white">Company</h3>
+            <ul className="space-y-4 text-gray-400 text-sm font-medium">
+              <li><Link href="/about/company" className="hover:text-[#39FF14] transition-colors">About Us</Link></li>
+              <li><Link href="/about/leadership" className="hover:text-[#39FF14] transition-colors">Leadership Team</Link></li>
+              <li><Link href="/media" className="hover:text-[#39FF14] transition-colors">Media Centre</Link></li>
+              <li><Link href="/jobs" className="hover:text-[#39FF14] transition-colors">Jobs</Link></li>
+              <li><Link href="/contactUs" className="hover:text-[#39FF14] transition-colors">Contact Us</Link></li>
+            </ul>
+          </div>
+
+          {/* Services Links */}
+          <div>
+            <h3 className="font-bold text-lg mb-6 text-white">Services</h3>
+            <ul className="space-y-4 text-gray-400 text-sm font-medium">
+              <li><Link href="/services/general_staffing" className="hover:text-[#39FF14] transition-colors">General Staffing</Link></li>
+              <li><Link href="/services/professional_staffing" className="hover:text-[#39FF14] transition-colors">Professional Staffing</Link></li>
+              <li><Link href="/services/digital_platform" className="hover:text-[#39FF14] transition-colors">Digital Platform</Link></li>
+              <li><Link href="/about/csr" className="hover:text-[#39FF14] transition-colors">CSR Initiatives</Link></li>
+            </ul>
+          </div>
+
+          {/* Stay Connected */}
+          <div>
+            <h3 className="font-bold text-lg mb-6 text-white">Stay Connected</h3>
+            <p className="text-gray-400 text-sm mb-6">
+              Get hiring updates and job alerts in your Inbox.
+            </p>
+
+            <div className="space-y-4">
+              <a
+                href="mailto:info@shynr.in"
+                className="flex items-center gap-3 text-gray-300 hover:text-[#39FF14] transition-colors group"
+              >
+                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#39FF14]/10 transition-colors">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <span className="font-medium text-sm">info@shynr.in</span>
+              </a>
+
+              <a
+                href="tel:05124050588"
+                className="flex items-center gap-3 text-gray-300 hover:text-[#39FF14] transition-colors group"
+              >
+                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#39FF14]/10 transition-colors">
+                  <Phone className="w-5 h-5" />
+                </div>
+                <span className="font-medium text-sm">0512-4050588</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 pt-8 border-t border-[#39FF14]/10">
+          <p>© 2025 SHYNR Private Limited | All Rights Reserved</p>
+
+          <div className="flex gap-8 mt-4 md:mt-0">
+            <Link href="/privacy" className="hover:text-[#39FF14] transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-[#39FF14] transition-colors">Terms & Conditions</Link>
           </div>
         </div>
       </div>
-
     </footer>
   )
 }

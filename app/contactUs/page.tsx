@@ -60,7 +60,7 @@ const ContactPage = () => {
 
         {/* Left */}
         <div className={`transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#0a0a0a] leading-tight mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-6">
             Partner With <span className="text-[#39FF14]" style={{ textShadow: "0 2px 10px rgba(57,255,20,0.3)" }}>SHYNR</span>
           </h2>
 
@@ -80,11 +80,11 @@ const ContactPage = () => {
         <div
           className={`p-10 rounded-3xl shadow-2xl transition-all duration-1000 delay-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
           style={{
-            background: "#0a0a0a",
-            border: "1px solid rgba(255,255,255,0.1)"
+            background: "var(--card)",
+            border: "1px solid var(--border)"
           }}
         >
-          <h3 className="text-2xl font-bold mb-2 text-white">Send a message</h3>
+          <h3 className="text-2xl font-bold mb-2 text-card-foreground">Send a message</h3>
           <p className="text-sm text-gray-400 mb-8">
             We'll get back to you within 24 hours
           </p>
@@ -101,12 +101,7 @@ const ContactPage = () => {
 
             <button
               type="submit"
-              className="w-full py-4 rounded-xl font-bold text-lg transition hover:scale-[1.02]"
-              style={{
-                backgroundColor: "#39FF14",
-                color: "#0a0a0a",
-                boxShadow: "0 0 20px rgba(57,255,20,0.3)"
-              }}
+              className="w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 border border-transparent hover:border-[#39FF14] bg-[#39FF14] text-[#0a0a0a] hover:bg-black hover:text-[#39FF14] shadow-[0_0_20px_rgba(57,255,20,0.3)] hover:shadow-[0_0_30px_rgba(57,255,20,0.5)]"
             >
               Send Message
             </button>
@@ -139,7 +134,7 @@ const Input = ({ type = "text", placeholder }: any) => (
     type={type}
     placeholder={placeholder}
     required
-    className="w-full p-4 rounded-xl bg-[#111] text-white border border-gray-800 focus:border-[#39FF14] focus:outline-none transition-colors"
+    className="w-full p-4 rounded-xl bg-background text-foreground border border-border focus:border-[#39FF14] focus:outline-none transition-colors"
   />
 )
 
@@ -148,7 +143,7 @@ const Textarea = ({ placeholder }: any) => (
     placeholder={placeholder}
     required
     rows={5}
-    className="w-full p-4 rounded-xl bg-[#111] text-white border border-gray-800 focus:border-[#39FF14] focus:outline-none resize-none transition-colors"
+    className="w-full p-4 rounded-xl bg-background text-foreground border border-border focus:border-[#39FF14] focus:outline-none resize-none transition-colors"
   />
 )
 

@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
+import { ArrowRight } from "lucide-react"
 
 // SVG icons for features
 const PanIndiaIcon = () => (
@@ -149,19 +150,17 @@ export default function About() {
           {/* CTA with neon glow */}
           <Link
             href="/about/company"
-            className={`inline-flex items-center gap-2 px-8 py-3 rounded-md font-semibold transition-all duration-500 hover:scale-105 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
+            className={`inline-flex items-center gap-2 px-8 py-3 rounded-md font-semibold transition-all duration-300 
+                       border border-transparent hover:border-[#39FF14]
+                       bg-[#39FF14] text-[#0a0a0a] hover:bg-black hover:text-[#39FF14]
+                       shadow-[0_0_20px_rgba(57,255,20,0.4)] hover:shadow-[0_0_30px_rgba(57,255,20,0.6)]
+                       ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
             style={{
-              backgroundColor: "#39FF14",
-              color: "#0a0a0a",
-              boxShadow: "0 0 20px rgba(57,255,20,0.4), 0 0 40px rgba(57,255,20,0.2)",
               transitionDelay: "700ms"
             }}
           >
             Learn More About Us
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+            <ArrowRight className="w-5 h-5" />
           </Link>
         </div>
 

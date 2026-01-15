@@ -1,23 +1,26 @@
 import Link from "next/link"
+import { Phone, Mail } from "lucide-react"
 
 export default function TopBar() {
   return (
-    <div className="bg-[#0a0a0a] text-white text-sm border-b border-gray-900">
-      <div className="max-w-7xl mx-auto px-6 py-2 flex justify-end">
+    <div className="bg-neutral-400 text-white text-sm border-b border-neutral-300 shadow-sm">
+      <div className="max-w-7xl mx-auto px-6 py-2.5 flex justify-end">
 
-        <div className="flex items-center gap-6 flex-wrap justify-center sm:justify-end w-full sm:w-auto">
+        <div className="flex items-center gap-6 md:gap-8 flex-wrap justify-center sm:justify-end w-full sm:w-auto font-medium">
           <Link
             href="tel:05124050588"
-            className="flex items-center gap-2 hover:text-[#39FF14] transition-colors duration-300"
+            className="flex items-center gap-2 hover:text-[#39FF14] transition-all duration-300 group"
           >
-            📞 0512-4050588
+            <Phone className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+            <span>0512-4050588</span>
           </Link>
 
           <Link
             href="mailto:info@shynr.in"
-            className="flex items-center gap-2 hover:text-[#39FF14] transition-colors duration-300"
+            className="flex items-center gap-2 hover:text-[#39FF14] transition-all duration-300 group"
           >
-            ✉ info@shynr.in
+            <Mail className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+            <span>info@shynr.in</span>
           </Link>
         </div>
 

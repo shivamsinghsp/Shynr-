@@ -108,7 +108,7 @@ export default function ProfessionalStaffing() {
                         <img
                             src="/images/tech-office.png"
                             alt="Professional Staffing Office"
-                            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                            className="w-full h-full object-cover transition-transform duration-1000"
                         />
                     </div>
 
@@ -127,7 +127,7 @@ export default function ProfessionalStaffing() {
                             <button
                                 key={tab.key}
                                 onClick={() => setActiveTab(tab.key as TabKey)}
-                                className="flex-1 transition-all duration-300 transform hover:scale-105"
+                                className="flex-1 transition-all duration-300 transform hover:shadow-[0_0_15px_rgba(57,255,20,0.3)]"
                                 style={{
                                     padding: "16px 24px",
                                     fontSize: "16px",
@@ -211,21 +211,6 @@ export default function ProfessionalStaffing() {
                 </section>
             )}
 
-            {/* CTA BUTTON */}
-            <section className="py-20 text-center bg-[#0a0a0a]">
-                <h2 className="text-3xl font-bold text-white mb-8">Ready to transform your workforce?</h2>
-                <button
-                    onClick={() => router.push("/contactUs")}
-                    className="inline-block px-10 py-4 rounded-full font-bold text-lg transition-all hover:scale-105"
-                    style={{
-                        backgroundColor: "#39FF14",
-                        color: "#0a0a0a",
-                        boxShadow: "0 0 20px rgba(57,255,20,0.4)"
-                    }}
-                >
-                    Partner With SHYNR
-                </button>
-            </section>
 
         </main>
     )

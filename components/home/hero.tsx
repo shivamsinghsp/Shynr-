@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import Image from "next/image"
+import { ArrowRight } from "lucide-react"
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false)
@@ -133,19 +134,15 @@ export default function Hero() {
           <Link
             href="/about"
             className={`inline-flex items-center mt-8 px-8 py-3 rounded-md font-semibold
-                       transition-all duration-500 delay-500
-                       hover:scale-105 active:scale-95
+                       transition-all duration-300 delay-500
+                       border border-transparent hover:border-[#39FF14]
+                       bg-[#39FF14] text-[#0a0a0a] hover:bg-black hover:text-[#39FF14]
+                       hover:shadow-[0_0_25px_rgba(57,255,20,0.6)]
+                       shadow-[0_0_15px_rgba(57,255,20,0.4)]
                        ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-            style={{
-              backgroundColor: "#39FF14",
-              color: "#0a0a0a",
-              boxShadow: "0 0 15px rgba(57,255,20,0.4), 0 0 30px rgba(57,255,20,0.2)",
-            }}
           >
             Explore More
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+            <ArrowRight className="w-5 h-5 ml-2" />
           </Link>
         </div>
 

@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from "react"
 import Link from "next/link"
+import CountUp from "@/components/shared/CountUp"
 
 // SVG icons for categories
 const AgricultureIcon = () => (
@@ -28,18 +29,10 @@ const TransportIcon = () => (
   </svg>
 )
 
-// Arrow icons
-const ArrowLeftIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-  </svg>
-)
 
-const ArrowRightIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-  </svg>
-)
+// Arrow icons pulled from Lucide
+import { ArrowLeft, ArrowRight } from "lucide-react"
+
 
 const cards = [
   { title: "Agriculture", jobs: 1254, icon: <AgricultureIcon /> },
@@ -87,12 +80,12 @@ export default function Categories() {
       ref={sectionRef}
       className="py-20 relative overflow-hidden"
       style={{
-        background: "linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%)"
+        background: "linear-gradient(135deg, var(--background) 0%, rgba(57,255,20,0.05) 50%, var(--background) 100%)"
       }}
     >
       {/* Heading */}
       <div
-        className={`text-center mb-12 px-6 text-white transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        className={`text-center mb-12 px-6 text-foreground transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
       >
         <p
@@ -104,89 +97,92 @@ export default function Categories() {
         <h2 className="text-3xl md:text-4xl font-bold mt-2">
           Key Differentiators
         </h2>
-        <p className="mt-4 max-w-xl mx-auto text-gray-400 text-sm md:text-base">
+        <p className="mt-4 max-w-xl mx-auto text-muted-foreground text-sm md:text-base">
           At eu lobortis pretium tincidunt amet lacus ut aenean aliquet.
           Blandit a massa elementum id scelerisque.
         </p>
       </div>
 
       {/* Arrows with neon style */}
-      <button
-        onClick={() => scroll("left")}
-        className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full shadow items-center justify-center z-10 transition-all duration-300 hover:scale-110"
-        style={{
-          backgroundColor: "#39FF14",
-          color: "#0a0a0a",
-          boxShadow: "0 0 15px rgba(57,255,20,0.5)"
-        }}
-      >
-        <ArrowLeftIcon />
-      </button>
+      {/* Slider Container with Arrows */}
+      <div className="relative group">
+        <button
+          onClick={() => scroll("left")}
+          className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full shadow items-center justify-center z-20 transition-all duration-300"
+          style={{
+            backgroundColor: "#39FF14",
+            color: "var(--foreground)",
+            boxShadow: "0 0 15px rgba(57,255,20,0.5)"
+          }}
+        >
+          <ArrowLeft className="w-6 h-6" />
+        </button>
 
-      <button
-        onClick={() => scroll("right")}
-        className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full shadow items-center justify-center z-10 transition-all duration-300 hover:scale-110"
-        style={{
-          backgroundColor: "#39FF14",
-          color: "#0a0a0a",
-          boxShadow: "0 0 15px rgba(57,255,20,0.5)"
-        }}
-      >
-        <ArrowRightIcon />
-      </button>
+        <button
+          onClick={() => scroll("right")}
+          className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full shadow items-center justify-center z-20 transition-all duration-300"
+          style={{
+            backgroundColor: "#39FF14",
+            color: "var(--foreground)",
+            boxShadow: "0 0 15px rgba(57,255,20,0.5)"
+          }}
+        >
+          <ArrowRight className="w-6 h-6" />
+        </button>
 
-      {/* Slider */}
-      <div
-        ref={slider}
-        className="flex gap-8 overflow-x-auto overflow-y-visible px-6 md:px-16 
-                   scroll-smooth snap-x snap-mandatory no-scrollbar py-10"
-      >
-        {cards.map((card, i) => (
-          <Link
-            key={i}
-            href={`/categories/${card.title.toLowerCase().replace(/\s+/g, "-")}`}
-            className={`snap-start min-w-[240px] sm:min-w-[280px] 
-                       h-[360px] md:h-[420px] 
-                       flex items-center justify-center
-                       transition-all duration-700
-                       ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}
-            style={{ transitionDelay: `${i * 100}ms` }}
-          >
-            <div
-              className="bg-white/10 backdrop-blur-sm w-full h-full rounded-2xl 
-                         flex flex-col items-center justify-center 
-                         border border-white/20
-                         transition-all duration-500 ease-out
-                         hover:scale-[1.08] hover:-translate-y-4
-                         will-change-transform group"
-              style={{
-                boxShadow: "0 0 30px rgba(0,0,0,0.3)"
-              }}
+        {/* Slider */}
+        <div
+          ref={slider}
+          className="flex gap-8 overflow-x-auto overflow-y-visible px-6 md:px-16 
+                    scroll-smooth snap-x snap-mandatory no-scrollbar py-10"
+        >
+          {cards.map((card, i) => (
+            <Link
+              key={i}
+              href={`/categories/${card.title.toLowerCase().replace(/\s+/g, "-")}`}
+              className={`snap-start min-w-[240px] sm:min-w-[280px] 
+                         h-[360px] md:h-[420px] 
+                         flex items-center justify-center
+                         transition-all duration-700
+                         ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}
+              style={{ transitionDelay: `${i * 100}ms` }}
             >
               <div
-                className="text-white mb-6 transition-transform duration-300 group-hover:scale-125"
-                style={{ color: "#39FF14" }}
-              >
-                {card.icon}
-              </div>
-
-              <h3 className="text-lg md:text-xl font-bold mb-3 text-white">
-                {card.title}
-              </h3>
-
-              <span
-                className="px-4 py-1 rounded-full text-sm font-semibold"
+                className="bg-card w-full h-full rounded-2xl 
+                          flex flex-col items-center justify-center 
+                          border border-border
+                          transition-all duration-500 ease-out
+                          hover:-translate-y-4
+                          will-change-transform group"
                 style={{
-                  backgroundColor: "rgba(57,255,20,0.2)",
-                  color: "#39FF14",
-                  border: "1px solid #39FF14"
+                  boxShadow: "0 0 30px rgba(0,0,0,0.3)"
                 }}
               >
-                {card.jobs} jobs
-              </span>
-            </div>
-          </Link>
-        ))}
+                <div
+                  className="text-white mb-6 transition-transform duration-300 group-hover:scale-125"
+                  style={{ color: "#39FF14" }}
+                >
+                  {card.icon}
+                </div>
+
+                <h3 className="text-lg md:text-xl font-bold mb-3 text-card-foreground">
+                  {card.title}
+                </h3>
+
+                <span
+                  className="px-4 py-1 rounded-full text-sm font-semibold"
+                  style={{
+                    backgroundColor: "rgba(57,255,20,0.2)",
+                    color: "#39FF14",
+                    border: "1px solid #39FF14"
+                  }}
+                >
+                  <CountUp end={card.jobs} duration={1500} /> jobs
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
 
       <p
@@ -199,7 +195,7 @@ export default function Categories() {
         </svg>
       </p>
 
-    </section>
+    </section >
   )
 }
 
