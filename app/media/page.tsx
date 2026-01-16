@@ -138,14 +138,14 @@ export default function MediaPage() {
                 <div
                     className="absolute bottom-0 left-0 right-0 h-1 z-[2]"
                     style={{
-                        background: "linear-gradient(90deg, transparent 0%, #39FF14 50%, transparent 100%)",
-                        boxShadow: "0 0 20px #39FF14, 0 0 40px #39FF14"
+                        background: "linear-gradient(90deg, transparent 0%, #05033e 50%, transparent 100%)",
+                        boxShadow: "0 0 20px #05033e, 0 0 40px #05033e"
                     }}
                 />
 
                 <div className={`relative z-10 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
                     <h1 className="text-white text-4xl md:text-6xl font-bold mb-4">
-                        Media <span style={{ color: "#39FF14", textShadow: "0 0 20px rgba(57,255,20,0.3)" }}>Centre</span>
+                        Media <span style={{ color: "#05033e", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Centre</span>
                     </h1>
                     <p className="text-gray-400 text-lg max-w-2xl mx-auto">
                         Latest updates, press releases, and media resources from SHYNR
@@ -160,8 +160,8 @@ export default function MediaPage() {
                         <button
                             onClick={() => setActiveTab("press")}
                             className={`px-8 py-3 rounded-xl font-bold transition-all duration-300 ${activeTab === "press"
-                                    ? "bg-[#0a0a0a] text-[#39FF14] shadow-lg scale-105"
-                                    : "text-gray-500 hover:text-gray-900"
+                                ? "bg-[#0a0a0a] text-white shadow-lg scale-105"
+                                : "text-gray-500 hover:text-gray-900"
                                 }`}
                         >
                             Press Coverage
@@ -169,8 +169,8 @@ export default function MediaPage() {
                         <button
                             onClick={() => setActiveTab("contact")}
                             className={`px-8 py-3 rounded-xl font-bold transition-all duration-300 ${activeTab === "contact"
-                                    ? "bg-[#0a0a0a] text-[#39FF14] shadow-lg scale-105"
-                                    : "text-gray-500 hover:text-gray-900"
+                                ? "bg-[#0a0a0a] text-white shadow-lg scale-105"
+                                : "text-gray-500 hover:text-gray-900"
                                 }`}
                         >
                             Media Contact
@@ -199,14 +199,14 @@ export default function MediaPage() {
                                         <select
                                             value={selectedYear}
                                             onChange={(e) => setSelectedYear(e.target.value)}
-                                            className="appearance-none bg-white border border-gray-300 text-gray-900 font-bold py-2 pl-4 pr-10 rounded-lg focus:outline-none focus:border-[#39FF14] focus:ring-1 focus:ring-[#39FF14] cursor-pointer shadow-sm hover:border-[#39FF14] transition-all"
+                                            className="appearance-none bg-white border border-gray-300 text-gray-900 font-bold py-2 pl-4 pr-10 rounded-lg focus:outline-none focus:border-[#05033e] focus:ring-1 focus:ring-[#05033e] cursor-pointer shadow-sm hover:border-[#05033e] transition-all"
                                         >
                                             {years.map(year => (
                                                 <option key={year} value={year}>{year}</option>
                                             ))}
                                             <option value="All">All Years</option>
                                         </select>
-                                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 pointer-events-none group-hover:text-[#39FF14] transition-colors" />
+                                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 pointer-events-none group-hover:text-[#05033e] transition-colors" />
                                     </div>
                                 </div>
                             </div>
@@ -217,7 +217,7 @@ export default function MediaPage() {
                                     currentNews.map((news, index) => (
                                         <div
                                             key={news.id}
-                                            className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-2xl border-l-4 border-[#39FF14] transition-all duration-500 group opacity-0 animate-slideUp"
+                                            className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-2xl border-l-4 border-[#05033e] transition-all duration-500 group opacity-0 animate-slideUp"
                                             style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'forwards' }}
                                         >
                                             <div className="flex items-center gap-2 text-sm text-gray-500 mb-3 font-semibold">
@@ -233,7 +233,7 @@ export default function MediaPage() {
 
                                             <Link
                                                 href={news.link}
-                                                className="inline-flex items-center text-sm font-bold text-[#39FF14] group-hover:translate-x-2 transition-transform duration-300"
+                                                className="inline-flex items-center text-sm font-bold text-[#05033e] group-hover:translate-x-2 transition-transform duration-300"
                                                 style={{ textShadow: "0 0 1px rgba(0,0,0,0.1)" }}
                                             >
                                                 Read More →
@@ -253,7 +253,7 @@ export default function MediaPage() {
                                     <button
                                         onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                         disabled={currentPage === 1}
-                                        className="p-2 rounded-full border border-gray-300 hover:border-[#39FF14] hover:bg-[#39FF14] hover:text-black disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:border-gray-300 transition-all duration-300"
+                                        className="p-2 rounded-full border border-gray-300 hover:border-[#05033e] hover:bg-[#05033e] hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:border-gray-300 transition-all duration-300"
                                     >
                                         <ChevronLeft size={24} />
                                     </button>
@@ -265,7 +265,7 @@ export default function MediaPage() {
                                     <button
                                         onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                         disabled={currentPage === totalPages}
-                                        className="p-2 rounded-full border border-gray-300 hover:border-[#39FF14] hover:bg-[#39FF14] hover:text-black disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:border-gray-300 transition-all duration-300"
+                                        className="p-2 rounded-full border border-gray-300 hover:border-[#05033e] hover:bg-[#05033e] hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:border-gray-300 transition-all duration-300"
                                     >
                                         <ChevronRight size={24} />
                                     </button>
@@ -279,8 +279,8 @@ export default function MediaPage() {
                     {activeTab === "contact" && (
                         <div className="animate-fadeIn max-w-4xl mx-auto">
                             <div className="bg-white rounded-3xl p-10 md:p-16 shadow-2xl text-center border border-gray-100 hover:shadow-[0_0_40px_rgba(0,0,0,0.1)] transition-shadow duration-500">
-                                <div className="w-24 h-24 bg-[#0a0a0a] rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg animate-bounce-slow">
-                                    <Mail className="w-10 h-10 text-[#39FF14]" />
+                                <div className="w-24 h-24 bg-[#ffffffff] rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg animate-bounce-slow">
+                                    <Mail className="w-10 h-10 text-[#05033e]" />
                                 </div>
 
                                 <h2 className="text-3xl md:text-4xl font-bold text-[#0a0a0a] mb-6">
@@ -293,18 +293,18 @@ export default function MediaPage() {
                                 </p>
 
                                 <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
-                                    <div className="p-6 bg-gray-50 rounded-2xl hover:bg-black hover:text-white transition-all duration-300 group cursor-pointer">
-                                        <Mail className="w-8 h-8 text-teal-700 group-hover:text-[#39FF14] mx-auto mb-4 transition-colors" />
-                                        <h3 className="font-bold mb-2 group-hover:text-white">Email Us</h3>
-                                        <Link href="mailto:info@shynr.in" className="text-lg text-teal-700 font-semibold group-hover:text-[#39FF14]">
+                                    <div className="p-8 bg-white rounded-3xl shadow-lg border border-gray-100 hover:bg-[#05033e] hover:border-[#05033e] transition-all duration-300 group cursor-pointer hover:-translate-y-2">
+                                        <Mail className="w-10 h-10 text-[#05033e] group-hover:text-white mx-auto mb-6 transition-colors" />
+                                        <h3 className="font-bold text-xl mb-2 text-[#0a0a0a] group-hover:text-white">Email Us</h3>
+                                        <Link href="mailto:info@shynr.in" className="text-lg text-[#05033e] font-semibold group-hover:text-white">
                                             info@shynr.in
                                         </Link>
                                     </div>
 
-                                    <div className="p-6 bg-gray-50 rounded-2xl hover:bg-black hover:text-white transition-all duration-300 group cursor-pointer">
-                                        <Phone className="w-8 h-8 text-teal-700 group-hover:text-[#39FF14] mx-auto mb-4 transition-colors" />
-                                        <h3 className="font-bold mb-2 group-hover:text-white">Call Us</h3>
-                                        <Link href="tel:05124050588" className="text-lg text-teal-700 font-semibold group-hover:text-[#39FF14]">
+                                    <div className="p-8 bg-white rounded-3xl shadow-lg border border-gray-100 hover:bg-[#05033e] hover:border-[#05033e] transition-all duration-300 group cursor-pointer hover:-translate-y-2">
+                                        <Phone className="w-10 h-10 text-[#05033e] group-hover:text-white mx-auto mb-6 transition-colors" />
+                                        <h3 className="font-bold text-xl mb-2 text-[#0a0a0a] group-hover:text-white">Call Us</h3>
+                                        <Link href="tel:05124050588" className="text-lg text-[#05033e] font-semibold group-hover:text-white">
                                             0512-4050588
                                         </Link>
                                     </div>

@@ -49,14 +49,14 @@ export default function LeadershipPage() {
         <div
           className="absolute bottom-0 left-0 right-0 h-1 z-[2]"
           style={{
-            background: "linear-gradient(90deg, transparent 0%, #39FF14 50%, transparent 100%)",
-            boxShadow: "0 0 20px #39FF14, 0 0 40px #39FF14"
+            background: "linear-gradient(90deg, transparent 0%, #05033e 50%, transparent 100%)",
+            boxShadow: "0 0 20px #05033e, 0 0 40px #05033e"
           }}
         />
 
         <div className={`relative z-10 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <h1 className="text-white text-4xl md:text-6xl font-bold mb-4">
-            Leadership <span style={{ color: "#39FF14", textShadow: "0 0 20px rgba(57,255,20,0.3)" }}>Team</span>
+            Leadership <span style={{ color: "#05033e", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Team</span>
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Guiding SHYNR with Vision, Governance & Growth
@@ -70,7 +70,7 @@ export default function LeadershipPage() {
 
           <div className={`transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <h2 className="text-3xl md:text-4xl font-bold mb-8 text-[#0a0a0a]">
-              Board of <span className="text-[#39FF14]" style={{ textShadow: "0 2px 10px rgba(57,255,20,0.3)" }}>Directors</span>
+              Board of <span className="text-[#05033e]" style={{ textShadow: "0 2px 10px rgba(5,3,62,0.3)" }}>Directors</span>
             </h2>
 
             <p className="text-lg md:text-xl font-medium max-w-4xl mx-auto leading-relaxed mb-16 text-gray-700">
@@ -85,10 +85,10 @@ export default function LeadershipPage() {
             {insights.map((member, i) => (
               <div
                 key={i}
-                className={`bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:border-[#39FF14] transition-all duration-500 hover:-translate-y-2 group ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
+                className={`bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:border-[#05033e] transition-all duration-500 hover:-translate-y-2 group ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
                 style={{ transitionDelay: `${500 + i * 200}ms` }}
               >
-                <div className="relative w-40 h-40 mx-auto mb-8 rounded-full overflow-hidden border-4 border-gray-200 group-hover:border-[#39FF14] transition-colors">
+                <div className="relative w-40 h-40 mx-auto mb-8 rounded-full overflow-hidden border-4 border-gray-200 group-hover:border-[#05033e] transition-colors">
                   {/* Placeholder for real image, using avatar fallback */}
                   <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-4xl font-bold text-gray-400">
                     {member.title.charAt(0)}
@@ -109,9 +109,9 @@ export default function LeadershipPage() {
               href="/contactUs"
               className="inline-block px-10 py-4 rounded-full font-bold text-lg transition-all hover:scale-105"
               style={{
-                backgroundColor: "#39FF14",
-                color: "#0a0a0a",
-                boxShadow: "0 0 20px rgba(57,255,20,0.4)"
+                backgroundColor: "#05033e",
+                color: "white",
+                boxShadow: "0 0 20px rgba(5,3,62,0.4)"
               }}
             >
               Connect With Us

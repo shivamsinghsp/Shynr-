@@ -29,14 +29,14 @@ export default function GeneralStaffing() {
         <div
           className="absolute bottom-0 left-0 right-0 h-1 z-[2]"
           style={{
-            background: "linear-gradient(90deg, transparent 0%, #39FF14 50%, transparent 100%)",
-            boxShadow: "0 0 20px #39FF14, 0 0 40px #39FF14"
+            background: "linear-gradient(90deg, transparent 0%, #05033e 50%, transparent 100%)",
+            boxShadow: "0 0 20px #05033e, 0 0 40px #05033e"
           }}
         />
 
         <div className={`relative z-10 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <h1 className="text-white text-4xl md:text-6xl font-bold mb-4">
-            General <span style={{ color: "#39FF14", textShadow: "0 0 20px rgba(57,255,20,0.3)" }}>Staffing</span>
+            General <span style={{ color: "#05033e", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Staffing</span>
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Building Reliable Workforces at Scale
@@ -50,7 +50,7 @@ export default function GeneralStaffing() {
 
           <div className={`transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <h2 className="text-3xl md:text-4xl font-bold text-[#0a0a0a] mb-8">
-              General Staffing <span className="text-[#39FF14]" style={{ textShadow: "0 2px 10px rgba(57,255,20,0.3)" }}>Solutions</span>
+              General Staffing <span className="text-[#05033e]" style={{ textShadow: "0 2px 10px rgba(5,3,62,0.3)" }}>Solutions</span>
             </h2>
 
             <p className="text-gray-600 text-lg leading-relaxed max-w-4xl mx-auto">
@@ -71,10 +71,11 @@ export default function GeneralStaffing() {
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12">
 
           {/* Bulk Hiring */}
-          <div className="bg-white p-10 rounded-2xl shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2 border-t-4 border-[#39FF14]">
+          <div className="p-10 rounded-2xl shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2 border-t-4 border-[#05033e]"
+            style={{ backgroundColor: `hsl(210, 100%, 96%)` }}>
             <div className="flex flex-col items-center text-center">
-              <div className="w-24 h-24 bg-[#0a0a0a] rounded-full flex items-center justify-center mb-6 shadow-lg">
-                <Users className="w-10 h-10 text-[#39FF14]" />
+              <div className="w-24 h-24 bg-[#6fa8dc] rounded-full flex items-center justify-center mb-6 shadow-lg">
+                <Users className="w-10 h-10 text-[#05033e]" />
               </div>
 
               <h4 className="text-2xl font-bold text-gray-900 mb-4">
@@ -88,10 +89,11 @@ export default function GeneralStaffing() {
           </div>
 
           {/* Contract Staffing */}
-          <div className="bg-white p-10 rounded-2xl shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2 border-t-4 border-[#39FF14]">
+          <div className="p-10 rounded-2xl shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2 border-t-4 border-[#05033e]"
+            style={{ backgroundColor: `hsl(210, 100%, 96%)` }}>
             <div className="flex flex-col items-center text-center">
-              <div className="w-24 h-24 bg-[#0a0a0a] rounded-full flex items-center justify-center mb-6 shadow-lg">
-                <Settings className="w-10 h-10 text-[#39FF14]" />
+              <div className="w-24 h-24 bg-[#6fa8dc] rounded-full flex items-center justify-center mb-6 shadow-lg">
+                <Settings className="w-10 h-10 text-[#05033e]" />
               </div>
 
               <h4 className="text-2xl font-bold text-gray-900 mb-4">
@@ -112,9 +114,9 @@ export default function GeneralStaffing() {
             onClick={() => router.push("/contactUs")}
             className="px-12 py-4 rounded-full font-bold text-lg transition-all hover:scale-105"
             style={{
-              backgroundColor: "#39FF14",
-              color: "#0a0a0a",
-              boxShadow: "0 0 20px rgba(57,255,20,0.4)"
+              backgroundColor: "#05033e",
+              color: "white",
+              boxShadow: "0 0 20px rgba(5,3,62,0.4)"
             }}
           >
             Partner With SHYNR

@@ -61,14 +61,14 @@ export default function ProfessionalStaffing() {
                 <div
                     className="absolute bottom-0 left-0 right-0 h-1 z-[2]"
                     style={{
-                        background: "linear-gradient(90deg, transparent 0%, #39FF14 50%, transparent 100%)",
-                        boxShadow: "0 0 20px #39FF14, 0 0 40px #39FF14"
+                        background: "linear-gradient(90deg, transparent 0%, #05033e 50%, transparent 100%)",
+                        boxShadow: "0 0 20px #05033e, 0 0 40px #05033e"
                     }}
                 />
 
                 <div className={`relative z-10 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
                     <h1 className="text-white text-4xl md:text-6xl font-bold mb-4">
-                        Professional <span style={{ color: "#39FF14", textShadow: "0 0 20px rgba(57,255,20,0.3)" }}>Staffing</span>
+                        Professional <span style={{ color: "#05033e", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Staffing</span>
                     </h1>
                     <p className="text-gray-400 max-w-xl mx-auto text-lg">
                         Expertise that drives business transformation
@@ -85,15 +85,15 @@ export default function ProfessionalStaffing() {
                         className={`space-y-6 transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"}`}
                     >
                         <h2 className="text-3xl font-bold text-[#0a0a0a]">
-                            Building Key <span style={{ color: "#39FF14" }}>Capabilities</span>
+                            Building Key <span style={{ color: "#05033e" }}>Capabilities</span>
                         </h2>
-                        <p className="text-gray-700 text-lg leading-relaxed border-l-4 border-[#39FF14] pl-6 py-2 bg-gray-50 rounded-r-xl">
+                        <p className="text-gray-700 text-lg leading-relaxed border-l-4 border-[#05033e] pl-6 py-2 bg-gray-50 rounded-r-xl">
                             SHYNR Private Limited offers Professional Staffing solutions for organizations seeking experienced, skilled, and domain-specific professionals. Our consultative hiring approach helps clients acquire talent that drives performance, innovation, and long-term value.
                         </p>
                         <ul className="space-y-4 pt-4">
                             {['IT Staffing', 'Executive Search', 'Niche Skills'].map(item => (
                                 <li key={item} className="flex items-center gap-3 font-semibold text-gray-800">
-                                    <div className="w-2 h-2 rounded-full bg-[#39FF14]" /> {item}
+                                    <div className="w-2 h-2 rounded-full bg-[#05033e]" /> {item}
                                 </li>
                             ))}
                         </ul>
@@ -127,16 +127,16 @@ export default function ProfessionalStaffing() {
                             <button
                                 key={tab.key}
                                 onClick={() => setActiveTab(tab.key as TabKey)}
-                                className="flex-1 transition-all duration-300 transform hover:shadow-[0_0_15px_rgba(57,255,20,0.3)]"
+                                className="flex-1 transition-all duration-300 transform hover:shadow-[0_0_15px_rgba(5,3,62,0.3)]"
                                 style={{
                                     padding: "16px 24px",
                                     fontSize: "16px",
                                     fontWeight: 700,
-                                    backgroundColor: activeTab === tab.key ? "#39FF14" : "#111",
-                                    color: activeTab === tab.key ? "#0a0a0a" : "#fff",
-                                    border: activeTab === tab.key ? "none" : "1px solid #333",
+                                    backgroundColor: activeTab === tab.key ? "#05033e" : "#ffffff",
+                                    color: activeTab === tab.key ? "#ffffff" : "#05033e",
+                                    border: activeTab === tab.key ? "none" : "1px solid #e5e7eb",
                                     borderRadius: "12px",
-                                    boxShadow: activeTab === tab.key ? "0 0 20px rgba(57,255,20,0.4)" : "none",
+                                    boxShadow: activeTab === tab.key ? "0 0 20px rgba(5,3,62,0.4)" : "none",
                                 }}
                             >
                                 {tab.label}
@@ -168,12 +168,12 @@ export default function ProfessionalStaffing() {
                     <div className="max-w-4xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12">
                         {/* Staffing Services Card */}
                         <div
-                            className={`group bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:border-[#39FF14] transition-all duration-700 hover:-translate-y-2 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}
+                            className={`group bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:border-[#05033e] transition-all duration-700 hover:-translate-y-2 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}
                             style={{ transitionDelay: "200ms" }}
                         >
                             <div className="flex flex-col items-center text-center">
                                 <div
-                                    className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-[#39FF14]"
+                                    className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-[#05033e]"
                                     style={{ backgroundColor: "#111", color: "#fff" }}
                                 >
                                     <Users className="w-10 h-10 group-hover:text-black transition-colors" />
@@ -189,12 +189,12 @@ export default function ProfessionalStaffing() {
 
                         {/* Managed Solutions Card */}
                         <div
-                            className={`group bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:border-[#39FF14] transition-all duration-700 hover:-translate-y-2 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}
+                            className={`group bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:border-[#05033e] transition-all duration-700 hover:-translate-y-2 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}
                             style={{ transitionDelay: "400ms" }}
                         >
                             <div className="flex flex-col items-center text-center">
                                 <div
-                                    className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-[#39FF14]"
+                                    className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 transition-colors group-hover:bg-[#05033e]"
                                     style={{ backgroundColor: "#111", color: "#fff" }}
                                 >
                                     <Settings className="w-10 h-10 group-hover:text-black transition-colors" />

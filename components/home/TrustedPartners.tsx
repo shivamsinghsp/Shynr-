@@ -48,20 +48,20 @@ export default function TrustedPartners() {
       <div
         className="py-24 relative"
         style={{
-          background: "linear-gradient(180deg, var(--background) 0%, rgba(57,255,20,0.05) 100%)"
+          background: "white"
         }}
       >
         {/* Background glow */}
         <div
           className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-10 blur-3xl"
-          style={{ background: "#39FF14" }}
+          style={{ background: "#05033e" }}
         />
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <p
             className={`font-semibold text-2xl mb-4 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
               }`}
-            style={{ color: "#39FF14" }}
+            style={{ color: "#05033e" }}
           >
             Trusted Partners
           </p>
@@ -73,8 +73,8 @@ export default function TrustedPartners() {
             Companies We{" "}
             <span
               style={{
-                color: "#39FF14",
-                textShadow: "0 0 15px rgba(57,255,20,0.4)"
+                color: "#05033e",
+                textShadow: "0 0 15px rgba(5,3,62,0.4)"
               }}
             >
               Work With
@@ -93,19 +93,19 @@ export default function TrustedPartners() {
           {/* Stats */}
           <div className={`flex flex-wrap gap-12 mt-10 transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <div>
-              <h3 className="text-4xl font-bold" style={{ color: "#39FF14" }}>
+              <h3 className="text-4xl font-bold" style={{ color: "#05033e" }}>
                 <CountUp end={25} suffix="+" />
               </h3>
               <p className="text-muted-foreground mt-1">Companies Served</p>
             </div>
             <div>
-              <h3 className="text-4xl font-bold" style={{ color: "#39FF14" }}>
+              <h3 className="text-4xl font-bold" style={{ color: "#05033e" }}>
                 <CountUp end={28} />
               </h3>
               <p className="text-muted-foreground mt-1">States Presence</p>
             </div>
             <div>
-              <h3 className="text-4xl font-bold" style={{ color: "#39FF14" }}>
+              <h3 className="text-4xl font-bold" style={{ color: "#05033e" }}>
                 <CountUp end={15000} suffix="+" />
               </h3>
               <p className="text-muted-foreground mt-1">Professionals Hired</p>
@@ -118,22 +118,22 @@ export default function TrustedPartners() {
       <div
         className="py-12 overflow-hidden relative"
         style={{
-          background: "linear-gradient(90deg, var(--background) 0%, rgba(57,255,20,0.1) 50%, var(--background) 100%)"
+          background: "white"
         }}
       >
         {/* Top and bottom glow lines */}
         <div
           className="absolute top-0 left-0 right-0 h-px"
           style={{
-            background: "linear-gradient(90deg, transparent, #39FF14, transparent)",
-            boxShadow: "0 0 10px #39FF14"
+            background: "linear-gradient(90deg, transparent, #05033e, transparent)",
+            boxShadow: "0 0 10px #05033e"
           }}
         />
         <div
           className="absolute bottom-0 left-0 right-0 h-px"
           style={{
-            background: "linear-gradient(90deg, transparent, #39FF14, transparent)",
-            boxShadow: "0 0 10px #39FF14"
+            background: "linear-gradient(90deg, transparent, #05033e, transparent)",
+            boxShadow: "0 0 10px #05033e"
           }}
         />
 
@@ -156,7 +156,7 @@ export default function TrustedPartners() {
                 className="group relative h-32 min-w-[160px] flex-shrink-0 flex items-center justify-center px-4 transition-all duration-300"
               >
                 <img
-                  src="/Jana Small Finance Bank Logo.png"
+                  src="/Jana%20Small%20Finance%20Bank%20Logo.png"
                   alt={partner.name}
                   className="w-40 h-40 object-contain opacity-70 group-hover:opacity-100 transition-all duration-300 group-hover:scale-110"
                 />

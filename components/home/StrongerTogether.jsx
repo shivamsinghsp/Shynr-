@@ -30,7 +30,7 @@ export default function StrongerTogether() {
       ref={sectionRef}
       className="py-32 relative overflow-hidden"
       style={{
-        background: "linear-gradient(180deg, var(--background) 0%, rgba(57,255,20,0.05) 50%, var(--background) 100%)"
+        background: "white"
       }}
     >
       <div className="max-w-6xl mx-auto px-6 text-center relative z-10">
@@ -38,7 +38,7 @@ export default function StrongerTogether() {
         <p
           className={`text-3xl font-semibold mb-4 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
             }`}
-          style={{ color: "#39FF14" }}
+          style={{ color: "#05033e" }}
         >
           Stronger Together
         </p>
@@ -51,8 +51,8 @@ export default function StrongerTogether() {
           building{" "}
           <span
             style={{
-              color: "#39FF14",
-              textShadow: "0 0 20px rgba(57,255,20,0.5)"
+              color: "#05033e",
+              textShadow: "0 0 20px rgba(5,3,62,0.5)"
             }}
           >
             sustainable
@@ -74,9 +74,9 @@ export default function StrongerTogether() {
         <Link
           href="/contact"
           className={`inline-flex items-center justify-center px-10 py-4 rounded-md font-semibold text-lg
-                     transition-all duration-300 border border-transparent hover:border-[#39FF14]
-                     bg-[#39FF14] text-[#0a0a0a] hover:bg-black hover:text-[#39FF14]
-                     shadow-[0_0_25px_rgba(57,255,20,0.5)] hover:shadow-[0_0_35px_rgba(57,255,20,0.7)]
+                     transition-all duration-300 border border-transparent hover:border-[#05033e]
+                     bg-[#05033e] text-white hover:bg-black hover:text-[#05033e]
+                     shadow-[0_0_25px_rgba(5,3,62,0.5)] hover:shadow-[0_0_35px_rgba(5,3,62,0.7)]
                      ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
           style={{
             transitionDelay: "300ms"
@@ -96,10 +96,10 @@ export default function StrongerTogether() {
               style={{
                 transitionDelay: `${400 + index * 150}ms`,
                 background: index === 1
-                  ? "linear-gradient(135deg, #39FF14 0%, #00d4aa 100%)"
-                  : "linear-gradient(135deg, var(--card) 0%, var(--muted) 100%)",
-                border: "1px solid rgba(57,255,20,0.2)",
-                boxShadow: index === 1 ? "0 0 30px rgba(57,255,20,0.3)" : "none"
+                  ? "linear-gradient(135deg, #05033e 0%, #1e1b7a 100%)"
+                  : `hsl(210, 100%, ${96 - (index % 3) * 2}%)`,
+                border: "1px solid rgba(5,3,62,0.2)",
+                boxShadow: index === 1 ? "0 0 30px rgba(5,3,62,0.3)" : "none"
               }}
             />
           ))}

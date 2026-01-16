@@ -28,14 +28,14 @@ export default function CompanyPage() {
         <div
           className="absolute bottom-0 left-0 right-0 h-1 z-[2]"
           style={{
-            background: "linear-gradient(90deg, transparent 0%, #39FF14 50%, transparent 100%)",
-            boxShadow: "0 0 20px #39FF14, 0 0 40px #39FF14"
+            background: "linear-gradient(90deg, transparent 0%, #05033e 50%, transparent 100%)",
+            boxShadow: "0 0 20px #05033e, 0 0 40px #05033e"
           }}
         />
 
         <div className={`relative z-10 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <h1 className="text-white text-4xl md:text-6xl font-bold mb-4">
-            Shynr <span style={{ color: "#39FF14", textShadow: "0 0 20px rgba(57,255,20,0.3)" }}>Profile</span>
+            Shynr <span style={{ color: "#05033e", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Profile</span>
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Building scalable workforces. Empowering businesses.
@@ -49,7 +49,7 @@ export default function CompanyPage() {
 
           {/* Left */}
           <div className="space-y-6 text-2xl font-bold leading-tight text-foreground">
-            <p className="border-l-4 border-[#39FF14] pl-4">About SHYNR Private Limited</p>
+            <p className="border-l-4 border-[#05033e] pl-4">About SHYNR Private Limited</p>
             <p className="border-l-4 border-gray-200 pl-4">To become a trusted national workforce solutions partner</p>
             <p className="border-l-4 border-gray-200 pl-4">Delivering recruitment & managed services</p>
           </div>
@@ -78,7 +78,7 @@ export default function CompanyPage() {
 
 
       {/* Feature Section */}
-      <section className="bg-gray-50 py-24">
+      <section className="bg-white py-24">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
 
           {/* Image Placeholder */}
@@ -95,7 +95,7 @@ export default function CompanyPage() {
           {/* Content */}
           <div>
             <h2 className="text-4xl font-bold mb-6 text-foreground">
-              Why <span style={{ color: "#39FF14", textShadow: "0 2px 10px rgba(57,255,20,0.2)" }}>SHYNR?</span> <br />
+              Why <span style={{ color: "#05033e", textShadow: "0 2px 10px rgba(5,3,62,0.2)" }}>SHYNR?</span> <br />
               Integrity & Excellence
             </h2>
 
@@ -107,12 +107,12 @@ export default function CompanyPage() {
 
             <div className="flex gap-6 mb-12">
               <button
-                className="px-8 py-3 rounded-md font-bold transition-all duration-300 border border-transparent hover:border-[#39FF14] bg-[#39FF14] text-[#0a0a0a] hover:bg-black hover:text-[#39FF14] shadow-[0_0_15px_rgba(57,255,20,0.3)] hover:shadow-[0_0_25px_rgba(57,255,20,0.6)]"
+                className="px-8 py-3 rounded-md font-bold transition-all duration-300 border border-transparent hover:border-[#05033e] bg-[#05033e] text-white hover:bg-black hover:text-[#05033e] shadow-[0_0_15px_rgba(5,3,62,0.3)] hover:shadow-[0_0_25px_rgba(5,3,62,0.6)]"
               >
                 Partner With Us
               </button>
 
-              <button className="text-foreground font-bold hover:text-[#39FF14] transition-colors">
+              <button className="text-foreground font-bold hover:text-[#05033e] transition-colors">
                 Learn more →
               </button>
             </div>
@@ -126,7 +126,7 @@ export default function CompanyPage() {
                 { value: 100, suffix: "%", label: "Compliance" }
               ].map((stat) => (
                 <div key={stat.label}>
-                  <h3 className="text-3xl font-bold" style={{ color: "#39FF14" }}>
+                  <h3 className="text-3xl font-bold" style={{ color: "#05033e" }}>
                     <CountUp end={stat.value} suffix={stat.suffix} />
                   </h3>
                   <p className="text-gray-800 font-semibold mt-1">
@@ -165,10 +165,15 @@ export default function CompanyPage() {
               { title: "Screen", desc: "Rigorous evaluation and quality-focused shortlisting." },
               { title: "Deploy", desc: "Seamless onboarding with compliance and payroll support." },
             ].map((step, i) => (
-              <div key={step.title} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:border-[#39FF14] border border-transparent transition-all duration-300 group">
+              <div key={step.title} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:border-[#05033e] border border-transparent transition-all duration-300 group">
                 <div
-                  className="w-14 h-14 mx-auto mb-6 rounded-full flex items-center justify-center font-bold text-xl transition-colors group-hover:bg-[#39FF14] group-hover:text-foreground"
-                  style={{ backgroundColor: "var(--background)", color: "#39FF14", borderColor: "#39FF14", borderWidth: "1px" }}
+                  className="w-14 h-14 mx-auto mb-6 rounded-full flex items-center justify-center font-bold text-xl transition-colors group-hover:bg-[#05033e] group-hover:text-foreground"
+                  style={{
+                    backgroundColor: `hsl(210, 100%, ${96 - (i % 3) * 2}%)`,
+                    color: "#05033e",
+                    borderColor: "#05033e",
+                    borderWidth: "1px"
+                  }}
                 >
                   {i + 1}
                 </div>
@@ -193,20 +198,21 @@ export default function CompanyPage() {
             {!isPlaying ? (
               <>
                 {/* Placeholder Background for Video */}
-                <div className="absolute inset-0 opacity-30 bg-[url('/pattern.svg')] transition-opacity group-hover:opacity-40"></div>
+                {/* Placeholder Background for Video */}
+                <div className="absolute inset-0 bg-[#e0e7ff] opacity-30 transition-opacity group-hover:opacity-40"></div>
 
                 {/* Center content */}
                 <div className="relative z-10 flex flex-col items-center justify-center text-white px-6 text-center pointer-events-none">
                   <button
-                    className="w-20 h-20 rounded-full flex items-center justify-center mb-8 transition group-hover:shadow-[0_0_40px_rgba(57,255,20,0.7)] shadow-[0_0_30px_rgba(57,255,20,0.5)]"
-                    style={{ backgroundColor: "#39FF14", color: "var(--foreground)" }}
+                    className="w-20 h-20 rounded-full flex items-center justify-center mb-8 transition group-hover:shadow-[0_0_40px_rgba(5,3,62,0.7)] shadow-[0_0_30px_rgba(5,3,62,0.5)]"
+                    style={{ backgroundColor: "#05033e", color: "white" }}
                   >
                     <span className="text-3xl ml-1">▶</span>
                   </button>
 
                   <h2 className="text-3xl md:text-5xl font-bold leading-tight mb-4 text-foreground">
                     Reliable Workforce Backed By <br />
-                    <span style={{ color: "#39FF14" }}>Strong Governance</span>
+                    <span style={{ color: "#05033e" }}>Strong Governance</span>
                   </h2>
                 </div>
               </>

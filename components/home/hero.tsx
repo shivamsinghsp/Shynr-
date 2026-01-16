@@ -13,15 +13,12 @@ export default function Hero() {
   }, [])
 
   // Add your hero images here - these will scroll from right to left
+  // Add your hero images here - these will scroll from right to left
   const heroImages = [
-    "/1.svg",
-    "/2.svg",
-    "/3.svg",
-    "/4.svg",
-    // Add more images as needed, e.g.:
-    // "/hero-image-1.jpg",
-    // "/hero-image-2.jpg",
-    // "/hero-image-3.jpg",
+    "/hero_corporate_team_new.png",
+    "/hero_abstract_network_new.png",
+    "/hero_handshake_new.png",
+    "/hero_future_office_new.png",
   ]
 
   return (
@@ -50,12 +47,10 @@ export default function Hero() {
                 flexShrink: 0,
               }}
             >
-              <Image
+              <img
                 src={src}
                 alt={`Hero slide ${index + 1}`}
-                fill
-                style={{ objectFit: 'cover' }}
-                priority={index === 0}
+                className="w-full h-full object-cover"
               />
             </div>
           ))}
@@ -71,11 +66,10 @@ export default function Hero() {
                 flexShrink: 0,
               }}
             >
-              <Image
+              <img
                 src={src}
                 alt={`Hero slide duplicate ${index + 1}`}
-                fill
-                style={{ objectFit: 'cover' }}
+                className="w-full h-full object-cover"
               />
             </div>
           ))}
@@ -86,7 +80,7 @@ export default function Hero() {
       <div
         className="absolute inset-0 z-[1]"
         style={{
-          background: "linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 50%, rgba(57,255,20,0.15) 100%)"
+          background: "linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 50%, rgba(5,3,62,0.15) 100%)"
         }}
       />
 
@@ -94,9 +88,9 @@ export default function Hero() {
       <div
         className="absolute bottom-0 left-0 right-0 h-1 z-[2]"
         style={{
-          background: "linear-gradient(90deg, transparent 0%, #39FF14 50%, transparent 100%)",
+          background: "linear-gradient(90deg, transparent 0%, #05033e 50%, transparent 100%)",
           animation: "pulse 2s ease-in-out infinite",
-          boxShadow: "0 0 20px #39FF14, 0 0 40px #39FF14"
+          boxShadow: "0 0 20px #05033e, 0 0 40px #05033e"
         }}
       />
 
@@ -113,8 +107,8 @@ export default function Hero() {
             Future For <br />
             <span
               style={{
-                color: "#39FF14",
-                textShadow: "0 0 10px rgba(57,255,20,0.5), 0 0 20px rgba(57,255,20,0.3)"
+                color: "#05033e",
+                textShadow: "0 0 10px rgba(5,3,62,0.5), 0 0 20px rgba(5,3,62,0.3)"
               }}
             >
               Yourself
@@ -135,10 +129,10 @@ export default function Hero() {
             href="/about"
             className={`inline-flex items-center mt-8 px-8 py-3 rounded-md font-semibold
                        transition-all duration-300 delay-500
-                       border border-transparent hover:border-[#39FF14]
-                       bg-[#39FF14] text-[#0a0a0a] hover:bg-black hover:text-[#39FF14]
-                       hover:shadow-[0_0_25px_rgba(57,255,20,0.6)]
-                       shadow-[0_0_15px_rgba(57,255,20,0.4)]
+                       border border-transparent hover:border-[#05033e]
+                       bg-[#05033e] text-white hover:bg-black hover:text-[#05033e]
+                       hover:shadow-[0_0_25px_rgba(5,3,62,0.6)]
+                       shadow-[0_0_15px_rgba(5,3,62,0.4)]
                        ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
           >
             Explore More

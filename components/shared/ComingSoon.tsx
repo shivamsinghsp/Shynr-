@@ -15,18 +15,18 @@ export default function ComingSoon({ pageName }: ComingSoonProps) {
 
             {/* Animated Neon Lines */}
             <div className="absolute inset-0 z-[1] opacity-20">
-                <div className="absolute top-1/4 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#39FF14] to-transparent animate-pulse" />
-                <div className="absolute bottom-1/4 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#39FF14] to-transparent animate-pulse delay-75" />
+                <div className="absolute top-1/4 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#05033e] to-transparent animate-pulse" />
+                <div className="absolute bottom-1/4 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#05033e] to-transparent animate-pulse delay-75" />
             </div>
 
             <div className="relative z-10 text-center px-6">
                 {/* Animated Icon */}
-                <div className="w-24 h-24 mx-auto mb-8 rounded-full border-4 border-[#39FF14] flex items-center justify-center animate-bounce shadow-[0_0_30px_rgba(57,255,20,0.3)] bg-background">
-                    <Clock className="w-10 h-10 text-[#39FF14]" />
+                <div className="w-24 h-24 mx-auto mb-8 rounded-full border-4 border-[#05033e] flex items-center justify-center animate-bounce shadow-[0_0_30px_rgba(5,3,62,0.3)] bg-background">
+                    <Clock className="w-10 h-10 text-[#05033e]" />
                 </div>
 
                 <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 tracking-tight">
-                    {pageName} <span className="block text-[#39FF14] drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] mt-2">Coming Soon</span>
+                    {pageName} <span className="block text-[#05033e] drop-shadow-[0_0_10px_rgba(5,3,62,0.8)] mt-2">Coming Soon</span>
                 </h1>
 
                 <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
@@ -36,7 +36,7 @@ export default function ComingSoon({ pageName }: ComingSoonProps) {
 
                 <Link
                     href="/"
-                    className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 border border-transparent hover:border-[#39FF14] bg-[#39FF14] text-[#0a0a0a] hover:bg-black hover:text-[#39FF14] shadow-[0_0_20px_rgba(57,255,20,0.4)] hover:shadow-[0_0_40px_rgba(57,255,20,0.6)]"
+                    className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 border border-transparent hover:border-[#05033e] bg-[#05033e] text-white hover:bg-black hover:text-white shadow-[0_0_20px_rgba(5,3,62,0.4)] hover:shadow-[0_0_40px_rgba(5,3,62,0.6)]"
                 >
                     <ArrowLeft className="w-5 h-5" />
                     Back to Home

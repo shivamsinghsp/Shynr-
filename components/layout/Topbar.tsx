@@ -9,7 +9,7 @@ export default function TopBar() {
         <div className="flex items-center gap-6 md:gap-8 flex-wrap justify-center sm:justify-end w-full sm:w-auto font-medium">
           <Link
             href="tel:05124050588"
-            className="flex items-center gap-2 hover:text-[#39FF14] transition-all duration-300 group"
+            className="flex items-center gap-2 hover:text-[#05033e] transition-all duration-300 group"
           >
             <Phone className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
             <span>0512-4050588</span>
@@ -17,7 +17,7 @@ export default function TopBar() {
 
           <Link
             href="mailto:info@shynr.in"
-            className="flex items-center gap-2 hover:text-[#39FF14] transition-all duration-300 group"
+            className="flex items-center gap-2 hover:text-[#05033e] transition-all duration-300 group"
           >
             <Mail className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
             <span>info@shynr.in</span>

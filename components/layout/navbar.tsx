@@ -20,7 +20,7 @@ export default function Navbar() {
 
         {/* Logo */}
         <Link href="/" className="text-3xl font-bold tracking-tight text-neutral-900">
-          Shynr<span style={{ color: "#10cf6fff" }}>.</span>
+          Shynr<span style={{ color: "#05033e" }}>.</span>
         </Link>
 
         {/* DESKTOP NAV */}
@@ -32,13 +32,13 @@ export default function Navbar() {
             onMouseEnter={() => setOpenMenu("about")}
             onMouseLeave={() => setOpenMenu(null)}
           >
-            <span className="flex items-center gap-1 cursor-pointer transition-colors py-2 relative group-hover:text-[#39FF14]">
+            <span className="flex items-center gap-1 cursor-pointer transition-colors py-2 relative group-hover:text-[#05033e]">
               About Us
               <ChevronDown
                 size={16}
                 className={`transition-transform duration-200 ${openMenu === "about" ? "rotate-180" : ""}`}
               />
-              <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-[#39FF14] transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100 origin-left`}></span>
+              <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-[#05033e] transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100 origin-left`}></span>
             </span>
 
             <div
@@ -57,13 +57,13 @@ export default function Navbar() {
             onMouseEnter={() => setOpenMenu("services")}
             onMouseLeave={() => setOpenMenu(null)}
           >
-            <span className="flex items-center gap-1 cursor-pointer transition-colors py-2 relative group-hover:text-[#39FF14]">
+            <span className="flex items-center gap-1 cursor-pointer transition-colors py-2 relative group-hover:text-[#05033e]">
               Services
               <ChevronDown
                 size={16}
                 className={`transition-transform duration-200 ${openMenu === "services" ? "rotate-180" : ""}`}
               />
-              <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-[#39FF14] transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100 origin-left`}></span>
+              <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-[#05033e] transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100 origin-left`}></span>
             </span>
 
             <div
@@ -82,7 +82,7 @@ export default function Navbar() {
 
           <Link
             href="/jobs"
-            className="px-6 py-3 rounded-full font-bold transition-all duration-300 border border-transparent hover:border-[#39FF14] bg-[#39FF14] text-[#0a0a0a] hover:bg-[#004d00] hover:text-white shadow-[0_4px_14px_0_rgba(57,255,20,0.39)] hover:shadow-[0_0_20px_rgba(57,255,20,0.4)]"
+            className="px-6 py-3 rounded-full font-bold transition-all duration-300 border border-transparent hover:border-[#05033e] bg-[#05033e] text-white hover:bg-[#020120] hover:text-white shadow-[0_4px_14px_0_rgba(5,3,62,0.39)] hover:shadow-[0_0_20px_rgba(5,3,62,0.4)]"
           >
             Jobs
           </Link>
@@ -113,7 +113,7 @@ export default function Navbar() {
                 <ChevronDown size={20} className={`transition-transform ${mobileSubmenu === "about" ? "rotate-180" : ""}`} />
               </button>
               {mobileSubmenu === "about" && (
-                <div className="pl-4 mt-2 space-y-3 text-base text-neutral-600 border-l-2 border-[#39FF14]">
+                <div className="pl-4 mt-2 space-y-3 text-base text-neutral-600 border-l-2 border-[#05033e]">
                   <Link href="/about/company" onClick={() => setMobileMenuOpen(false)} className="block py-1">Company Profile</Link>
                   <Link href="/about/leadership" onClick={() => setMobileMenuOpen(false)} className="block py-1">Leadership Team</Link>
                   <Link href="/about/csr" onClick={() => setMobileMenuOpen(false)} className="block py-1">CSR</Link>
@@ -131,7 +131,7 @@ export default function Navbar() {
                 <ChevronDown size={20} className={`transition-transform ${mobileSubmenu === "services" ? "rotate-180" : ""}`} />
               </button>
               {mobileSubmenu === "services" && (
-                <div className="pl-4 mt-2 space-y-3 text-base text-neutral-600 border-l-2 border-[#39FF14]">
+                <div className="pl-4 mt-2 space-y-3 text-base text-neutral-600 border-l-2 border-[#05033e]">
                   <Link href="/services/general_staffing" onClick={() => setMobileMenuOpen(false)} className="block py-1">General Staffing</Link>
                   <Link href="/services/professional_staffing" onClick={() => setMobileMenuOpen(false)} className="block py-1">Professional Staffing</Link>
                   <Link href="/services/digital_platform" onClick={() => setMobileMenuOpen(false)} className="block py-1">Digital Platform</Link>
@@ -147,7 +147,7 @@ export default function Navbar() {
               href="/jobs"
               onClick={() => setMobileMenuOpen(false)}
               className="mt-4 text-center py-3 rounded-full font-bold shadow-lg"
-              style={{ backgroundColor: "#39FF14", color: "#0a0a0a" }}
+              style={{ backgroundColor: "#05033e", color: "white" }}
             >
               Jobs
             </Link>
@@ -167,11 +167,11 @@ function NavLink({ href, children, onClick }: { href: string; children: React.Re
     <Link
       href={href}
       onClick={onClick}
-      className={`relative py-1 transition-colors duration-300 hover:text-[#39FF14]
-                 ${isActive ? "text-[#39FF14]" : ""}`}
+      className={`relative py-1 transition-colors duration-300 hover:text-[#05033e]
+                 ${isActive ? "text-[#05033e]" : ""}`}
     >
       {children}
-      <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-[#39FF14] transform transition-transform duration-300 origin-left 
+      <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-[#05033e] transform transition-transform duration-300 origin-left 
                        ${isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100 hover:scale-x-100"}`}>
       </span>
     </Link>
@@ -186,8 +186,8 @@ function DropdownLink({ href, children, onClick }: { href: string; children: Rea
     <Link
       href={href}
       onClick={onClick}
-      className={`block px-6 py-3 transition-colors duration-300 hover:bg-white/50 hover:text-[#39FF14]
-                 ${isActive ? "text-[#39FF14] bg-white/50" : ""}`}
+      className={`block px-6 py-3 transition-colors duration-300 hover:bg-white/50 hover:text-[#05033e]
+                 ${isActive ? "text-[#05033e] bg-white/50" : ""}`}
     >
       {children}
     </Link>

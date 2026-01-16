@@ -40,14 +40,14 @@ const ContactPage = () => {
         <div
           className="absolute bottom-0 left-0 right-0 h-1 z-[2]"
           style={{
-            background: "linear-gradient(90deg, transparent 0%, #39FF14 50%, transparent 100%)",
-            boxShadow: "0 0 20px #39FF14, 0 0 40px #39FF14"
+            background: "linear-gradient(90deg, transparent 0%, #05033e 50%, transparent 100%)",
+            boxShadow: "0 0 20px #05033e, 0 0 40px #05033e"
           }}
         />
 
         <div className="relative z-10 animate-fade-in-up">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-            Get in <span style={{ color: "#39FF14", textShadow: "0 0 20px rgba(57,255,20,0.3)" }}>Touch</span>
+            Get in <span style={{ color: "#05033e", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Touch</span>
           </h1>
           <p className="text-gray-300 text-lg max-w-2xl mx-auto">
             Have questions? We'd love to hear from you.
@@ -61,7 +61,7 @@ const ContactPage = () => {
         {/* Left */}
         <div className={`transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-6">
-            Partner With <span className="text-[#39FF14]" style={{ textShadow: "0 2px 10px rgba(57,255,20,0.3)" }}>SHYNR</span>
+            Partner With <span className="text-[#05033e]" style={{ textShadow: "0 2px 10px rgba(5,3,62,0.3)" }}>SHYNR</span>
           </h2>
 
           <p className="mt-4 text-gray-600 text-lg max-w-lg leading-relaxed">
@@ -80,8 +80,9 @@ const ContactPage = () => {
         <div
           className={`p-10 rounded-3xl shadow-2xl transition-all duration-1000 delay-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
           style={{
-            background: "var(--card)",
-            border: "1px solid var(--border)"
+            background: "white",
+            border: "1px solid #e5e7eb",
+            boxShadow: "0 0 40px rgba(5,3,62,0.1)"
           }}
         >
           <h3 className="text-2xl font-bold mb-2 text-card-foreground">Send a message</h3>
@@ -101,13 +102,13 @@ const ContactPage = () => {
 
             <button
               type="submit"
-              className="w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 border border-transparent hover:border-[#39FF14] bg-[#39FF14] text-[#0a0a0a] hover:bg-black hover:text-[#39FF14] shadow-[0_0_20px_rgba(57,255,20,0.3)] hover:shadow-[0_0_30px_rgba(57,255,20,0.5)]"
+              className="w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 border border-transparent hover:border-[#05033e] bg-[#05033e] text-white hover:bg-black hover:text-white shadow-[0_0_20px_rgba(5,3,62,0.3)] hover:shadow-[0_0_30px_rgba(5,3,62,0.5)]"
             >
               Send Message
             </button>
 
             {sent && (
-              <p className="text-[#39FF14] text-sm text-center mt-4 font-semibold">
+              <p className="text-[#05033e] text-sm text-center mt-4 font-semibold">
                 Message sent successfully
               </p>
             )}
@@ -122,10 +123,10 @@ const ContactPage = () => {
 /* Components */
 
 const Info = ({ title, value, icon }: any) => (
-  <div className="flex flex-col gap-2">
-    <span className="text-2xl">{icon}</span>
-    <h4 className="font-bold text-gray-900">{title}</h4>
-    <p className="text-gray-600">{value}</p>
+  <div className="flex flex-col gap-2 p-6 rounded-2xl bg-white border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+    <span className="text-3xl mb-2 group-hover:scale-110 transition-transform duration-300">{icon}</span>
+    <h4 className="font-bold text-[#05033e] text-lg">{title}</h4>
+    <p className="text-gray-600 font-medium group-hover:text-[#05033e] transition-colors">{value}</p>
   </div>
 )
 
@@ -134,7 +135,7 @@ const Input = ({ type = "text", placeholder }: any) => (
     type={type}
     placeholder={placeholder}
     required
-    className="w-full p-4 rounded-xl bg-background text-foreground border border-border focus:border-[#39FF14] focus:outline-none transition-colors"
+    className="w-full p-4 rounded-xl bg-gray-50 text-foreground border border-transparent focus:bg-white focus:border-[#05033e] focus:ring-4 focus:ring-[#05033e]/10 focus:outline-none transition-all duration-300 placeholder:text-gray-400 font-medium"
   />
 )
 
@@ -143,7 +144,7 @@ const Textarea = ({ placeholder }: any) => (
     placeholder={placeholder}
     required
     rows={5}
-    className="w-full p-4 rounded-xl bg-background text-foreground border border-border focus:border-[#39FF14] focus:outline-none resize-none transition-colors"
+    className="w-full p-4 rounded-xl bg-gray-50 text-foreground border border-transparent focus:bg-white focus:border-[#05033e] focus:ring-4 focus:ring-[#05033e]/10 focus:outline-none resize-none transition-all duration-300 placeholder:text-gray-400 font-medium"
   />
 )
 
