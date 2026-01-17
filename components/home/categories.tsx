@@ -113,7 +113,7 @@ export default function Categories() {
           {cards.map((card, i) => (
             <Link
               key={i}
-              href={`/categories/${card.title.toLowerCase().replace(/\s+/g, "-")}`}
+              href={`/coming-soon?title=${encodeURIComponent(card.title)}`}
               className={`snap-start min-w-[240px] sm:min-w-[280px] 
                          h-[360px] md:h-[420px] 
                          flex items-center justify-center

@@ -44,43 +44,44 @@ export default function StrongerTogether() {
         </p>
 
         <h2
-          className={`text-4xl md:text-6xl font-bold leading-tight mb-8 text-foreground transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          className={`text-4xl md:text-6xl  text-[#05033e] font-bold leading-tight mb-8 text-foreground transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
             }`}
         >
-          Spreading smiles and <br />
-          building{" "}
           <span
             style={{
               color: "#05033e",
               textShadow: "0 0 20px rgba(5,3,62,0.5)"
             }}
           >
+            Spreading smiles and <br />
+            building{" "}
+
             sustainable
+
+            relationships
+
           </span> <br />
-          relationships
         </h2>
 
         <p
           className={`max-w-3xl mx-auto text-muted-foreground leading-relaxed mb-12 transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
             }`}
         >
-          At eu lobortis pretium ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.
-          Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,
-          quis gravida magna mi a libero. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Tincidunt amet lacus ut aenean aliquet. Blandit a massa elementum id scelerisque rhoncus.
+          We believe in the power of collaboration. By connecting the right people with the right opportunities,
+          we build stronger communities and successful businesses. Our commitment goes beyond placing candidates –
+          we build lasting partnerships that drive growth and innovation. Together, we create a future where
+          talent meets opportunity seamlessly.
         </p>
 
         {/* CTA with neon glow */}
         <Link
-          href="/contact"
+          href="/about/leadership"
           className={`inline-flex items-center justify-center px-10 py-4 rounded-md font-semibold text-lg
-                     transition-all duration-300 border border-transparent hover:border-[#05033e]
-                     bg-[#05033e] text-white hover:bg-black hover:text-[#05033e]
+                     transition-all  border border-transparent hover:border-[#05033e]
+                     bg-[#05033e] text-white hover:bg-white hover:text-[#05033e]
                      shadow-[0_0_25px_rgba(5,3,62,0.5)] hover:shadow-[0_0_35px_rgba(5,3,62,0.7)]
                      ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-          style={{
-            transitionDelay: "300ms"
-          }}
+
         >
           Explore More
           <ArrowRight className="w-5 h-5 ml-2" />

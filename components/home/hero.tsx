@@ -107,8 +107,7 @@ export default function Hero() {
             Future For <br />
             <span
               style={{
-                color: "#05033e",
-                textShadow: "0 0 10px rgba(5,3,62,0.5), 0 0 20px rgba(5,3,62,0.3)"
+                color: "#96c2ecff"
               }}
             >
               Yourself
@@ -120,17 +119,17 @@ export default function Hero() {
             className={`mt-6 max-w-md text-gray-300 transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
               }`}
           >
-            At eu lobortis pretium tincidunt amet lacus ut aenean aliquet.
-            Blandit a massa elementum id scelerisque rhoncus...
+            Empowering businesses with top-tier talent and helping professionals find their dream careers.
+            We bridge the gap between opportunity and potential with innovative workforce solutions.
           </p>
 
           {/* Animated CTA with neon glow */}
           <Link
-            href="/about"
+            href="#about"
             className={`inline-flex items-center mt-8 px-8 py-3 rounded-md font-semibold
-                       transition-all duration-300 delay-500
+                       transition-all duration-300 
                        border border-transparent hover:border-[#05033e]
-                       bg-[#05033e] text-white hover:bg-black hover:text-[#05033e]
+                       bg-white text-[#05033e] hover:bg-[#05033e] hover:text-white
                        hover:shadow-[0_0_25px_rgba(5,3,62,0.6)]
                        shadow-[0_0_15px_rgba(5,3,62,0.4)]
                        ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}

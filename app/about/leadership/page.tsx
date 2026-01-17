@@ -56,7 +56,7 @@ export default function LeadershipPage() {
 
         <div className={`relative z-10 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <h1 className="text-white text-4xl md:text-6xl font-bold mb-4">
-            Leadership <span style={{ color: "#05033e", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Team</span>
+            Leadership <span style={{ color: "#96c2ecff", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Team</span>
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Guiding SHYNR with Vision, Governance & Growth
@@ -107,10 +107,8 @@ export default function LeadershipPage() {
           <div className={`mt-20 transition-all duration-1000 delay-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <Link
               href="/contactUs"
-              className="inline-block px-10 py-4 rounded-full font-bold text-lg transition-all hover:scale-105"
+              className="inline-block px-10 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 bg-[#05033e] text-white hover:bg-white hover:text-[#05033e]"
               style={{
-                backgroundColor: "#05033e",
-                color: "white",
                 boxShadow: "0 0 20px rgba(5,3,62,0.4)"
               }}
             >

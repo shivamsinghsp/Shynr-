@@ -36,7 +36,7 @@ export default function GeneralStaffing() {
 
         <div className={`relative z-10 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <h1 className="text-white text-4xl md:text-6xl font-bold mb-4">
-            General <span style={{ color: "#05033e", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Staffing</span>
+            General <span style={{ color: "#96c2ecff", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Staffing</span>
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Building Reliable Workforces at Scale
@@ -112,10 +112,8 @@ export default function GeneralStaffing() {
         <div className="mt-20 flex justify-center px-6">
           <button
             onClick={() => router.push("/contactUs")}
-            className="px-12 py-4 rounded-full font-bold text-lg transition-all hover:scale-105"
+            className="px-12 py-4 rounded-full font-bold text-lg transition-all bg-[#05033e] text-white hover:bg-white hover:text-[#05033e]"
             style={{
-              backgroundColor: "#05033e",
-              color: "white",
               boxShadow: "0 0 20px rgba(5,3,62,0.4)"
             }}
           >

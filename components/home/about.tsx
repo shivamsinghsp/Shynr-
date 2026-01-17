@@ -58,7 +58,7 @@ export default function About() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="bg-white py-24 overflow-hidden">
+    <section id="about" ref={sectionRef} className="bg-white py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
 
         {/* Left images with staggered animation */}
@@ -150,14 +150,11 @@ export default function About() {
           {/* CTA with neon glow */}
           <Link
             href="/about/company"
-            className={`inline-flex items-center gap-2 px-8 py-3 rounded-md font-semibold transition-all duration-300 
+            className={`inline-flex items-center gap-2 px-8 py-3 rounded-md font-semibold transition-all 
                        border border-transparent hover:border-[#05033e]
-                       bg-[#05033e] text-white hover:bg-black hover:text-[#05033e]
+                       bg-[#05033e] text-white hover:bg-white hover:text-[#05033e]
                        shadow-[0_0_20px_rgba(5,3,62,0.4)] hover:shadow-[0_0_30px_rgba(5,3,62,0.6)]
                        ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-            style={{
-              transitionDelay: "700ms"
-            }}
           >
             Learn More About Us
             <ArrowRight className="w-5 h-5" />

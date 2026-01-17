@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
+import { Phone, Mail, Clock, MapPin } from "lucide-react"
 
 const ContactPage = () => {
   const settings = {
@@ -47,7 +48,7 @@ const ContactPage = () => {
 
         <div className="relative z-10 animate-fade-in-up">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-            Get in <span style={{ color: "#05033e", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Touch</span>
+            Get in <span style={{ color: "#96c2ecff", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Touch</span>
           </h1>
           <p className="text-gray-300 text-lg max-w-2xl mx-auto">
             Have questions? We'd love to hear from you.
@@ -69,10 +70,26 @@ const ContactPage = () => {
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 mt-12">
-            <Info title="Call us" value={settings.phone} icon="📞" />
-            <Info title="Email" value={settings.email} icon="✉️" />
-            <Info title="Hours" value={settings.openingHours} icon="🕒" />
-            <Info title="Operations" value={settings.officeAddress} icon="📍" />
+            <Info
+              title="Call us"
+              value={settings.phone}
+              icon={<Phone className="w-8 h-8 text-[#05033e]" />}
+            />
+            <Info
+              title="Email"
+              value={settings.email}
+              icon={<Mail className="w-8 h-8 text-[#05033e]" />}
+            />
+            <Info
+              title="Hours"
+              value={settings.openingHours}
+              icon={<Clock className="w-8 h-8 text-[#05033e]" />}
+            />
+            <Info
+              title="Operations"
+              value={settings.officeAddress}
+              icon={<MapPin className="w-8 h-8 text-[#05033e]" />}
+            />
           </div>
         </div>
 
@@ -124,7 +141,9 @@ const ContactPage = () => {
 
 const Info = ({ title, value, icon }: any) => (
   <div className="flex flex-col gap-2 p-6 rounded-2xl bg-white border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-    <span className="text-3xl mb-2 group-hover:scale-110 transition-transform duration-300">{icon}</span>
+    <div className="mb-4 p-3 bg-gray-50 rounded-full w-fit group-hover:bg-[#e6e6fa] transition-colors duration-300">
+      {icon}
+    </div>
     <h4 className="font-bold text-[#05033e] text-lg">{title}</h4>
     <p className="text-gray-600 font-medium group-hover:text-[#05033e] transition-colors">{value}</p>
   </div>

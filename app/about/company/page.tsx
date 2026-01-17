@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Link from "next/link"
 import CountUp from "@/components/shared/CountUp"
 
 export default function CompanyPage() {
@@ -35,7 +36,7 @@ export default function CompanyPage() {
 
         <div className={`relative z-10 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <h1 className="text-white text-4xl md:text-6xl font-bold mb-4">
-            Shynr <span style={{ color: "#05033e", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Profile</span>
+            Shynr <span style={{ color: "#96c2ecff", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Profile</span>
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Building scalable workforces. Empowering businesses.
@@ -105,16 +106,17 @@ export default function CompanyPage() {
               and consistent growth reflect trust and delivery capability.
             </p>
 
-            <div className="flex gap-6 mb-12">
-              <button
-                className="px-8 py-3 rounded-md font-bold transition-all duration-300 border border-transparent hover:border-[#05033e] bg-[#05033e] text-white hover:bg-black hover:text-[#05033e] shadow-[0_0_15px_rgba(5,3,62,0.3)] hover:shadow-[0_0_25px_rgba(5,3,62,0.6)]"
+            <div className="flex items-center gap-6 mb-12">
+              <Link
+                href="/contactUs"
+                className="px-8 py-3 rounded-md font-bold transition-all duration-300 border border-transparent hover:border-[#05033e] bg-[#05033e] text-white hover:bg-white hover:text-[#05033e] inline-block text-center"
               >
                 Partner With Us
-              </button>
+              </Link>
 
-              <button className="text-foreground font-bold hover:text-[#05033e] transition-colors">
+              <Link href="/services/digital_platform" className="text-foreground font-bold hover:text-[#05033e] transition-colors inline-block">
                 Learn more →
-              </button>
+              </Link>
             </div>
 
             {/* Stats */}

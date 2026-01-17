@@ -145,7 +145,7 @@ export default function MediaPage() {
 
                 <div className={`relative z-10 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
                     <h1 className="text-white text-4xl md:text-6xl font-bold mb-4">
-                        Media <span style={{ color: "#05033e", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Centre</span>
+                        Media <span style={{ color: "#96c2ecff", textShadow: "0 0 20px rgba(5,3,62,0.3)" }}>Centre</span>
                     </h1>
                     <p className="text-gray-400 text-lg max-w-2xl mx-auto">
                         Latest updates, press releases, and media resources from SHYNR
@@ -160,8 +160,8 @@ export default function MediaPage() {
                         <button
                             onClick={() => setActiveTab("press")}
                             className={`px-8 py-3 rounded-xl font-bold transition-all duration-300 ${activeTab === "press"
-                                ? "bg-[#0a0a0a] text-white shadow-lg scale-105"
-                                : "text-gray-500 hover:text-gray-900"
+                                ? "bg-[#05033e] text-white shadow-lg scale-105"
+                                : "text-[#05033e] hover:text-[#05033e]"
                                 }`}
                         >
                             Press Coverage
@@ -169,8 +169,8 @@ export default function MediaPage() {
                         <button
                             onClick={() => setActiveTab("contact")}
                             className={`px-8 py-3 rounded-xl font-bold transition-all duration-300 ${activeTab === "contact"
-                                ? "bg-[#0a0a0a] text-white shadow-lg scale-105"
-                                : "text-gray-500 hover:text-gray-900"
+                                ? "bg-[#05033e] text-white shadow-lg scale-105"
+                                : "text-[#05033e] hover:text-[#05033e]"
                                 }`}
                         >
                             Media Contact
@@ -217,15 +217,15 @@ export default function MediaPage() {
                                     currentNews.map((news, index) => (
                                         <div
                                             key={news.id}
-                                            className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-2xl border-l-4 border-[#05033e] transition-all duration-500 group opacity-0 animate-slideUp"
+                                            className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-2xl border-l-4 border-[#05033e] hover:bg-[#05033e] transition-all duration-500 group opacity-0 animate-slideUp"
                                             style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'forwards' }}
                                         >
-                                            <div className="flex items-center gap-2 text-sm text-gray-500 mb-3 font-semibold">
-                                                <span className="text-[#0a0a0a]">{news.location},</span>
+                                            <div className="flex items-center gap-2 text-sm text-[#05033e] group-hover:text-gray-200 mb-3 font-semibold">
+                                                <span className="text-[#05033e] group-hover:text-white">{news.location},</span>
                                                 <span>{news.date}</span>
                                             </div>
 
-                                            <h3 className="text-xl font-bold text-[#0a0a0a] mb-4 group-hover:text-teal-700 transition-colors leading-snug">
+                                            <h3 className="text-xl font-bold text-[#05033e] mb-4 group-hover:text-white transition-colors leading-snug">
                                                 <Link href={news.link} className="hover:underline">
                                                     {news.title}
                                                 </Link>
@@ -233,7 +233,7 @@ export default function MediaPage() {
 
                                             <Link
                                                 href={news.link}
-                                                className="inline-flex items-center text-sm font-bold text-[#05033e] group-hover:translate-x-2 transition-transform duration-300"
+                                                className="inline-flex items-center text-sm font-bold text-[#05033e] group-hover:text-white group-hover:translate-x-2 transition-all duration-300"
                                                 style={{ textShadow: "0 0 1px rgba(0,0,0,0.1)" }}
                                             >
                                                 Read More →

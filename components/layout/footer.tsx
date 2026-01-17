@@ -16,7 +16,7 @@ export default function Footer() {
         </h2>
         <Link
           href="/contactUs"
-          className="inline-block px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 border border-transparent hover:border-[#05033e] bg-white text-[#05033e] hover:bg-black hover:text-white shadow-[0_0_20px_rgba(5,3,62,0.4)] hover:shadow-[0_0_30px_rgba(5,3,62,0.6)]"
+          className="inline-block px-8 py-4 rounded-full font-bold text-lg transition-all  border border-transparent hover:border-white bg-white text-[#05033e] hover:bg-[#05033e] hover:text-white shadow-[0_0_20px_rgba(5,3,62,0.4)] hover:shadow-[0_0_30px_rgba(5,3,62,0.6)]"
         >
           Partner With SHYNR
         </Link>
