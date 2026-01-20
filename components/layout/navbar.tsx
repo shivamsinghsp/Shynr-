@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useState } from "react"
 import { usePathname } from "next/navigation"
 import { ChevronDown, Menu, X } from "lucide-react"
@@ -19,8 +20,15 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
         {/* Logo */}
-        <Link href="/" className="text-3xl font-bold tracking-tight text-neutral-900">
-          Shynr<span style={{ color: "#05033e" }}>.</span>
+        <Link href="/" className="relative flex items-center w-60 h-10">
+          <Image
+            src="/3.png"
+            alt="Shynr"
+            width={320}
+            height={130}
+            className="absolute top-[-34px] left-0 h-32 w-auto object-contain max-w-none"
+            priority
+          />
         </Link>
 
         {/* DESKTOP NAV */}
@@ -81,7 +89,7 @@ export default function Navbar() {
           <NavLink href="/contactUs">Contact Us</NavLink>
 
           <Link
-            href="/jobs"
+            href="/auth/signin"
             className="px-6 py-3 rounded-full font-bold transition-all duration-300 border border-transparent hover:border-[#05033e] bg-[#05033e] text-white hover:bg-[#020120] hover:text-white shadow-[0_4px_14px_0_rgba(5,3,62,0.39)] hover:shadow-[0_0_20px_rgba(5,3,62,0.4)]"
           >
             Jobs
@@ -144,7 +152,7 @@ export default function Navbar() {
             <Link href="/contactUs" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-gray-100">Contact Us</Link>
 
             <Link
-              href="/jobs"
+              href="/auth/signin"
               onClick={() => setMobileMenuOpen(false)}
               className="mt-4 text-center py-3 rounded-full font-bold shadow-lg"
               style={{ backgroundColor: "#05033e", color: "white" }}

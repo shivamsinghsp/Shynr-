@@ -50,7 +50,6 @@ export default function StrongerTogether() {
           <span
             style={{
               color: "#05033e",
-              textShadow: "0 0 20px rgba(5,3,62,0.5)"
             }}
           >
             Spreading smiles and <br />
@@ -89,20 +88,23 @@ export default function StrongerTogether() {
 
         {/* Media Grid with staggered animation */}
         <div className="mt-20 grid grid-cols-2 gap-4 max-w-4xl mx-auto">
-          {[0, 1, 2, 3].map((index) => (
+          {["/home/job.jpg", "/home/job2.jpg", "/home/job3.jpg", "/home/job4.jpg"].map((src, index) => (
             <div
               key={index}
-              className={`h-56 md:h-72 rounded-3xl transition-all duration-700 hover:scale-[1.03] cursor-pointer ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
+              className={`relative h-56 md:h-72 rounded-3xl overflow-hidden transition-all duration-700 hover:scale-[1.03] cursor-pointer ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
                 }`}
               style={{
                 transitionDelay: `${400 + index * 150}ms`,
-                background: index === 1
-                  ? "linear-gradient(135deg, #05033e 0%, #1e1b7a 100%)"
-                  : `hsl(210, 100%, ${96 - (index % 3) * 2}%)`,
-                border: "1px solid rgba(5,3,62,0.2)",
-                boxShadow: index === 1 ? "0 0 30px rgba(5,3,62,0.3)" : "none"
+                border: "1px solid rgba(5,3,62,0.1)", // Subtle border instead of shadow if needed, or remove completely if strict "no shadow" implies flat.
+                // User said "dont put shadow", so I will strictly obey that.
               }}
-            />
+            >
+              <img
+                src={src}
+                alt={`Gallery image ${index + 1}`}
+                className="w-full h-full object-cover"
+              />
+            </div>
           ))}
         </div>
 

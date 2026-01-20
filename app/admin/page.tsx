@@ -1,0 +1,107 @@
+'use client';
+
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
+
+export default function AdminLoginPage() {
+    const router = useRouter();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setError('');
+
+        try {
+            const result = await signIn('credentials', {
+                redirect: false,
+                email,
+                password,
+            });
+
+            if (result?.error) {
+                setError('Invalid credentials');
+                setIsLoading(false);
+            } else {
+                // Check if user is actually an admin is handled by the protected pages/layout
+                // But we can also do a check here if we could decode the session, but signIn doesn't return the session.
+                // We'll rely on the redirect source or just redirect to dashboard.
+                // However, if a regular user logs in here, they will end up at /admin/dashboard
+                // which should then kick them out.
+                router.push('/admin/dashboard');
+            }
+        } catch (error) {
+            setError('An error occurred during sign in');
+            setIsLoading(false);
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+                <div className="bg-[#05033e] p-8 text-center text-white">
+                    <h1 className="text-3xl font-bold mb-2">Admin Portal</h1>
+                    <p className="text-blue-200">Restricted Access Only</p>
+                </div>
+
+                <div className="p-8">
+                    {error && (
+                        <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-sm text-center">
+                            {error}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Email Address
+                            </label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#05033e] focus:border-transparent transition-colors"
+                                placeholder="admin@shynr.com"
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Password
+                            </label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#05033e] focus:border-transparent transition-colors"
+                                placeholder="••••••••"
+                                required
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="w-full bg-[#05033e] text-white py-3 rounded-lg font-semibold hover:bg-blue-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {isLoading ? 'Authenticating...' : 'Sign In to Dashboard'}
+                        </button>
+                    </form>
+
+                    <div className="mt-8 text-center">
+                        <Link href="/" className="text-gray-500 hover:text-[#05033e] text-sm transition-colors">
+                            ← Back to Main Site
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

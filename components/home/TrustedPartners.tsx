@@ -28,17 +28,17 @@ export default function TrustedPartners() {
   // SHYNR's trusted partner companies
   const partners = [
     { name: "Jana Small Finance Bank", logo: "/Jana Small Finance Bank Logo.png" },
-    { name: "Axis Max Life Insurance", logo: "/Jana Small Finance Bank Logo.png" },
-    { name: "Lenskart", logo: "/partners/lenskart.png" },
-    { name: "JustDial", logo: "/partners/justdial.png" },
-    { name: "Digitide", logo: "/partners/digitide.png" },
-    { name: "Paytm", logo: "/partners/paytm.png" },
-    { name: "AllDigi", logo: "/partners/alldigi.png" },
-    { name: "Himalaya Opticals", logo: "/partners/himalaya-opticals.png" },
-    { name: "Vaco Binary Semantics", logo: "/partners/vaco.png" },
-    { name: "CMS", logo: "/partners/cms.png" },
-    { name: "L&T Finance", logo: "/partners/lt-finance.png" },
-    { name: "HDB Finance", logo: "/partners/hdb-finance.png" },
+    { name: "Axis Max Life Insurance", logo: "/home/axis-bank.png" },
+    { name: "Lenskart", logo: "/home/Lenskart.png" },
+    { name: "JustDial", logo: "/home/justdial.png" },
+    { name: "Digitide", logo: "/home/DIGITIDE.jpg" },
+    { name: "Paytm", logo: "/home/Paytm.png" },
+    { name: "AllDigi", logo: "/home/vaco.jpg" },
+    { name: "Himalaya Opticals", logo: "/home/vaco.jpg" },
+    { name: "Vaco Binary Semantics", logo: "/home/vaco.jpg" },
+    { name: "CMS", logo: "/home/vaco.jpg" },
+    { name: "L&T Finance", logo: "/home/L&T_Finance.png" },
+    { name: "HDB Finance", logo: "/home/HDB_Finance.png" },
   ]
 
   return (
@@ -52,10 +52,7 @@ export default function TrustedPartners() {
         }}
       >
         {/* Background glow */}
-        <div
-          className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-10 blur-3xl"
-          style={{ background: "#05033e" }}
-        />
+        {/* Background glow removed as per request */}
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <p
@@ -122,20 +119,7 @@ export default function TrustedPartners() {
         }}
       >
         {/* Top and bottom glow lines */}
-        <div
-          className="absolute top-0 left-0 right-0 h-px"
-          style={{
-            background: "linear-gradient(90deg, transparent, #05033e, transparent)",
-            boxShadow: "0 0 10px #05033e"
-          }}
-        />
-        <div
-          className="absolute bottom-0 left-0 right-0 h-px"
-          style={{
-            background: "linear-gradient(90deg, transparent, #05033e, transparent)",
-            boxShadow: "0 0 10px #05033e"
-          }}
-        />
+        {/* Top and bottom glow lines removed as per request */}
 
         <div className="relative w-full">
           {/* Gradient edges for fade */}
@@ -156,7 +140,7 @@ export default function TrustedPartners() {
                 className="group relative h-32 min-w-[160px] flex-shrink-0 flex items-center justify-center px-4 transition-all duration-300"
               >
                 <img
-                  src="/Jana%20Small%20Finance%20Bank%20Logo.png"
+                  src={partner.logo}
                   alt={partner.name}
                   className="w-40 h-40 object-contain opacity-70 group-hover:opacity-100 transition-all duration-300 group-hover:scale-110"
                 />
