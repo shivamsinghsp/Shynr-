@@ -24,9 +24,18 @@ export async function GET(request: NextRequest) {
         const skip = (page - 1) * limit;
         const search = searchParams.get('search') || '';
         const status = searchParams.get('status') || '';
+        const role = searchParams.get('role') || '';
 
-        // Build query - all users (excluding admins if they exist in users collection)
-        const query: any = { $or: [{ role: 'user' }, { role: { $exists: false } }, { role: null }] };
+        // Build query - show all users (user, employee) but allow viewing admins too
+        const query: any = {};
+
+        // Role filter
+        if (role) {
+            query.role = role;
+        } else {
+            // By default show all non-admin users (users and employees)
+            query.$or = [{ role: 'user' }, { role: 'employee' }, { role: { $exists: false } }, { role: null }];
+        }
 
         if (search) {
             query.$and = query.$and || [];

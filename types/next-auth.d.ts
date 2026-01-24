@@ -8,7 +8,7 @@ declare module 'next-auth' {
             id: string;
             onboardingCompleted: boolean;
             onboardingStep: number | string;
-            role: 'user' | 'admin';
+            role: 'user' | 'admin' | 'employee';
         } & DefaultSession['user'];
     }
 
@@ -16,7 +16,7 @@ declare module 'next-auth' {
         id: string;
         onboardingCompleted?: boolean;
         onboardingStep?: number | string;
-        role?: 'user' | 'admin';
+        role?: 'user' | 'admin' | 'employee';
     }
 }
 
@@ -25,6 +25,6 @@ declare module 'next-auth/jwt' {
         id: string;
         onboardingCompleted: boolean;
         onboardingStep: number | string;
-        role: 'user' | 'admin';
+        role: 'user' | 'admin' | 'employee';
     }
 }

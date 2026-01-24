@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -29,11 +29,22 @@ export default function AdminLoginPage() {
                 setError('Invalid credentials');
                 setIsLoading(false);
             } else {
-                // Check if user is actually an admin is handled by the protected pages/layout
-                // But we can also do a check here if we could decode the session, but signIn doesn't return the session.
-                // We'll rely on the redirect source or just redirect to dashboard.
-                // However, if a regular user logs in here, they will end up at /admin/dashboard
-                // which should then kick them out.
+                // Check if user is actually an admin by fetching session
+                try {
+                    const sessionRes = await fetch('/api/auth/session');
+                    const sessionData = await sessionRes.json();
+
+                    if (sessionData?.user?.role !== 'admin') {
+                        // Sign out the regular user and show error
+                        await signOut({ redirect: false });
+                        setError('This portal is for administrators only. Please use the regular sign-in at /auth/signin');
+                        setIsLoading(false);
+                        return;
+                    }
+                } catch (err) {
+                    // If session check fails, still redirect but admin pages will handle auth
+                }
+
                 router.push('/admin/dashboard');
             }
         } catch (error) {
@@ -84,6 +95,11 @@ export default function AdminLoginPage() {
                                 placeholder="••••••••"
                                 required
                             />
+                            <div className="flex justify-end mt-1">
+                                <Link href="/auth/forgot-password" className="text-sm text-[#05033e] hover:underline">
+                                    Forgot Password?
+                                </Link>
+                            </div>
                         </div>
 
                         <button

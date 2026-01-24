@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import CountUp from "@/components/shared/CountUp"
+import PartnersMarquee from "@/components/shared/PartnersMarquee"
 
 export default function CompanyPage() {
   const [isVisible, setIsVisible] = useState(false)
@@ -147,6 +148,8 @@ export default function CompanyPage() {
 
 
 
+      {/* Partners Marquee */}
+      <PartnersMarquee />
 
       {/* How it works */}
       <section className="py-24 bg-white">

@@ -43,11 +43,11 @@ export default function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-6 text-white">Company</h3>
             <ul className="space-y-4 text-gray-400 text-sm font-medium">
-              <li><Link href="/about/company" className="hover:text-[#05033e] transition-colors">About Us</Link></li>
-              <li><Link href="/about/leadership" className="hover:text-[#05033e] transition-colors">Leadership Team</Link></li>
-              <li><Link href="/media" className="hover:text-[#05033e] transition-colors">Media Centre</Link></li>
-              <li><Link href="/jobs" className="hover:text-[#05033e] transition-colors">Jobs</Link></li>
-              <li><Link href="/contactUs" className="hover:text-[#05033e] transition-colors">Contact Us</Link></li>
+              <li><Link href="/about/company" className="hover:text-white transition-colors">About Us</Link></li>
+              <li><Link href="/about/leadership" className="hover:text-white transition-colors">Leadership Team</Link></li>
+              <li><Link href="/media" className="hover:text-white transition-colors">Media Centre</Link></li>
+              <li><Link href="/jobs" className="hover:text-white transition-colors">Jobs</Link></li>
+              <li><Link href="/contactUs" className="hover:text-white transition-colors">Contact Us</Link></li>
             </ul>
           </div>
 
@@ -55,10 +55,10 @@ export default function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-6 text-white">Services</h3>
             <ul className="space-y-4 text-gray-400 text-sm font-medium">
-              <li><Link href="/services/general_staffing" className="hover:text-[#05033e] transition-colors">General Staffing</Link></li>
-              <li><Link href="/services/professional_staffing" className="hover:text-[#05033e] transition-colors">Professional Staffing</Link></li>
-              <li><Link href="/services/digital_platform" className="hover:text-[#05033e] transition-colors">Digital Platform</Link></li>
-              <li><Link href="/about/csr" className="hover:text-[#05033e] transition-colors">CSR Initiatives</Link></li>
+              <li><Link href="/services/general_staffing" className="hover:text-white transition-colors">General Staffing</Link></li>
+              <li><Link href="/services/professional_staffing" className="hover:text-white transition-colors">Professional Staffing</Link></li>
+              <li><Link href="/services/digital_platform" className="hover:text-white transition-colors">Digital Platform</Link></li>
+              <li><Link href="/about/csr" className="hover:text-white transition-colors">CSR Initiatives</Link></li>
             </ul>
           </div>
 
@@ -72,9 +72,9 @@ export default function Footer() {
             <div className="space-y-4">
               <a
                 href="mailto:info@shynr.in"
-                className="flex items-center gap-3 text-gray-300 hover:text-[#05033e] transition-colors group"
+                className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors group"
               >
-                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#05033e]/10 transition-colors">
+                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
                   <Mail className="w-5 h-5" />
                 </div>
                 <span className="font-medium text-sm">info@shynr.in</span>
@@ -82,9 +82,9 @@ export default function Footer() {
 
               <a
                 href="tel:05124050588"
-                className="flex items-center gap-3 text-gray-300 hover:text-[#05033e] transition-colors group"
+                className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors group"
               >
-                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#05033e]/10 transition-colors">
+                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
                   <Phone className="w-5 h-5" />
                 </div>
                 <span className="font-medium text-sm">0512-4050588</span>
@@ -99,8 +99,8 @@ export default function Footer() {
           <p>© 2025 SHYNR Private Limited | All Rights Reserved</p>
 
           <div className="flex gap-8 mt-4 md:mt-0">
-            <Link href="/privacy" className="hover:text-[#05033e] transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-[#05033e] transition-colors">Terms & Conditions</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms & Conditions</Link>
           </div>
         </div>
       </div>

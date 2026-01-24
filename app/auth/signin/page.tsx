@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession, signIn } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -64,6 +64,22 @@ export default function SignInPage() {
             setError(result.error);
             setLoading(false);
         } else {
+            // Check if user is an admin by fetching session
+            try {
+                const sessionRes = await fetch('/api/auth/session');
+                const sessionData = await sessionRes.json();
+
+                if (sessionData?.user?.role === 'admin') {
+                    // Sign out the admin user and show error
+                    await signOut({ redirect: false });
+                    setError("Admin users must use the Admin Portal. Please go to /admin to login.");
+                    setLoading(false);
+                    return;
+                }
+            } catch (err) {
+                // Continue if session check fails
+            }
+
             // Check onboarding status and redirect
             router.push("/onboarding");
         }
@@ -318,6 +334,11 @@ export default function SignInPage() {
                                                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                             </button>
                                         </div>
+                                        <div className="flex justify-end mt-1">
+                                            <Link href="/auth/forgot-password" className="text-sm text-[#05033e] hover:underline">
+                                                Forgot Password?
+                                            </Link>
+                                        </div>
                                     </div>
 
                                     <button
@@ -356,6 +377,16 @@ export default function SignInPage() {
                                     Sign up
                                 </button>
                             </p>
+
+                            {/* Skip to Browse Jobs */}
+                            <div className="mt-4 text-center">
+                                <Link
+                                    href="/browse-jobs"
+                                    className="text-gray-500 hover:text-[#05033e] text-sm transition-colors"
+                                >
+                                    Skip for now → Browse jobs without signing in
+                                </Link>
+                            </div>
                         </div>
                     )}
                 </div>

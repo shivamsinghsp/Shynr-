@@ -135,7 +135,7 @@ export const authOptions: NextAuthOptions = {
                 (session.user as any).id = token.id as string;
                 (session.user as any).onboardingCompleted = token.onboardingCompleted as boolean;
                 (session.user as any).onboardingStep = token.onboardingStep as number | string;
-                (session.user as any).role = token.role as 'user' | 'admin';
+                (session.user as any).role = token.role as 'user' | 'admin' | 'employee';
             }
             return session;
         },

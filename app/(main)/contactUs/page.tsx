@@ -137,7 +137,7 @@ const ContactPage = () => {
       {/* Google Map Section */}
       <section className="w-full relative z-10 border-t border-gray-100 py-12">
         <div className="max-w-7xl mx-auto px-6 h-[550px] md:h-[650px]">
-          <div className="w-full h-full rounded-3xl overflow-hidden shadow-lg border border-gray-200 grayscale hover:grayscale-0 transition-all duration-500">
+          <div className="w-full h-full rounded-3xl overflow-hidden shadow-lg border border-gray-200 transition-all duration-500">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d710.3025256935434!2d80.33639478700282!3d26.477576072980895!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399c389bcaa40e41%3A0xd46dd1b7825522c7!2sRatan%20Esquire!5e0!3m2!1sen!2sin!4v1768822701984!5m2!1sen!2sin"
               width="100%"

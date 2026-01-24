@@ -63,12 +63,17 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
         const { id } = await params;
         const body = await request.json();
-        const { isActive } = body;
+        const { isActive, role } = body;
 
         const updateData: any = { updatedAt: new Date() };
 
         if (isActive !== undefined) {
             updateData.isActive = isActive;
+        }
+
+        // Allow role updates (user, employee, admin)
+        if (role !== undefined && ['user', 'employee', 'admin'].includes(role)) {
+            updateData.role = role;
         }
 
         const user = await User.findByIdAndUpdate(

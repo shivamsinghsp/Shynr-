@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { Download, CheckSquare, Square, Mail } from 'lucide-react';
 
 interface Application {
     _id: string;
@@ -44,6 +45,11 @@ export default function AdminApplicationsPage() {
     const [error, setError] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
     const [updatingId, setUpdatingId] = useState<string | null>(null);
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [bulkStatus, setBulkStatus] = useState('');
+    const [bulkLoading, setBulkLoading] = useState(false);
+    const [exportLoading, setExportLoading] = useState(false);
+    const [emailNotification, setEmailNotification] = useState<string | null>(null);
 
     useEffect(() => {
         fetchApplications();
@@ -60,6 +66,7 @@ export default function AdminApplicationsPage() {
 
             if (data.success) {
                 setApplications(data.data);
+                setSelectedIds([]); // Reset selection
             } else {
                 setError(data.error || 'Failed to load applications');
             }
@@ -84,6 +91,10 @@ export default function AdminApplicationsPage() {
                 setApplications(applications.map(app =>
                     app._id === appId ? { ...app, status: newStatus as Application['status'] } : app
                 ));
+                if (data.emailSent) {
+                    setEmailNotification('Email notification sent to applicant');
+                    setTimeout(() => setEmailNotification(null), 3000);
+                }
             } else {
                 alert(data.error || 'Failed to update status');
             }
@@ -91,6 +102,82 @@ export default function AdminApplicationsPage() {
             alert('Failed to update status');
         } finally {
             setUpdatingId(null);
+        }
+    };
+
+    const handleSelectAll = () => {
+        if (selectedIds.length === applications.length) {
+            setSelectedIds([]);
+        } else {
+            setSelectedIds(applications.map(app => app._id));
+        }
+    };
+
+    const handleSelectOne = (id: string) => {
+        if (selectedIds.includes(id)) {
+            setSelectedIds(selectedIds.filter(sid => sid !== id));
+        } else {
+            setSelectedIds([...selectedIds, id]);
+        }
+    };
+
+    const handleBulkStatusChange = async () => {
+        if (!bulkStatus || selectedIds.length === 0) return;
+
+        setBulkLoading(true);
+        try {
+            const promises = selectedIds.map(id =>
+                fetch(`/api/admin/applications/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: bulkStatus })
+                })
+            );
+
+            await Promise.all(promises);
+
+            setApplications(applications.map(app =>
+                selectedIds.includes(app._id)
+                    ? { ...app, status: bulkStatus as Application['status'] }
+                    : app
+            ));
+
+            setEmailNotification(`Status updated for ${selectedIds.length} applications. Email notifications sent.`);
+            setTimeout(() => setEmailNotification(null), 3000);
+
+            setSelectedIds([]);
+            setBulkStatus('');
+        } catch (err) {
+            alert('Failed to update some applications');
+        } finally {
+            setBulkLoading(false);
+        }
+    };
+
+    const handleExport = async (exportSelected = false) => {
+        setExportLoading(true);
+        try {
+            const params = new URLSearchParams();
+            if (statusFilter) params.append('status', statusFilter);
+            if (exportSelected && selectedIds.length > 0) {
+                params.append('ids', selectedIds.join(','));
+            }
+
+            const res = await fetch(`/api/admin/applications/export?${params.toString()}`);
+            const blob = await res.blob();
+
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `applications-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        } catch (err) {
+            alert('Failed to export applications');
+        } finally {
+            setExportLoading(false);
         }
     };
 
@@ -111,9 +198,27 @@ export default function AdminApplicationsPage() {
 
     return (
         <div>
+            {/* Email Notification Toast */}
+            {emailNotification && (
+                <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-in slide-in-from-right">
+                    <Mail className="w-5 h-5" />
+                    {emailNotification}
+                </div>
+            )}
+
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Applications</h1>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                    {/* Export Button */}
+                    <button
+                        onClick={() => handleExport(false)}
+                        disabled={exportLoading}
+                        className="px-4 py-2 bg-[#05033e] text-white rounded-lg hover:bg-blue-900 transition-colors flex items-center gap-2 disabled:opacity-50"
+                    >
+                        <Download className="w-4 h-4" />
+                        {exportLoading ? 'Exporting...' : 'Export All'}
+                    </button>
+
                     <span className="text-sm text-gray-500">Filter:</span>
                     <select
                         value={statusFilter}
@@ -127,6 +232,48 @@ export default function AdminApplicationsPage() {
                     </select>
                 </div>
             </div>
+
+            {/* Bulk Actions Bar */}
+            {selectedIds.length > 0 && (
+                <div className="bg-[#05033e] text-white p-4 rounded-xl mb-4 flex flex-col sm:flex-row items-center justify-between gap-4 animate-in slide-in-from-top">
+                    <span className="font-medium">
+                        {selectedIds.length} application{selectedIds.length > 1 ? 's' : ''} selected
+                    </span>
+                    <div className="flex items-center gap-3">
+                        <select
+                            value={bulkStatus}
+                            onChange={(e) => setBulkStatus(e.target.value)}
+                            className="px-3 py-2 rounded-lg text-gray-900 text-sm"
+                        >
+                            <option value="">Change Status To...</option>
+                            {STATUS_OPTIONS.map(opt => (
+                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            ))}
+                        </select>
+                        <button
+                            onClick={handleBulkStatusChange}
+                            disabled={!bulkStatus || bulkLoading}
+                            className="px-4 py-2 bg-white text-[#05033e] rounded-lg font-medium hover:bg-gray-100 disabled:opacity-50"
+                        >
+                            {bulkLoading ? 'Updating...' : 'Apply'}
+                        </button>
+                        <button
+                            onClick={() => handleExport(true)}
+                            disabled={exportLoading}
+                            className="px-4 py-2 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 disabled:opacity-50 flex items-center gap-2"
+                        >
+                            <Download className="w-4 h-4" />
+                            Export Selected
+                        </button>
+                        <button
+                            onClick={() => setSelectedIds([])}
+                            className="px-4 py-2 bg-gray-600 text-white rounded-lg font-medium hover:bg-gray-700"
+                        >
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* Applications List */}
             {loading ? (
@@ -152,6 +299,18 @@ export default function AdminApplicationsPage() {
                         <table className="w-full">
                             <thead className="bg-gray-50">
                                 <tr>
+                                    <th className="px-4 py-3 text-left">
+                                        <button
+                                            onClick={handleSelectAll}
+                                            className="p-1 hover:bg-gray-200 rounded"
+                                        >
+                                            {selectedIds.length === applications.length ? (
+                                                <CheckSquare className="w-5 h-5 text-[#05033e]" />
+                                            ) : (
+                                                <Square className="w-5 h-5 text-gray-400" />
+                                            )}
+                                        </button>
+                                    </th>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Applicant</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Job</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
@@ -162,7 +321,19 @@ export default function AdminApplicationsPage() {
                             </thead>
                             <tbody className="divide-y divide-gray-100">
                                 {applications.map((app) => (
-                                    <tr key={app._id} className="hover:bg-gray-50">
+                                    <tr key={app._id} className={`hover:bg-gray-50 ${selectedIds.includes(app._id) ? 'bg-blue-50' : ''}`}>
+                                        <td className="px-4 py-4">
+                                            <button
+                                                onClick={() => handleSelectOne(app._id)}
+                                                className="p-1 hover:bg-gray-200 rounded"
+                                            >
+                                                {selectedIds.includes(app._id) ? (
+                                                    <CheckSquare className="w-5 h-5 text-[#05033e]" />
+                                                ) : (
+                                                    <Square className="w-5 h-5 text-gray-400" />
+                                                )}
+                                            </button>
+                                        </td>
                                         <td className="px-4 py-4">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 bg-[#05033e] rounded-full flex items-center justify-center text-white font-medium">
@@ -231,9 +402,19 @@ export default function AdminApplicationsPage() {
                     {/* Mobile Cards */}
                     <div className="lg:hidden divide-y divide-gray-100">
                         {applications.map((app) => (
-                            <div key={app._id} className="p-4">
+                            <div key={app._id} className={`p-4 ${selectedIds.includes(app._id) ? 'bg-blue-50' : ''}`}>
                                 <div className="flex items-start justify-between mb-3">
                                     <div className="flex items-center gap-3">
+                                        <button
+                                            onClick={() => handleSelectOne(app._id)}
+                                            className="p-1"
+                                        >
+                                            {selectedIds.includes(app._id) ? (
+                                                <CheckSquare className="w-5 h-5 text-[#05033e]" />
+                                            ) : (
+                                                <Square className="w-5 h-5 text-gray-400" />
+                                            )}
+                                        </button>
                                         <div className="w-10 h-10 bg-[#05033e] rounded-full flex items-center justify-center text-white font-medium">
                                             {app.user?.firstName?.[0] || 'U'}{app.user?.lastName?.[0] || ''}
                                         </div>

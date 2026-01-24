@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import JobsComp from "./JobsComp";
 import { Loader2 } from "lucide-react";
 
-import JobFilters, { FilterState } from "./JobFilters";
+import JobFilters, { FilterState, MobileFilterButton, MobileFilterDrawer } from "./JobFilters";
 
 // Job interface matching API response
 interface Job {
@@ -32,6 +32,7 @@ const JobsPage = () => {
     const [jobs, setJobs] = useState<Job[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
     // Filter State
     const [filters, setFilters] = useState<FilterState>({
@@ -211,6 +212,20 @@ const JobsPage = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Mobile Filter Button - Always visible on mobile */}
+            <MobileFilterButton
+                filters={filters}
+                onClick={() => setIsMobileFilterOpen(true)}
+            />
+
+            {/* Mobile Filter Drawer */}
+            <MobileFilterDrawer
+                isOpen={isMobileFilterOpen}
+                onClose={() => setIsMobileFilterOpen(false)}
+                filters={filters}
+                setFilters={setFilters}
+            />
         </div>
     );
 };

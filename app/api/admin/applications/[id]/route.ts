@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/db';
 import Application from '@/db/models/Application';
+import { sendApplicationStatusEmail, isEmailConfigured } from '@/lib/mail';
 
 interface RouteParams {
     params: Promise<{ id: string }>;
@@ -105,9 +106,36 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             );
         }
 
+        // Send email notification to applicant if status changed
+        if (status && application.user && (application.user as any).email) {
+            const user = application.user as any;
+            const job = application.job as any;
+            const userName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Applicant';
+            const jobTitle = job?.title || 'Position';
+            const company = job?.company || 'Company';
+
+            try {
+                if (isEmailConfigured()) {
+                    await sendApplicationStatusEmail(
+                        user.email,
+                        userName,
+                        jobTitle,
+                        company,
+                        status,
+                        body.statusNote
+                    );
+                    console.log(`✅ Status change email sent to ${user.email}`);
+                }
+            } catch (emailError) {
+                console.error('Failed to send status email:', emailError);
+                // Don't fail the request if email fails
+            }
+        }
+
         return NextResponse.json({
             success: true,
             data: application,
+            emailSent: isEmailConfigured(),
         });
     } catch (error) {
         console.error('Error updating application:', error);

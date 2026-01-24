@@ -68,7 +68,7 @@ export interface IUser extends Document {
     onboardingCompleted: boolean;
     onboardingStep: 1 | 2 | 3 | 'complete';
     profileCompleteness: number;
-    role: 'user' | 'admin';
+    role: 'user' | 'admin' | 'employee';
 
     isActive: boolean;
     emailVerified: boolean;
@@ -154,7 +154,7 @@ const UserSchema = new Schema<IUser>(
 
         role: {
             type: String,
-            enum: ['user', 'admin'],
+            enum: ['user', 'admin', 'employee'],
             default: 'user'
         },
 

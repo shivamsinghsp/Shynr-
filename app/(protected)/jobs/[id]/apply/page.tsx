@@ -3,7 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Upload, CheckCircle, Loader2, FileText, X, Plus, Trash2, GraduationCap } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useSession } from "next-auth/react";
 
 interface Job {
@@ -54,6 +54,54 @@ export default function ApplyPage() {
     const [resume, setResume] = useState<{ url: string; filename: string } | null>(null);
     const [uploadingResume, setUploadingResume] = useState(false);
     const resumeInputRef = useRef<HTMLInputElement>(null);
+
+    // Skills state
+    const [skills, setSkills] = useState<string[]>([]);
+    const [skillInput, setSkillInput] = useState("");
+    const [showSkillSuggestions, setShowSkillSuggestions] = useState(false);
+
+    // Common skill suggestions
+    const skillSuggestions = [
+        "JavaScript", "TypeScript", "React", "Next.js", "Node.js",
+        "Python", "Java", "C++", "C#", "PHP",
+        "HTML", "CSS", "Tailwind CSS", "Bootstrap", "SASS",
+        "MongoDB", "PostgreSQL", "MySQL", "Redis", "Firebase",
+        "AWS", "Azure", "Google Cloud", "Docker", "Kubernetes",
+        "Git", "GitHub", "GitLab", "CI/CD", "DevOps",
+        "REST API", "GraphQL", "Microservices", "System Design",
+        "Machine Learning", "Data Analysis", "Excel", "Power BI", "Tableau",
+        "Communication", "Leadership", "Problem Solving", "Team Work", "Time Management",
+        "Project Management", "Agile", "Scrum", "JIRA", "Confluence"
+    ];
+
+    const filteredSuggestions = skillSuggestions.filter(
+        skill => skill.toLowerCase().includes(skillInput.toLowerCase()) && !skills.includes(skill)
+    ).slice(0, 6);
+
+    const addSkill = (skill: string) => {
+        if (skills.length < 5 && skill.trim() && !skills.includes(skill.trim())) {
+            setSkills([...skills, skill.trim()]);
+            setSkillInput("");
+            setShowSkillSuggestions(false);
+        }
+    };
+
+    const removeSkill = (skillToRemove: string) => {
+        setSkills(skills.filter(s => s !== skillToRemove));
+    };
+
+    // Form validation - check if all required fields are filled
+    const isFormValid = useMemo(() => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return (
+            formData.firstName.trim() !== "" &&
+            formData.lastName.trim() !== "" &&
+            formData.email.trim() !== "" &&
+            emailRegex.test(formData.email) &&
+            formData.phone.trim() !== "" &&
+            resume !== null
+        );
+    }, [formData.firstName, formData.lastName, formData.email, formData.phone, resume]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -453,6 +501,78 @@ export default function ApplyPage() {
                             )}
                         </div>
 
+                        {/* Section: Skills */}
+                        <div className="space-y-6">
+                            <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                                <h2 className="text-xl font-bold text-[#05033e]">Skills</h2>
+                                <span className="text-sm text-gray-500">{skills.length}/5 skills</span>
+                            </div>
+
+                            {/* Added Skills */}
+                            {skills.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mb-4">
+                                    {skills.map((skill, index) => (
+                                        <span
+                                            key={index}
+                                            className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#05033e] text-white rounded-full text-sm font-medium"
+                                        >
+                                            {skill}
+                                            <button
+                                                type="button"
+                                                onClick={() => removeSkill(skill)}
+                                                className="ml-1 hover:bg-white/20 rounded-full p-0.5 transition-colors"
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
+
+                            {/* Skill Input */}
+                            {skills.length < 5 && (
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        value={skillInput}
+                                        onChange={(e) => {
+                                            setSkillInput(e.target.value);
+                                            setShowSkillSuggestions(e.target.value.length > 0);
+                                        }}
+                                        onFocus={() => setShowSkillSuggestions(skillInput.length > 0)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                if (skillInput.trim()) addSkill(skillInput);
+                                            }
+                                        }}
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#05033e]/20 focus:border-[#05033e]"
+                                        placeholder="Type a skill and press Enter (e.g. React, Python, Excel)"
+                                    />
+
+                                    {/* Suggestions Dropdown */}
+                                    {showSkillSuggestions && filteredSuggestions.length > 0 && (
+                                        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                                            {filteredSuggestions.map((suggestion, index) => (
+                                                <button
+                                                    key={index}
+                                                    type="button"
+                                                    onClick={() => addSkill(suggestion)}
+                                                    className="w-full px-4 py-2.5 text-left hover:bg-[#D3E9FD] transition-colors first:rounded-t-xl last:rounded-b-xl"
+                                                >
+                                                    {suggestion}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {skills.length === 0 && (
+                                <p className="text-gray-500 italic text-sm">Add up to 5 skills to highlight your expertise.</p>
+                            )}
+                        </div>
+
                         {/* Section: Professional Links */}
                         <div className="space-y-6">
                             <h2 className="text-xl font-bold text-[#05033e] border-b border-gray-100 pb-2">Professional Details</h2>
@@ -516,16 +636,21 @@ export default function ApplyPage() {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="block text-sm font-semibold text-gray-700">Why are you a good fit?</label>
-                                <textarea name="coverLetter" value={formData.coverLetter} onChange={handleInputChange} rows={5} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#05033e]/20 focus:border-[#05033e] resize-none" placeholder="Tell us about yourself..."></textarea>
+                                <label className="block text-sm font-semibold text-gray-700">Cover Letter <span className="text-gray-400 font-normal">(Optional)</span></label>
+                                <textarea name="coverLetter" value={formData.coverLetter} onChange={handleInputChange} rows={5} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#05033e]/20 focus:border-[#05033e] resize-none" placeholder="Tell us why you're a great fit for this role..."></textarea>
                             </div>
                         </div>
 
                         {/* Submit */}
                         <div className="pt-4">
+                            {!isFormValid && (
+                                <p className="text-sm text-amber-600 mb-3 text-center">
+                                    Please fill in all required fields (First Name, Last Name, Email, Phone) and upload your resume to submit.
+                                </p>
+                            )}
                             <button
                                 type="submit"
-                                disabled={submitting || uploadingResume}
+                                disabled={submitting || uploadingResume || !isFormValid}
                                 className="w-full bg-[#05033e] text-white font-bold py-4 rounded-xl text-lg hover:bg-[#020120] transition-all shadow-xl hover:shadow-2xl active:scale-[0.99] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
                                 {submitting ? (
