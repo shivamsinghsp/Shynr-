@@ -1,7 +1,7 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
-import LinkedInProvider from 'next-auth/providers/linkedin';
+
 import bcrypt from 'bcryptjs';
 import dbConnect from '@/db';
 import User from '@/db/models/User';
@@ -15,14 +15,6 @@ export const authOptions: NextAuthOptions = {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         }),
 
-        // LinkedIn OAuth Provider
-        LinkedInProvider({
-            clientId: process.env.LINKEDIN_CLIENT_ID!,
-            clientSecret: process.env.LINKEDIN_CLIENT_SECRET!,
-            authorization: {
-                params: { scope: 'openid profile email' },
-            },
-        }),
 
         // Email/Password Credentials Provider
         CredentialsProvider({
@@ -45,7 +37,7 @@ export const authOptions: NextAuthOptions = {
                 }
 
                 if (!user.password) {
-                    throw new Error('Please sign in with Google or LinkedIn');
+                    throw new Error('Please sign in with Google');
                 }
 
                 const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
@@ -70,7 +62,7 @@ export const authOptions: NextAuthOptions = {
 
     callbacks: {
         async signIn({ user, account, profile }) {
-            if (account?.provider === 'google' || account?.provider === 'linkedin') {
+            if (account?.provider === 'google') {
                 await dbConnect();
 
                 const userEmail = user.email?.toLowerCase();
