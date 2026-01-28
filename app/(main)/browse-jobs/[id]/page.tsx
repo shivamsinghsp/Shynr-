@@ -37,7 +37,13 @@ export default function PublicJobDetailsPage() {
     const [isScrolled, setIsScrolled] = useState(false);
 
     useEffect(() => {
-        const handleScroll = () => setIsScrolled(window.scrollY > 50);
+        const handleScroll = () => {
+            if (window.scrollY > 50) {
+                setIsScrolled(true);
+            } else if (window.scrollY < 30) {
+                setIsScrolled(false);
+            }
+        };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
@@ -97,17 +103,17 @@ export default function PublicJobDetailsPage() {
                     <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                         <div className="flex items-center gap-6">
                             {(job.companyLogo || job.logo) ? (
-                                <img src={job.companyLogo || job.logo} alt={job.company} className={`rounded-xl object-contain bg-white p-2 shadow-sm border border-gray-100 transition-all duration-300 ${isScrolled ? "w-12 h-12" : "w-20 h-20"}`} />
+                                <img src={job.companyLogo || job.logo} alt={job.company} className={`rounded-xl object-contain bg-white p-2 shadow-sm border border-gray-100 transition-all duration-300 ${isScrolled ? "w-14 h-14" : "w-32 h-32"}`} />
                             ) : (
-                                <div className={`bg-gray-100 rounded-xl flex items-center justify-center transition-all duration-300 ${isScrolled ? "w-12 h-12" : "w-20 h-20"}`}><div className="w-8 h-8 bg-gray-200 rounded-full" /></div>
+                                <div className={`bg-gray-100 rounded-xl flex items-center justify-center transition-all duration-300 ${isScrolled ? "w-14 h-14" : "w-32 h-32"}`}><div className="w-12 h-12 bg-gray-200 rounded-full" /></div>
                             )}
                             <div>
-                                <div className={`overflow-hidden transition-all duration-300 ${isScrolled ? "h-0 opacity-0 mb-0" : "h-auto opacity-100 mb-3"}`}>
+                                <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isScrolled ? "max-h-0 opacity-0 mb-0" : "max-h-[50px] opacity-100 mb-3"}`}>
                                     <span className="bg-[#D3E9FD] text-[#05033e] px-4 py-1.5 rounded-full text-sm font-semibold inline-block">{formatDate(job.createdAt || job.postedDate)}</span>
                                 </div>
                                 <h1 className={`font-bold text-[#05033e] transition-all duration-300 ${isScrolled ? "text-2xl mb-0" : "text-4xl mb-2"}`}>{job.title}</h1>
                                 <p className={`text-gray-500 font-medium transition-all duration-300 ${isScrolled ? "text-sm mb-0" : "text-lg mb-6"}`}>{job.company}</p>
-                                <div className={`flex flex-wrap items-center gap-6 text-gray-600 font-medium overflow-hidden transition-all duration-300 ${isScrolled ? "max-h-0 opacity-0 mt-0" : "max-h-20 opacity-100 mt-0"}`}>
+                                <div className={`flex flex-wrap items-center gap-6 text-gray-600 font-medium overflow-hidden transition-all duration-500 ease-in-out ${isScrolled ? "max-h-0 opacity-0 mt-0" : "max-h-[100px] opacity-100 mt-0"}`}>
                                     <div className="flex items-center gap-2"><BriefcaseBusiness size={20} className="text-[#05033e]" /><span>{job.category}</span></div>
                                     <div className="flex items-center gap-2"><Clock size={20} className="text-[#05033e]" /><span>{job.type}</span></div>
                                     <div className="flex items-center gap-2"><Wallet size={20} className="text-[#05033e]" /><span>{formatSalary(job.salary)}</span></div>

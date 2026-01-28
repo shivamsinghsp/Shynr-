@@ -19,6 +19,8 @@ export async function GET(request: NextRequest) {
         await dbConnect();
 
         const { searchParams } = new URL(request.url);
+        const startDate = searchParams.get('startDate');
+        const endDate = searchParams.get('endDate');
         const date = searchParams.get('date');
         const userId = searchParams.get('userId');
         const locationId = searchParams.get('locationId');
@@ -26,7 +28,13 @@ export async function GET(request: NextRequest) {
         // Build query
         const query: any = {};
 
-        if (date) {
+        if (startDate && endDate) {
+            const start = new Date(startDate);
+            start.setHours(0, 0, 0, 0);
+            const end = new Date(endDate);
+            end.setHours(23, 59, 59, 999);
+            query.date = { $gte: start, $lte: end };
+        } else if (date) {
             const targetDate = new Date(date);
             targetDate.setHours(0, 0, 0, 0);
             const nextDay = new Date(targetDate);

@@ -36,6 +36,28 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // Time Validation
+        const now = new Date();
+        const currentHour = now.getHours();
+
+        if (action === 'check-in') {
+            // Allow only between 10:00 AM and 11:00 AM
+            if (currentHour < 10 || currentHour >= 11) {
+                return NextResponse.json(
+                    { success: false, error: 'Check-in is only allowed between 10:00 AM and 11:00 AM.' },
+                    { status: 400 }
+                );
+            }
+        } else if (action === 'check-out') {
+            // Allow only after 7:00 PM (19:00)
+            if (currentHour < 19) {
+                return NextResponse.json(
+                    { success: false, error: 'Check-out is only allowed after 07:00 PM.' },
+                    { status: 400 }
+                );
+            }
+        }
+
         await dbConnect();
 
         // Find nearby valid location

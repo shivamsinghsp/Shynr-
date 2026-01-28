@@ -16,7 +16,7 @@ export default function Navbar() {
   }
 
   return (
-    <div className="sticky top-0 z-50 bg-white/70 backdrop-blur-lg border-b border-white/20 transition-all duration-300 supports-[backdrop-filter]:bg-white/60">
+    <div className="sticky top-0 z-[40] bg-white/70 backdrop-blur-lg border-b border-white/20 transition-all duration-300 supports-[backdrop-filter]:bg-white/60">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
         {/* Logo */}

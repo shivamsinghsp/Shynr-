@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
         const allowedTypes: Record<string, string[]> = {
             resume: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
             avatar: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+            companyLogo: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
         };
 
         const fileType = type || 'resume';
@@ -63,6 +64,8 @@ export async function POST(request: NextRequest) {
 
         if (fileType === 'avatar') {
             uploadOptions.transformation = 'w_200,h_200,c_fill,g_face';
+        } else if (fileType === 'companyLogo') {
+            uploadOptions.transformation = 'w_400,h_400,c_limit';
         }
 
         const result = await cloudinary.uploader.upload(dataUri, uploadOptions);

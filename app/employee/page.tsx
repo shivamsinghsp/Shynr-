@@ -58,39 +58,24 @@ export default function EmployeeLoginPage() {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    background: linear-gradient(135deg, #0a1628 0%, #1a365d 50%, #0d2847 100%);
+                    background: #f1f5f9;
+                    background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+                    background-size: 32px 32px;
                     padding: 20px;
                     position: relative;
                     overflow: hidden;
                 }
                 
-                .employee-login-container::before {
-                    content: '';
-                    position: absolute;
-                    top: -50%;
-                    left: -50%;
-                    width: 200%;
-                    height: 200%;
-                    background: radial-gradient(ellipse at center, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
-                    animation: pulse 8s ease-in-out infinite;
-                }
-                
-                @keyframes pulse {
-                    0%, 100% { transform: scale(1); opacity: 0.5; }
-                    50% { transform: scale(1.1); opacity: 0.8; }
-                }
-                
                 .login-card {
-                    background: rgba(255, 255, 255, 0.05);
-                    backdrop-filter: blur(20px);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    background: white;
+                    border: 1px solid #e2e8f0;
                     border-radius: 24px;
                     padding: 48px;
                     width: 100%;
                     max-width: 440px;
                     position: relative;
                     z-index: 1;
-                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
                 }
                 
                 .logo-container {
@@ -100,8 +85,8 @@ export default function EmployeeLoginPage() {
                 }
                 
                 .portal-badge {
-                    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-                    color: white;
+                    background: #e0f2fe;
+                    color: #0284c7;
                     padding: 6px 16px;
                     border-radius: 20px;
                     font-size: 12px;
@@ -113,7 +98,7 @@ export default function EmployeeLoginPage() {
                 }
                 
                 .login-title {
-                    color: white;
+                    color: #0f172a;
                     font-size: 28px;
                     font-weight: 700;
                     text-align: center;
@@ -121,7 +106,7 @@ export default function EmployeeLoginPage() {
                 }
                 
                 .login-subtitle {
-                    color: rgba(255, 255, 255, 0.6);
+                    color: #64748b;
                     font-size: 14px;
                     text-align: center;
                     margin-bottom: 32px;
@@ -133,7 +118,7 @@ export default function EmployeeLoginPage() {
                 
                 .form-label {
                     display: block;
-                    color: rgba(255, 255, 255, 0.8);
+                    color: #475569;
                     font-size: 14px;
                     font-weight: 500;
                     margin-bottom: 8px;
@@ -142,29 +127,29 @@ export default function EmployeeLoginPage() {
                 .form-input {
                     width: 100%;
                     padding: 14px 16px;
-                    background: rgba(255, 255, 255, 0.08);
-                    border: 1px solid rgba(255, 255, 255, 0.15);
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
                     border-radius: 12px;
-                    color: white;
+                    color: #0f172a;
                     font-size: 15px;
                     transition: all 0.3s ease;
                     outline: none;
                 }
                 
                 .form-input:focus {
-                    border-color: #06b6d4;
-                    background: rgba(255, 255, 255, 0.12);
-                    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+                    border-color: #0ea5e9;
+                    background: white;
+                    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
                 }
                 
                 .form-input::placeholder {
-                    color: rgba(255, 255, 255, 0.4);
+                    color: #94a3b8;
                 }
                 
                 .error-message {
-                    background: rgba(239, 68, 68, 0.15);
-                    border: 1px solid rgba(239, 68, 68, 0.3);
-                    color: #fca5a5;
+                    background: #fef2f2;
+                    border: 1px solid #fecaca;
+                    color: #ef4444;
                     padding: 12px 16px;
                     border-radius: 10px;
                     margin-bottom: 20px;
@@ -177,7 +162,7 @@ export default function EmployeeLoginPage() {
                 .submit-button {
                     width: 100%;
                     padding: 14px;
-                    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+                    background: linear-gradient(135deg, #05033e 0%, #1a1a6e 100%);
                     border: none;
                     border-radius: 12px;
                     color: white;
@@ -191,7 +176,7 @@ export default function EmployeeLoginPage() {
                 
                 .submit-button:hover:not(:disabled) {
                     transform: translateY(-2px);
-                    box-shadow: 0 10px 30px rgba(6, 182, 212, 0.4);
+                    box-shadow: 0 10px 30px rgba(5, 3, 62, 0.25);
                 }
                 
                 .submit-button:disabled {
@@ -199,33 +184,18 @@ export default function EmployeeLoginPage() {
                     cursor: not-allowed;
                 }
                 
-                .submit-button::after {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: -100%;
-                    width: 100%;
-                    height: 100%;
-                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-                    transition: left 0.5s ease;
-                }
-                
-                .submit-button:hover::after {
-                    left: 100%;
-                }
-                
                 .back-link {
                     display: block;
                     text-align: center;
                     margin-top: 24px;
-                    color: rgba(255, 255, 255, 0.6);
+                    color: #64748b;
                     font-size: 14px;
                     text-decoration: none;
                     transition: color 0.2s ease;
                 }
                 
                 .back-link:hover {
-                    color: #06b6d4;
+                    color: #05033e;
                 }
                 
                 .loading-spinner {
@@ -260,9 +230,8 @@ export default function EmployeeLoginPage() {
                         <div style={{
                             fontSize: 36,
                             fontWeight: 800,
-                            color: 'white',
+                            color: '#05033e',
                             letterSpacing: 2,
-                            textShadow: '0 4px 20px rgba(6, 182, 212, 0.3)'
                         }}>SHYNR</div>
                         <div className="portal-badge">Employee Portal</div>
                     </div>

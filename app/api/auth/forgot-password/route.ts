@@ -3,6 +3,7 @@ import dbConnect from '@/db';
 import User from '@/db/models/User';
 import PasswordResetToken from '@/db/models/PasswordResetToken';
 import crypto from 'crypto';
+import { sendPasswordResetEmail } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
     try {
@@ -42,16 +43,14 @@ export async function POST(request: NextRequest) {
             expiresAt,
         });
 
-        // In production, you would send an email here
-        // For development, we'll return the token in the response
         const resetUrl = `${process.env.NEXTAUTH_URL}/auth/reset-password?token=${token}`;
+
+        // Send Email
+        await sendPasswordResetEmail(email, resetUrl);
 
         return NextResponse.json({
             success: true,
             message: 'If an account exists with this email, you will receive a password reset link.',
-            // Development only - remove in production!
-            devResetUrl: resetUrl,
-            devToken: token,
         });
     } catch (error) {
         console.error('Error in forgot password:', error);

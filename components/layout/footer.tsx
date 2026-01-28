@@ -5,7 +5,7 @@ import { Mail, Phone } from "lucide-react"
 
 export default function Footer() {
   return (
-    <footer className="w-full">
+    <footer id="main-footer" className="w-full">
       {/* CTA Section */}
       <div
         className="py-20 px-6 text-center"

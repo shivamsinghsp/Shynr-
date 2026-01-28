@@ -75,8 +75,67 @@ export async function POST(request: NextRequest) {
     }
 }
 
-export async function GET() {
-    return NextResponse.json({
-        message: 'Use POST request with ?secret=YOUR_NEXTAUTH_SECRET to seed admin user'
-    });
+export async function GET(request: NextRequest) {
+    const { searchParams } = new URL(request.url);
+    const secret = searchParams.get('secret');
+
+    // Allow GET for easier testing - same logic as POST
+    if (secret !== process.env.NEXTAUTH_SECRET) {
+        return NextResponse.json({
+            error: 'Unauthorized - add ?secret=YOUR_NEXTAUTH_SECRET to the URL',
+            hint: 'Check your .env file for NEXTAUTH_SECRET value'
+        }, { status: 401 });
+    }
+
+    try {
+        await dbConnect();
+
+        const adminEmail = 'shivam.sp2106@gmail.com';
+        const adminPassword = 'Shivam@2105';
+
+        const existingAdmin = await User.findOne({ email: adminEmail });
+
+        if (existingAdmin) {
+            const hashedPassword = await bcrypt.hash(adminPassword, 10);
+            existingAdmin.password = hashedPassword;
+            existingAdmin.role = 'admin';
+            existingAdmin.onboardingCompleted = true;
+            existingAdmin.onboardingStep = 'complete';
+            existingAdmin.emailVerified = true;
+            await existingAdmin.save();
+
+            return NextResponse.json({
+                success: true,
+                message: 'Admin user updated successfully',
+                email: adminEmail,
+                action: 'updated'
+            });
+        } else {
+            const hashedPassword = await bcrypt.hash(adminPassword, 10);
+            await User.create({
+                email: adminEmail,
+                password: hashedPassword,
+                firstName: 'Shivam',
+                lastName: 'SP',
+                role: 'admin',
+                provider: 'credentials',
+                onboardingCompleted: true,
+                onboardingStep: 'complete',
+                emailVerified: true
+            });
+
+            return NextResponse.json({
+                success: true,
+                message: 'Admin user created successfully',
+                email: adminEmail,
+                action: 'created'
+            });
+        }
+    } catch (error) {
+        console.error('Error seeding admin:', error);
+        return NextResponse.json(
+            { error: 'Failed to seed admin', details: String(error) },
+            { status: 500 }
+        );
+    }
 }

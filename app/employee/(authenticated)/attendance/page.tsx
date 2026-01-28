@@ -72,6 +72,25 @@ export default function EmployeeAttendancePage() {
     };
 
     const handleMarkAttendance = async () => {
+        const now = new Date();
+        const currentHour = now.getHours();
+
+        // Strict Time Validation
+        // Check In: 10 AM - 11 AM (10:00 to 10:59)
+        const isCheckInAction = !todayAttendance?.checkIn;
+        if (isCheckInAction) {
+            if (currentHour < 10 || currentHour >= 11) {
+                setError('Check-in is only allowed between 10:00 AM and 11:00 AM.');
+                return;
+            }
+        } else {
+            // Check Out: After 7 PM (19:00 onwards)
+            if (currentHour < 19) {
+                setError('Check-out is only allowed after 07:00 PM.');
+                return;
+            }
+        }
+
         setError('');
         setSuccess('');
         setMarking(true);
@@ -152,14 +171,14 @@ export default function EmployeeAttendancePage() {
                 }
                 
                 .page-title {
-                    color: white;
+                    color: #05033e;
                     font-size: 28px;
                     font-weight: 700;
                     margin-bottom: 8px;
                 }
                 
                 .page-subtitle {
-                    color: rgba(255, 255, 255, 0.5);
+                    color: #64748b;
                     font-size: 14px;
                 }
                 
@@ -170,20 +189,21 @@ export default function EmployeeAttendancePage() {
                 }
                 
                 .card {
-                    background: rgba(255, 255, 255, 0.05);
-                    backdrop-filter: blur(20px);
-                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    background: white;
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                    border: 1px solid #e2e8f0;
                     border-radius: 16px;
                     overflow: hidden;
                 }
                 
                 .card-header {
                     padding: 20px 24px;
-                    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                    border-bottom: 1px solid #f1f5f9;
+                    background: #f8fafc;
                 }
                 
                 .card-title {
-                    color: white;
+                    color: #0f172a;
                     font-size: 16px;
                     font-weight: 600;
                 }
@@ -195,42 +215,43 @@ export default function EmployeeAttendancePage() {
                 .status-display {
                     text-align: center;
                     padding: 24px;
-                    background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05));
+                    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
                     border-radius: 12px;
                     margin-bottom: 24px;
+                    border: 1px solid #bae6fd;
                 }
                 
                 .status-icon {
                     width: 64px;
                     height: 64px;
                     border-radius: 50%;
-                    background: rgba(6, 182, 212, 0.2);
+                    background: rgba(14, 165, 233, 0.1);
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     margin: 0 auto 16px;
-                    color: #06b6d4;
+                    color: #0ea5e9;
                 }
                 
                 .status-icon.checked-in {
-                    background: rgba(34, 197, 94, 0.2);
+                    background: rgba(34, 197, 94, 0.1);
                     color: #22c55e;
                 }
                 
                 .status-icon.completed {
-                    background: rgba(139, 92, 246, 0.2);
-                    color: #8b5cf6;
+                    background: rgba(59, 130, 246, 0.1);
+                    color: #3b82f6;
                 }
                 
                 .status-text {
-                    color: white;
+                    color: #0f172a;
                     font-size: 18px;
                     font-weight: 600;
                     margin-bottom: 4px;
                 }
                 
                 .status-subtext {
-                    color: rgba(255, 255, 255, 0.5);
+                    color: #64748b;
                     font-size: 13px;
                 }
                 
@@ -243,19 +264,20 @@ export default function EmployeeAttendancePage() {
                 
                 .time-card {
                     padding: 16px;
-                    background: rgba(255, 255, 255, 0.03);
+                    background: #f8fafc;
                     border-radius: 10px;
+                    border: 1px solid #e2e8f0;
                     text-align: center;
                 }
                 
                 .time-label {
-                    color: rgba(255, 255, 255, 0.5);
+                    color: #64748b;
                     font-size: 12px;
                     margin-bottom: 4px;
                 }
                 
                 .time-value {
-                    color: white;
+                    color: #0f172a;
                     font-size: 20px;
                     font-weight: 600;
                 }
@@ -276,25 +298,28 @@ export default function EmployeeAttendancePage() {
                 }
                 
                 .mark-button.check-in {
-                    background: linear-gradient(135deg, #06b6d4, #0891b2);
+                    background: linear-gradient(135deg, #05033e 0%, #1a1a6e 100%);
                     color: white;
+                    box-shadow: 0 4px 6px rgba(5, 3, 62, 0.2);
                 }
                 
                 .mark-button.check-out {
-                    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+                    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
                     color: white;
+                    box-shadow: 0 4px 6px rgba(220, 38, 38, 0.2);
                 }
                 
                 .mark-button:hover:not(:disabled) {
                     transform: translateY(-2px);
-                    box-shadow: 0 10px 30px rgba(6, 182, 212, 0.3);
+                    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
                 }
                 
                 .mark-button:disabled {
                     opacity: 0.6;
                     cursor: not-allowed;
-                    background: rgba(255, 255, 255, 0.1);
-                    color: rgba(255, 255, 255, 0.5);
+                    background: #e2e8f0;
+                    color: #94a3b8;
+                    box-shadow: none;
                 }
                 
                 .alert {
@@ -325,20 +350,21 @@ export default function EmployeeAttendancePage() {
                     align-items: center;
                     gap: 12px;
                     padding: 12px;
-                    background: rgba(255, 255, 255, 0.03);
+                    background: #f8fafc;
                     border-radius: 8px;
                     margin-bottom: 8px;
+                    border: 1px solid #e2e8f0;
                 }
                 
                 .location-icon {
                     width: 36px;
                     height: 36px;
                     border-radius: 8px;
-                    background: rgba(6, 182, 212, 0.2);
+                    background: rgba(5, 3, 62, 0.1);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: #06b6d4;
+                    color: #05033e;
                 }
                 
                 .location-details {
@@ -346,13 +372,13 @@ export default function EmployeeAttendancePage() {
                 }
                 
                 .location-name {
-                    color: white;
+                    color: #0f172a;
                     font-size: 14px;
-                    font-weight: 500;
+                    font-weight: 600;
                 }
                 
                 .location-address {
-                    color: rgba(255, 255, 255, 0.5);
+                    color: #64748b;
                     font-size: 12px;
                 }
                 
@@ -482,41 +508,70 @@ export default function EmployeeAttendancePage() {
                             </div>
                         </div>
 
+                        {/* Missed Checkout Alert */}
+                        {!todayAttendance && attendanceHistory.length > 0 && attendanceHistory[0].status === 'checked-in' && (
+                            <div className="alert error mb-4">
+                                <p className="font-semibold">Missed Checkout detected</p>
+                                <p className="text-sm opacity-90">You forgot to check out yesterday. Please check in for today to start a new session.</p>
+                            </div>
+                        )}
+
                         {error && <div className="alert error">{error}</div>}
                         {success && <div className="alert success">{success}</div>}
 
-                        <button
-                            onClick={handleMarkAttendance}
-                            disabled={marking || !!todayAttendance?.checkOut}
-                            className={`mark-button ${todayAttendance?.checkIn ? 'check-out' : 'check-in'}`}
-                        >
-                            {marking ? (
-                                <>
-                                    <div className="spinner"></div>
-                                    {locationLoading ? 'Getting Location...' : 'Marking...'}
-                                </>
-                            ) : todayAttendance?.checkOut ? (
-                                'Attendance Completed'
-                            ) : todayAttendance?.checkIn ? (
-                                <>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                                        <polyline points="16 17 21 12 16 7" />
-                                        <line x1="21" y1="12" x2="9" y2="12" />
-                                    </svg>
-                                    Check Out
-                                </>
-                            ) : (
-                                <>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                                        <polyline points="10 17 15 12 10 7" />
-                                        <line x1="15" y1="12" x2="3" y2="12" />
-                                    </svg>
-                                    Check In
-                                </>
+                        {/* Button with Time logic */}
+                        <div className="flex flex-col gap-2">
+                            {!todayAttendance?.checkIn && (
+                                <p className="text-xs text-center text-gray-400">
+                                    Check-in allowed: 10:00 AM - 11:00 AM
+                                </p>
                             )}
-                        </button>
+                            {todayAttendance?.checkIn && !todayAttendance.checkOut && (
+                                <p className="text-xs text-center text-gray-400">
+                                    Check-out allowed: After 07:00 PM
+                                </p>
+                            )}
+
+                            <button
+                                onClick={handleMarkAttendance}
+                                disabled={
+                                    marking ||
+                                    !!todayAttendance?.checkOut ||
+                                    // Disable Check-in if not 10-11 AM
+                                    (!todayAttendance?.checkIn && (new Date().getHours() < 10 || new Date().getHours() >= 11)) ||
+                                    // Disable Check-out if before 7 PM
+                                    (!!todayAttendance?.checkIn && !todayAttendance?.checkOut && new Date().getHours() < 19)
+                                }
+                                className={`mark-button ${todayAttendance?.checkIn ? 'check-out' : 'check-in'}`}
+                            >
+                                {marking ? (
+                                    <>
+                                        <div className="spinner"></div>
+                                        {locationLoading ? 'Getting Location...' : 'Marking...'}
+                                    </>
+                                ) : todayAttendance?.checkOut ? (
+                                    'Attendance Completed'
+                                ) : todayAttendance?.checkIn ? (
+                                    <>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                            <polyline points="16 17 21 12 16 7" />
+                                            <line x1="21" y1="12" x2="9" y2="12" />
+                                        </svg>
+                                        Check Out
+                                    </>
+                                ) : (
+                                    <>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                                            <polyline points="10 17 15 12 10 7" />
+                                            <line x1="15" y1="12" x2="3" y2="12" />
+                                        </svg>
+                                        Check In
+                                    </>
+                                )}
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -546,7 +601,7 @@ export default function EmployeeAttendancePage() {
                                     </div>
                                 ))
                             ) : (
-                                <p style={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center', padding: 24 }}>
+                                <p style={{ color: '#64748b', textAlign: 'center', padding: 24 }}>
                                     No locations configured
                                 </p>
                             )}
@@ -573,7 +628,7 @@ export default function EmployeeAttendancePage() {
                             <tbody>
                                 {loading ? (
                                     <tr>
-                                        <td colSpan={5} style={{ textAlign: 'center', padding: 32, color: 'rgba(255,255,255,0.4)' }}>
+                                        <td colSpan={5} style={{ textAlign: 'center', padding: 32, color: '#64748b' }}>
                                             Loading...
                                         </td>
                                     </tr>
@@ -599,7 +654,7 @@ export default function EmployeeAttendancePage() {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={5} style={{ textAlign: 'center', padding: 32, color: 'rgba(255,255,255,0.4)' }}>
+                                        <td colSpan={5} style={{ textAlign: 'center', padding: 32, color: '#64748b' }}>
                                             No attendance records yet
                                         </td>
                                     </tr>

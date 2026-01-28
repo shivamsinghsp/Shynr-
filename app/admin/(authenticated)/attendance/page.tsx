@@ -212,6 +212,9 @@ export default function AdminAttendancePage() {
                                                         {record.user?.firstName || 'Unknown'} {record.user?.lastName || ''}
                                                     </p>
                                                     <p className="text-sm text-gray-500">{record.user?.email || 'N/A'}</p>
+                                                    <a href={`/admin/attendance/user/${record.user?._id}`} className="text-xs text-blue-600 hover:underline mt-1 inline-block">
+                                                        View Calendar
+                                                    </a>
                                                 </div>
                                             </div>
                                         </td>
@@ -241,8 +244,8 @@ export default function AdminAttendancePage() {
                                         </td>
                                         <td className="px-6 py-4">
                                             <span className={`px-3 py-1 rounded-full text-xs font-medium ${record.status === 'checked-out'
-                                                    ? 'bg-green-100 text-green-800'
-                                                    : 'bg-yellow-100 text-yellow-800'
+                                                ? 'bg-green-100 text-green-800'
+                                                : 'bg-yellow-100 text-yellow-800'
                                                 }`}>
                                                 {record.status === 'checked-out' ? 'Completed' : 'In Progress'}
                                             </span>

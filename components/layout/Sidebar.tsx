@@ -304,7 +304,7 @@ export default function Sidebar({ onOpenSignIn, collapsed: controlledCollapsed, 
             {/* Mobile Menu Button */}
             <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="fixed top-4 left-4 z-50 md:hidden p-2 bg-white rounded-lg shadow-lg"
+                className="fixed top-4 left-4 z-[110] md:hidden p-2 bg-white rounded-lg shadow-lg"
             >
                 {mobileOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -312,14 +312,14 @@ export default function Sidebar({ onOpenSignIn, collapsed: controlledCollapsed, 
             {/* Mobile Overlay */}
             {mobileOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 z-40 md:hidden"
+                    className="fixed inset-0 bg-black/50 z-[90] md:hidden"
                     onClick={() => setMobileOpen(false)}
                 />
             )}
 
             {/* Sidebar */}
             <aside
-                className={`fixed top-0 left-0 h-full bg-white border-r border-gray-100 z-40 transition-all duration-300 ${collapsed ? "w-20" : "w-72"
+                className={`fixed top-0 left-0 h-full bg-white border-r border-gray-100 z-[100] transition-all duration-300 ${collapsed ? "w-20" : "w-72"
                     } ${mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
             >
                 <SidebarContent />

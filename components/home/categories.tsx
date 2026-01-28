@@ -2,47 +2,62 @@
 
 import { useRef, useEffect, useState } from "react"
 import Link from "next/link"
-import CountUp from "@/components/shared/CountUp"
+import {
+  ArrowLeft,
+  ArrowRight,
+  Layout,
+  Palette,
+  Headset,
+  TrendingUp,
+  Target,
+  Wallet,
+  ShieldCheck,
+  ArrowUpRight
+} from "lucide-react"
 
-// SVG icons for categories
-const AgricultureIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1.5M12 21v-1.5M8.25 4.5l.75 1.3M15 18.2l.75 1.3M4.5 8.25l1.3.75M18.2 15l1.3.75M3 12h1.5M21 12h-1.5M4.5 15.75l1.3-.75M18.2 9l1.3-.75M8.25 19.5l.75-1.3M15 5.8l.75-1.3" />
-  </svg>
-)
-
-const MetalIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-  </svg>
-)
-
-const FinanceIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-)
-
-const TransportIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
-  </svg>
-)
-
-
-// Arrow icons pulled from Lucide
-import { ArrowLeft, ArrowRight } from "lucide-react"
-
-
-const cards = [
-  { title: "Agriculture", jobs: 1254, icon: <AgricultureIcon /> },
-  { title: "Metal Production", jobs: 816, icon: <MetalIcon /> },
-  { title: "Financial Services", jobs: 1529, icon: <FinanceIcon /> },
-  { title: "Transport", jobs: 1244, icon: <TransportIcon /> },
-  { title: "Agriculture", jobs: 1254, icon: <AgricultureIcon /> },
-  { title: "Metal Production", jobs: 816, icon: <MetalIcon /> },
-  { title: "Financial Services", jobs: 1529, icon: <FinanceIcon /> },
-  { title: "Transport", jobs: 1244, icon: <TransportIcon /> }
+const categories = [
+  {
+    title: "Modern Design",
+    icon: <Layout className="w-10 h-10" />,
+    description: "Sleek, responsive, and user-centric interfaces.",
+    color: "from-blue-400 to-blue-600"
+  },
+  {
+    title: "Creative Design",
+    icon: <Palette className="w-10 h-10" />,
+    description: "Innovative visuals that capture brand identity.",
+    color: "from-purple-400 to-purple-600"
+  },
+  {
+    title: "24*7 User Support",
+    icon: <Headset className="w-10 h-10" />,
+    description: "Round-the-clock assistance for your peace of mind.",
+    color: "from-green-400 to-green-600"
+  },
+  {
+    title: "Business Growth",
+    icon: <TrendingUp className="w-10 h-10" />,
+    description: "Data-driven strategies to scale your operations.",
+    color: "from-orange-400 to-orange-600"
+  },
+  {
+    title: "Market Strategy",
+    icon: <Target className="w-10 h-10" />,
+    description: "Targeted campaigns that maximize ROI.",
+    color: "from-red-400 to-red-600"
+  },
+  {
+    title: "Affordable Cost",
+    icon: <Wallet className="w-10 h-10" />,
+    description: "Premium solutions tailored to your budget.",
+    color: "from-teal-400 to-teal-600"
+  },
+  {
+    title: "Safe & Secure",
+    icon: <ShieldCheck className="w-10 h-10" />,
+    description: "Enterprise-grade security for your data.",
+    color: "from-indigo-400 to-indigo-600"
+  }
 ]
 
 export default function Categories() {
@@ -57,7 +72,7 @@ export default function Categories() {
           setIsVisible(true)
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     )
 
     if (sectionRef.current) {
@@ -70,7 +85,7 @@ export default function Categories() {
   const scroll = (dir: "left" | "right") => {
     if (!slider.current) return
     slider.current.scrollBy({
-      left: dir === "left" ? -350 : 350,
+      left: dir === "left" ? -320 : 320,
       behavior: "smooth"
     })
   }
@@ -78,125 +93,115 @@ export default function Categories() {
   return (
     <section
       ref={sectionRef}
-      className="py-20 relative overflow-hidden bg-white"
+      className="py-24 relative overflow-hidden bg-slate-50"
     >
-      {/* Heading */}
-      <div
-        className={`text-center mb-12 px-6 text-foreground transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
-      >
-        <p
-          className="font-semibold text-lg md:text-2xl mb-2"
-          style={{ color: "#05033e" }}
-        >
-          Why Choose Us
-        </p>
-        <h2 className="text-3xl md:text-4xl font-bold mt-2">
-          Key Differentiators
-        </h2>
-        <p className="mt-4 max-w-xl mx-auto text-muted-foreground text-sm md:text-base">
-          At eu lobortis pretium tincidunt amet lacus ut aenean aliquet.
-          Blandit a massa elementum id scelerisque.
-        </p>
+      {/* Background Elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-blue-100/50 blur-3xl opacity-60" />
+        <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] rounded-full bg-indigo-100/50 blur-3xl opacity-60" />
       </div>
 
-      {/* Arrows with neon style */}
-      {/* Slider Container */}
-      <div className="relative group">
-
-        {/* Slider */}
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Heading */}
         <div
-          ref={slider}
-          className="flex gap-8 overflow-x-auto overflow-y-visible px-6 md:px-16 
-                    scroll-smooth snap-x snap-mandatory no-scrollbar py-10"
+          className={`text-center mb-16 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            }`}
         >
-          {cards.map((card, i) => (
-            <Link
-              key={i}
-              href={`/coming-soon?title=${encodeURIComponent(card.title)}`}
-              className={`snap-start min-w-[240px] sm:min-w-[280px] 
-                         h-[360px] md:h-[420px] 
-                         flex items-center justify-center
-                         transition-all duration-700
-                         ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}
-              style={{ transitionDelay: `${i * 100}ms` }}
-            >
-              <div
-                className="bg-card w-full h-full rounded-2xl 
-                          flex flex-col items-center justify-center 
-                          border border-border
-                          transition-all duration-500 ease-out
-                          hover:-translate-y-4
-                          will-change-transform group"
-                style={{
-                  boxShadow: "0 0 30px rgba(0,0,0,0.1)",
-                  backgroundColor: `hsl(210, 100%, ${96 - (i % 3) * 2}%)` // e.g., 96%, 94%, 92% lightness for variations of light blue
-                }}
+          <span className="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-700 text-xs font-bold tracking-wider mb-4 uppercase">
+            Why Choose Us
+          </span>
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-[#05033e]">
+            Our Key Features
+          </h2>
+          <p className="max-w-2xl mx-auto text-slate-600 text-base md:text-lg">
+            We deliver excellence through innovation, dedication, and a commitment to your success.
+            Explore what makes us the preferred choice.
+          </p>
+        </div>
+
+        {/* Slider Container */}
+        <div className="relative group px-4 md:px-12">
+
+          {/* Slider */}
+          <div
+            ref={slider}
+            className="flex gap-6 overflow-x-auto px-4 pb-12 pt-4 snap-x snap-mandatory no-scrollbar"
+            style={{ scrollBehavior: 'smooth' }}
+          >
+            {categories.map((item, i) => (
+              <Link
+                key={i}
+                href="#"
+                className={`snap-center shrink-0 w-[300px] md:w-[360px] 
+                           transition-all duration-700
+                           ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}
+                style={{ transitionDelay: `${i * 100}ms` }}
               >
                 <div
-                  className="text-white mb-6 transition-transform duration-300 group-hover:scale-125"
-                  style={{ color: "#05033e" }}
+                  className="bg-white h-[380px] rounded-2xl p-8
+                            flex flex-col items-start justify-center text-left
+                            border border-slate-100
+                            transition-all duration-300 ease-out
+                            hover:-translate-y-2 hover:shadow-xl hover:border-blue-100
+                            group/card relative overflow-hidden"
                 >
-                  {card.icon}
+                  {/* Hover Gradient Overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover/card:opacity-5 transition-opacity duration-300`} />
+
+                  <div className="relative z-10 w-full">
+                    <div
+                      className="mb-6 w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center
+                                text-[#05033e] group-hover/card:scale-110 group-hover/card:bg-[#05033e] group-hover/card:text-white
+                                transition-all duration-300 shadow-sm"
+                    >
+                      {item.icon}
+                    </div>
+
+                    <h3 className="text-xl md:text-2xl font-bold mb-4 text-slate-800 group-hover/card:text-[#05033e] transition-colors">
+                      {item.title}
+                    </h3>
+
+                    <p className="text-slate-500 leading-relaxed text-sm md:text-base group-hover/card:text-slate-600">
+                      {item.description}
+                    </p>
+                  </div>
                 </div>
+              </Link>
+            ))}
+          </div>
 
-                <h3 className="text-lg md:text-xl font-bold mb-3 text-card-foreground">
-                  {card.title}
-                </h3>
+          {/* Navigation Arrows */}
+          <div className="hidden md:flex justify-between items-center absolute top-1/2 -translate-y-1/2 left-0 right-0 w-full pointer-events-none px-0">
+            <button
+              onClick={() => scroll("left")}
+              className="w-12 h-12 rounded-full bg-white shadow-lg border border-slate-100 flex items-center justify-center 
+                        text-[#05033e] hover:bg-[#05033e] hover:text-white transition-all duration-300 pointer-events-auto
+                        hover:scale-110 -ml-6"
+              aria-label="Scroll left"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
 
-                <span
-                  className="px-4 py-1 rounded-full text-sm font-semibold"
-                  style={{
-                    backgroundColor: "rgba(5,3,62,0.2)",
-                    color: "#05033e",
-                    border: "1px solid #05033e"
-                  }}
-                >
-                  <CountUp end={card.jobs} duration={1500} /> jobs
-                </span>
-              </div>
-            </Link>
-          ))}
+            <button
+              onClick={() => scroll("right")}
+              className="w-12 h-12 rounded-full bg-white shadow-lg border border-slate-100 flex items-center justify-center 
+                        text-[#05033e] hover:bg-[#05033e] hover:text-white transition-all duration-300 pointer-events-auto
+                        hover:scale-110 -mr-6"
+              aria-label="Scroll right"
+            >
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
-        {/* Centered Arrows Below */}
-        <div className="flex justify-center items-center gap-6 mt-8">
-          <button
-            onClick={() => scroll("left")}
-            className="w-14 h-14 rounded-full shadow items-center justify-center z-20 transition-all duration-300 hover:scale-110 flex"
-            style={{
-              backgroundColor: "#05033e",
-              color: "white",
-              boxShadow: "0 0 15px rgba(5,3,62,0.5)"
-            }}
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
-
-          <button
-            onClick={() => scroll("right")}
-            className="w-14 h-14 rounded-full shadow items-center justify-center z-20 transition-all duration-300 hover:scale-110 flex"
-            style={{
-              backgroundColor: "#05033e",
-              color: "white",
-              boxShadow: "0 0 15px rgba(5,3,62,0.5)"
-            }}
-          >
-            <ArrowRight className="w-6 h-6" />
-          </button>
+        {/* Mobile Swipe Indicator */}
+        <div className="flex md:hidden justify-center items-center gap-2 mt-4 text-slate-400 text-sm animate-pulse">
+          <ArrowLeft className="w-4 h-4" />
+          <span>Swipe to explore</span>
+          <ArrowRight className="w-4 h-4" />
         </div>
+
       </div>
-
-      <p
-        className="mt-6 text-center text-sm md:hidden flex items-center justify-center gap-2"
-        style={{ color: "#05033e" }}
-      >
-        Swipe left or right
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-      </p>
-
     </section >
   )
 }

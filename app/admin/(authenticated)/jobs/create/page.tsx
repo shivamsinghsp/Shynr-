@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Upload, X, Loader2, Image as ImageIcon } from 'lucide-react';
 
 const JOB_CATEGORIES = [
     'Technology', 'Healthcare', 'Finance', 'Marketing', 'Sales',
@@ -19,9 +20,11 @@ export default function CreateJobPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const [uploading, setUploading] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
         company: '',
+        companyLogo: '',
         location: '',
         locationType: 'onsite',
         category: '',
@@ -69,6 +72,44 @@ export default function CreateJobPage() {
                 ...prev,
                 [name]: value
             }));
+        }
+    };
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            setError("Image size should be less than 5MB");
+            return;
+        }
+
+        try {
+            setUploading(true);
+            setError('');
+            const data = new FormData();
+            data.append('file', file);
+            data.append('type', 'companyLogo');
+
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: data
+            });
+
+            const result = await res.json();
+
+            if (result.success) {
+                setFormData(prev => ({
+                    ...prev,
+                    companyLogo: result.data.url
+                }));
+            } else {
+                setError(result.error || 'Failed to upload image');
+            }
+        } catch (err) {
+            setError('Failed to upload image');
+        } finally {
+            setUploading(false);
         }
     };
 
@@ -168,6 +209,65 @@ export default function CreateJobPage() {
                                     <option key={cat} value={cat}>{cat}</option>
                                 ))}
                             </select>
+                        </div>
+
+                        {/* Company Logo */}
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                            <h2 className="text-lg font-semibold text-gray-900 mb-4">Company Logo</h2>
+                            <div className="flex items-start gap-6">
+                                <div className="flex-shrink-0">
+                                    {formData.companyLogo ? (
+                                        <div className="relative w-32 h-32 rounded-lg border border-gray-200 overflow-hidden group">
+                                            <img
+                                                src={formData.companyLogo}
+                                                alt="Company Logo"
+                                                className="w-full h-full object-contain bg-white p-2"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setFormData(prev => ({ ...prev, companyLogo: '' }))}
+                                                className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                <X className="text-white w-6 h-6" />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="w-32 h-32 rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 bg-gray-50">
+                                            <ImageIcon className="w-8 h-8 mb-2" />
+                                            <span className="text-xs text-center">No Logo</span>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex-1">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Upload Logo (Max 5MB)</label>
+                                    <div className="flex items-center gap-4">
+                                        <label className={`
+                                    flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 
+                                    hover:bg-gray-50 cursor-pointer transition-colors
+                                    ${uploading ? 'opacity-50 cursor-not-allowed' : ''}
+                                `}>
+                                            {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                                            <span>{uploading ? 'Uploading...' : 'Choose File'}</span>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleImageUpload}
+                                                disabled={uploading}
+                                                className="hidden"
+                                            />
+                                        </label>
+                                        {formData.companyLogo && (
+                                            <span className="text-sm text-green-600 flex items-center gap-1">
+                                                <div className="w-2 h-2 bg-green-500 rounded-full" />
+                                                Logo Uploaded
+                                            </span>
+                                        )}
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-2">
+                                        Supported formats: JPEG, PNG, WebP. Recommended size: 400x400px.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

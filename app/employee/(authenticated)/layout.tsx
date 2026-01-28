@@ -120,7 +120,7 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
     const userRole = (session?.user as any)?.role || 'employee';
 
     return (
-        <div style={{ minHeight: '100vh', display: 'flex', background: '#0d1b2a' }}>
+        <div style={{ minHeight: '100vh', display: 'flex', background: '#f4f6f8' }}>
             {/* Mobile Overlay */}
             {sidebarOpen && (
                 <div
@@ -142,8 +142,8 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
                 left: 0,
                 right: 0,
                 height: 64,
-                background: '#0d1b2a',
-                borderBottom: '1px solid rgba(255,255,255,0.1)',
+                background: '#05033e',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                 zIndex: 90,
                 padding: '0 16px',
                 alignItems: 'center',
@@ -154,7 +154,7 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
                     height: 40,
                     background: 'rgba(255, 255, 255, 0.1)',
                     border: 'none',
-                    borderRadius: 10,
+                    borderRadius: 8,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -174,15 +174,17 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
             {/* Sidebar */}
             <aside style={{
                 width: 260,
-                background: '#0d1b2a',
-                borderRight: '1px solid rgba(255, 255, 255, 0.1)',
+                background: '#05033e',
+                backgroundImage: 'linear-gradient(180deg, #05033e 0%, #020120 100%)',
+                color: 'white',
                 display: 'flex',
                 flexDirection: 'column',
                 position: 'fixed',
                 height: '100vh',
                 zIndex: 100,
                 transform: sidebarOpen ? 'translateX(0)' : undefined,
-                transition: 'transform 0.3s ease'
+                transition: 'transform 0.3s ease',
+                boxShadow: '4px 0 10px rgba(0,0,0,0.1)'
             }} className="sidebar">
                 {/* Sidebar Header */}
                 <div style={{
@@ -192,15 +194,15 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                         <span style={{
                             color: 'white',
-                            fontSize: 22,
+                            fontSize: 24,
                             fontWeight: 800,
                             letterSpacing: 1
                         }}>SHYNR</span>
                         <span style={{
-                            background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+                            background: 'rgba(255, 255, 255, 0.15)',
                             color: 'white',
-                            padding: '4px 10px',
-                            borderRadius: 12,
+                            padding: '4px 8px',
+                            borderRadius: 6,
                             fontSize: 10,
                             fontWeight: 600,
                             letterSpacing: 0.5,
@@ -210,7 +212,7 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
                 </div>
 
                 {/* Navigation */}
-                <nav style={{ flex: 1, padding: '20px 12px', overflowY: 'auto' }}>
+                <nav style={{ flex: 1, padding: '24px 16px', overflowY: 'auto' }}>
                     {navItems.map((item) => {
                         const isActive = pathname === item.href;
                         return (
@@ -223,18 +225,19 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
                                     alignItems: 'center',
                                     gap: 12,
                                     padding: '12px 16px',
-                                    color: isActive ? '#06b6d4' : 'rgba(255, 255, 255, 0.7)',
+                                    color: isActive ? 'white' : 'rgba(255, 255, 255, 0.7)',
                                     textDecoration: 'none',
-                                    borderRadius: 10,
-                                    marginBottom: 4,
+                                    borderRadius: 8,
+                                    marginBottom: 8,
                                     fontSize: 14,
                                     fontWeight: isActive ? 600 : 500,
-                                    background: isActive ? 'rgba(6, 182, 212, 0.15)' : 'transparent',
-                                    border: isActive ? '1px solid rgba(6, 182, 212, 0.3)' : '1px solid transparent',
+                                    background: isActive ? 'rgba(255, 255, 255, 0.15)' : 'transparent',
                                     transition: 'all 0.2s ease'
                                 }}
                             >
-                                {item.icon}
+                                <span style={{ opacity: isActive ? 1 : 0.8 }}>
+                                    {item.icon}
+                                </span>
                                 {item.name}
                             </Link>
                         );
@@ -255,13 +258,13 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
                         <div style={{
                             width: 40,
                             height: 40,
-                            borderRadius: 10,
-                            background: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+                            borderRadius: 20,
+                            background: 'white',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            color: 'white',
-                            fontWeight: 600,
+                            color: '#05033e',
+                            fontWeight: 700,
                             fontSize: 16
                         }}>
                             {userName.charAt(0).toUpperCase()}
@@ -276,7 +279,7 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
                                 textOverflow: 'ellipsis'
                             }}>{userName}</div>
                             <div style={{
-                                color: 'rgba(255, 255, 255, 0.5)',
+                                color: 'rgba(255, 255, 255, 0.6)',
                                 fontSize: 12,
                                 textTransform: 'capitalize'
                             }}>{userRole}</div>
@@ -284,18 +287,19 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
                     </div>
                     <button onClick={handleLogout} style={{
                         width: '100%',
-                        padding: 10,
-                        background: 'rgba(239, 68, 68, 0.15)',
-                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                        padding: '10px',
+                        background: 'transparent',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
                         borderRadius: 8,
-                        color: '#fca5a5',
+                        color: 'white',
                         fontSize: 13,
                         fontWeight: 500,
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        gap: 8
+                        gap: 8,
+                        transition: 'background 0.2s'
                     }}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
@@ -308,7 +312,7 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
             </aside>
 
             {/* Main Content */}
-            <main style={{ flex: 1, marginLeft: 260, minHeight: '100vh' }} className="main-content">
+            <main style={{ flex: 1, marginLeft: 260, minHeight: '100vh', background: '#f8fafc' }} className="main-content">
                 {children}
             </main>
 
