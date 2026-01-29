@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
@@ -94,6 +94,12 @@ export default function Sidebar({ onOpenSignIn, collapsed: controlledCollapsed, 
             setInternalCollapsed(value);
         }
     };
+
+    // Close mobile menu when route changes
+    useEffect(() => {
+        setMobileOpen(false);
+        setOpenSubmenu(null);
+    }, [pathname]);
 
     const toggleSubmenu = (label: string) => {
         setOpenSubmenu(openSubmenu === label ? null : label);

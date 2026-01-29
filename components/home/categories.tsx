@@ -5,11 +5,11 @@ import Link from "next/link"
 import {
   ArrowLeft,
   ArrowRight,
-  Layout,
-  Palette,
+  Briefcase,
+  CheckCircle,
   Headset,
   TrendingUp,
-  Target,
+  Globe,
   Wallet,
   ShieldCheck,
   ArrowUpRight
@@ -17,52 +17,52 @@ import {
 
 const categories = [
   {
-    title: "Modern Design",
-    icon: <Layout className="w-10 h-10" />,
-    description: "Sleek, responsive, and user-centric interfaces.",
+    title: "Verified Jobs",
+    icon: <CheckCircle className="w-10 h-10" />,
+    description: "All job listings are verified and authenticated for your safety.",
     color: "from-blue-400 to-blue-600"
   },
   {
-    title: "Creative Design",
-    icon: <Palette className="w-10 h-10" />,
-    description: "Innovative visuals that capture brand identity.",
+    title: "Instant Hiring",
+    icon: <Briefcase className="w-10 h-10" />,
+    description: "Quick and efficient hiring process to get you started faster.",
     color: "from-purple-400 to-purple-600"
   },
   {
-    title: "24*7 User Support",
+    title: "24/7 Support",
     icon: <Headset className="w-10 h-10" />,
-    description: "Round-the-clock assistance for your peace of mind.",
+    description: "Round-the-clock assistance for all your job-related queries.",
     color: "from-green-400 to-green-600"
   },
   {
-    title: "Business Growth",
+    title: "Career Growth",
     icon: <TrendingUp className="w-10 h-10" />,
-    description: "Data-driven strategies to scale your operations.",
+    description: "Opportunities that help you grow and advance in your career.",
     color: "from-orange-400 to-orange-600"
   },
   {
-    title: "Market Strategy",
-    icon: <Target className="w-10 h-10" />,
-    description: "Targeted campaigns that maximize ROI.",
+    title: "Global Opportunities",
+    icon: <Globe className="w-10 h-10" />,
+    description: "Access job openings from companies across multiple locations.",
     color: "from-red-400 to-red-600"
   },
   {
-    title: "Affordable Cost",
+    title: "Competitive Salary",
     icon: <Wallet className="w-10 h-10" />,
-    description: "Premium solutions tailored to your budget.",
+    description: "Well-paying jobs with attractive salary packages and benefits.",
     color: "from-teal-400 to-teal-600"
   },
   {
-    title: "Safe & Secure",
+    title: "Secure Process",
     icon: <ShieldCheck className="w-10 h-10" />,
-    description: "Enterprise-grade security for your data.",
+    description: "Your personal data and applications are safe with us.",
     color: "from-indigo-400 to-indigo-600"
   }
 ]
 
 export default function Categories() {
-  const slider = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -82,13 +82,8 @@ export default function Categories() {
     return () => observer.disconnect()
   }, [])
 
-  const scroll = (dir: "left" | "right") => {
-    if (!slider.current) return
-    slider.current.scrollBy({
-      left: dir === "left" ? -320 : 320,
-      behavior: "smooth"
-    })
-  }
+  // Duplicate categories for seamless infinite loop
+  const duplicatedCategories = [...categories, ...categories]
 
   return (
     <section
@@ -107,7 +102,7 @@ export default function Categories() {
           className={`text-center mb-16 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
             }`}
         >
-          <span className="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-700 text-xs font-bold tracking-wider mb-4 uppercase">
+          <span className="inline-block py-2 px-4 rounded-full bg-blue-100 text-blue-700 text-sm font-bold tracking-wider mb-4 uppercase border border-blue-200">
             Why Choose Us
           </span>
           <h2 className="text-3xl md:text-5xl font-bold mb-6 text-[#05033e]">
@@ -119,23 +114,29 @@ export default function Categories() {
           </p>
         </div>
 
-        {/* Slider Container */}
-        <div className="relative group px-4 md:px-12">
+        {/* Infinite Marquee Slider */}
+        <div className="relative overflow-hidden">
+          {/* Gradient Overlays for smooth fade effect */}
+          <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
 
-          {/* Slider */}
+          {/* Marquee Track - uses marquee-track class from globals.css */}
           <div
-            ref={slider}
-            className="flex gap-6 overflow-x-auto px-4 pb-12 pt-4 snap-x snap-mandatory no-scrollbar"
-            style={{ scrollBehavior: 'smooth' }}
+            className="marquee-track flex gap-6 pb-8 pt-4"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            style={{
+              animationPlayState: isPaused ? 'paused' : 'running'
+            }}
           >
-            {categories.map((item, i) => (
+            {duplicatedCategories.map((item, i) => (
               <Link
                 key={i}
                 href="#"
-                className={`snap-center shrink-0 w-[300px] md:w-[360px] 
+                className={`shrink-0 w-[300px] md:w-[360px] 
                            transition-all duration-700
                            ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}
-                style={{ transitionDelay: `${i * 100}ms` }}
+                style={{ transitionDelay: `${(i % categories.length) * 100}ms` }}
               >
                 <div
                   className="bg-white h-[380px] rounded-2xl p-8
@@ -169,40 +170,10 @@ export default function Categories() {
               </Link>
             ))}
           </div>
-
-          {/* Navigation Arrows */}
-          <div className="hidden md:flex justify-between items-center absolute top-1/2 -translate-y-1/2 left-0 right-0 w-full pointer-events-none px-0">
-            <button
-              onClick={() => scroll("left")}
-              className="w-12 h-12 rounded-full bg-white shadow-lg border border-slate-100 flex items-center justify-center 
-                        text-[#05033e] hover:bg-[#05033e] hover:text-white transition-all duration-300 pointer-events-auto
-                        hover:scale-110 -ml-6"
-              aria-label="Scroll left"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-
-            <button
-              onClick={() => scroll("right")}
-              className="w-12 h-12 rounded-full bg-white shadow-lg border border-slate-100 flex items-center justify-center 
-                        text-[#05033e] hover:bg-[#05033e] hover:text-white transition-all duration-300 pointer-events-auto
-                        hover:scale-110 -mr-6"
-              aria-label="Scroll right"
-            >
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Swipe Indicator */}
-        <div className="flex md:hidden justify-center items-center gap-2 mt-4 text-slate-400 text-sm animate-pulse">
-          <ArrowLeft className="w-4 h-4" />
-          <span>Swipe to explore</span>
-          <ArrowRight className="w-4 h-4" />
         </div>
 
       </div>
-    </section >
+    </section>
   )
 }
 

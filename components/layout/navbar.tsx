@@ -2,14 +2,21 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { ChevronDown, Menu, X } from "lucide-react"
 
 export default function Navbar() {
+  const pathname = usePathname()
   const [openMenu, setOpenMenu] = useState<string | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileSubmenu, setMobileSubmenu] = useState<string | null>(null)
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false)
+    setMobileSubmenu(null)
+  }, [pathname])
 
   const toggleMobileSubmenu = (menu: string) => {
     setMobileSubmenu(mobileSubmenu === menu ? null : menu)
