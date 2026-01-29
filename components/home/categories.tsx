@@ -17,45 +17,45 @@ import {
 
 const categories = [
   {
-    title: "Verified Jobs",
-    icon: <CheckCircle className="w-10 h-10" />,
-    description: "All job listings are verified and authenticated for your safety.",
+    title: "End-to-End Staffing",
+    icon: <Briefcase className="w-10 h-10" />,
+    description: "Complete workforce solutions from sourcing to deployment, tailored to your business needs.",
     color: "from-blue-400 to-blue-600"
   },
   {
-    title: "Instant Hiring",
-    icon: <Briefcase className="w-10 h-10" />,
-    description: "Quick and efficient hiring process to get you started faster.",
+    title: "Pan-India Presence",
+    icon: <Globe className="w-10 h-10" />,
+    description: "Extensive network across India connecting talent with opportunities in every major city.",
     color: "from-purple-400 to-purple-600"
   },
   {
-    title: "24/7 Support",
+    title: "Dedicated Support",
     icon: <Headset className="w-10 h-10" />,
-    description: "Round-the-clock assistance for all your job-related queries.",
+    description: "Our team provides personalized guidance throughout your recruitment journey.",
     color: "from-green-400 to-green-600"
   },
   {
-    title: "Career Growth",
+    title: "Skill Development",
     icon: <TrendingUp className="w-10 h-10" />,
-    description: "Opportunities that help you grow and advance in your career.",
+    description: "Training and upskilling programs to enhance workforce capabilities and career growth.",
     color: "from-orange-400 to-orange-600"
   },
   {
-    title: "Global Opportunities",
-    icon: <Globe className="w-10 h-10" />,
-    description: "Access job openings from companies across multiple locations.",
+    title: "Industry Expertise",
+    icon: <CheckCircle className="w-10 h-10" />,
+    description: "Specialized staffing solutions across manufacturing, retail, logistics, and IT sectors.",
     color: "from-red-400 to-red-600"
   },
   {
-    title: "Competitive Salary",
-    icon: <Wallet className="w-10 h-10" />,
-    description: "Well-paying jobs with attractive salary packages and benefits.",
+    title: "Compliant Solutions",
+    icon: <ShieldCheck className="w-10 h-10" />,
+    description: "100% statutory compliance ensuring transparent and legally sound employment practices.",
     color: "from-teal-400 to-teal-600"
   },
   {
-    title: "Secure Process",
-    icon: <ShieldCheck className="w-10 h-10" />,
-    description: "Your personal data and applications are safe with us.",
+    title: "Quick Turnaround",
+    icon: <Wallet className="w-10 h-10" />,
+    description: "Fast and efficient placement process to meet your urgent staffing requirements.",
     color: "from-indigo-400 to-indigo-600"
   }
 ]
@@ -102,7 +102,7 @@ export default function Categories() {
           className={`text-center mb-16 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
             }`}
         >
-          <span className="inline-block py-2 px-4 rounded-full bg-blue-100 text-blue-700 text-sm font-bold tracking-wider mb-4 uppercase border border-blue-200">
+          <span className="inline-block text-[#05033e] text-sm font-semibold tracking-wider mb-4 uppercase border-b-2 border-[#05033e] pb-1">
             Why Choose Us
           </span>
           <h2 className="text-3xl md:text-5xl font-bold mb-6 text-[#05033e]">
