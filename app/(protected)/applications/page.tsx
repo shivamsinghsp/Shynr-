@@ -36,6 +36,7 @@ export default function ApplicationsPage() {
     const router = useRouter();
     const [applications, setApplications] = useState<Application[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [filter, setFilter] = useState("all");
 
     useEffect(() => {
@@ -44,30 +45,64 @@ export default function ApplicationsPage() {
         }
     }, [status, router]);
 
-    useEffect(() => {
-        const fetchApplications = async () => {
-            try {
-                const response = await fetch("/api/applications");
-                const data = await response.json();
-                if (data.success) {
-                    setApplications(data.data);
-                }
-            } catch (error) {
-                console.error("Error fetching applications:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchApplications = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const response = await fetch("/api/applications");
 
+            if (!response.ok) {
+                throw new Error('Failed to fetch applications');
+            }
+
+            const data = await response.json();
+            if (data.success) {
+                setApplications(data.data);
+            } else {
+                setError(data.error || "Failed to load applications");
+            }
+        } catch (error) {
+            console.error("Error fetching applications:", error);
+            setError("Unable to load your applications. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         if (session) {
             fetchApplications();
+        } else if (status === "loading") {
+            // Wait
+        } else {
+            setLoading(false);
         }
-    }, [session]);
+    }, [session, status]);
 
     if (status === "loading" || loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <Loader2 className="w-8 h-8 animate-spin text-[#05033e]" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+                <div className="text-center max-w-md w-full bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Briefcase className="text-red-500" size={24} />
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">Something went wrong</h3>
+                    <p className="text-gray-600 mb-6">{error}</p>
+                    <button
+                        onClick={fetchApplications}
+                        className="bg-[#05033e] text-white px-6 py-2 rounded-xl text-sm font-medium hover:bg-[#020120] transition-colors"
+                    >
+                        Try Again
+                    </button>
+                </div>
             </div>
         );
     }
@@ -111,8 +146,8 @@ export default function ApplicationsPage() {
                         key={key}
                         onClick={() => setFilter(key)}
                         className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${filter === key
-                                ? "bg-[#05033e] text-white"
-                                : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
+                            ? "bg-[#05033e] text-white"
+                            : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
                             }`}
                     >
                         {key.charAt(0).toUpperCase() + key.slice(1)} ({count})
@@ -134,19 +169,34 @@ export default function ApplicationsPage() {
                                         <Briefcase className="text-gray-400" size={24} />
                                     </div>
                                     <div>
-                                        <h3 className="font-semibold text-gray-900 text-lg">{app.job.title}</h3>
-                                        <p className="text-gray-600">{app.job.company}</p>
-                                        <div className="flex flex-wrap gap-3 mt-2 text-sm text-gray-500">
-                                            <span className="flex items-center gap-1">
-                                                <MapPin size={14} /> {app.job.location}
-                                            </span>
-                                            <span className="flex items-center gap-1">
-                                                <Clock size={14} /> {app.job.type}
-                                            </span>
-                                            <span className="flex items-center gap-1">
-                                                <Calendar size={14} /> Applied {new Date(app.appliedAt).toLocaleDateString()}
-                                            </span>
-                                        </div>
+                                        {/* Null Safety Check for Job */}
+                                        {app.job ? (
+                                            <>
+                                                <h3 className="font-semibold text-gray-900 text-lg">{app.job.title}</h3>
+                                                <p className="text-gray-600">{app.job.company}</p>
+                                                <div className="flex flex-wrap gap-3 mt-2 text-sm text-gray-500">
+                                                    <span className="flex items-center gap-1">
+                                                        <MapPin size={14} /> {app.job.location}
+                                                    </span>
+                                                    <span className="flex items-center gap-1">
+                                                        <Clock size={14} /> {app.job.type}
+                                                    </span>
+                                                    <span className="flex items-center gap-1">
+                                                        <Calendar size={14} /> Applied {new Date(app.appliedAt).toLocaleDateString()}
+                                                    </span>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <h3 className="font-semibold text-gray-400 text-lg italic">Job Unavailable</h3>
+                                                <p className="text-gray-400 italic">This job listing has been removed.</p>
+                                                <div className="flex flex-wrap gap-3 mt-2 text-sm text-gray-400">
+                                                    <span className="flex items-center gap-1">
+                                                        <Calendar size={14} /> Applied {new Date(app.appliedAt).toLocaleDateString()}
+                                                    </span>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
 
@@ -154,12 +204,14 @@ export default function ApplicationsPage() {
                                     <span className={`px-4 py-2 rounded-full text-sm font-medium border ${statusColors[app.status]}`}>
                                         {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
                                     </span>
-                                    <Link
-                                        href={`/jobs/${app.job._id}`}
-                                        className="p-2 text-gray-400 hover:text-[#05033e] transition-colors"
-                                    >
-                                        <ExternalLink size={20} />
-                                    </Link>
+                                    {app.job && (
+                                        <Link
+                                            href={`/jobs/${app.job._id}`}
+                                            className="p-2 text-gray-400 hover:text-[#05033e] transition-colors"
+                                        >
+                                            <ExternalLink size={20} />
+                                        </Link>
+                                    )}
                                 </div>
                             </div>
 

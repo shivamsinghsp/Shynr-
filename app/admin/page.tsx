@@ -1,17 +1,34 @@
 'use client';
 
-import { useState } from 'react';
-import { signIn, signOut } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Eye, EyeOff } from 'lucide-react';
+
 
 export default function AdminLoginPage() {
+    const { data: session, status } = useSession();
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
+    // Clear any existing session when loading the login page
+    useEffect(() => {
+        if (status === 'authenticated' && session) {
+            // If already logged in as admin, redirect to dashboard
+            if ((session.user as any)?.role === 'admin') {
+                router.push('/admin/dashboard');
+            } else {
+                // If logged in as user, sign out first
+                signOut({ redirect: false });
+            }
+        }
+    }, [status, session, router]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -87,14 +104,23 @@ export default function AdminLoginPage() {
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Password
                             </label>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#05033e] focus:border-transparent transition-colors"
-                                placeholder="••••••••"
-                                required
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#05033e] focus:border-transparent transition-colors pr-12"
+                                    placeholder="••••••••"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                                >
+                                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                </button>
+                            </div>
                             <div className="flex justify-end mt-1">
                                 <Link href="/auth/forgot-password" className="text-sm text-[#05033e] hover:underline">
                                     Forgot Password?

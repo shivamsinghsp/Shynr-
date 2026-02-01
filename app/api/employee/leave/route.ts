@@ -23,10 +23,24 @@ export async function GET(request: NextRequest) {
 
         const { searchParams } = new URL(request.url);
         const status = searchParams.get('status');
-        const limit = parseInt(searchParams.get('limit') || '20');
-        const page = parseInt(searchParams.get('page') || '1');
+
+        // Pagination Sanitization
+        let page = parseInt(searchParams.get('page') || '1');
+        let limit = parseInt(searchParams.get('limit') || '20');
+
+        // Ensure bounds
+        page = Math.max(1, isNaN(page) ? 1 : page);
+        limit = Math.max(1, Math.min(50, isNaN(limit) ? 20 : limit)); // Cap limit at 50
+
+        // ObjectId Correctness
+        // Determine whose leaves to fetch
+        // Employees see their own, Admins might see implied employee or their own? 
+        // Based on original code: const query: any = { employee: session.user.id };
+        // This implies fetching "my" leaves.
+        // We must ensure session.user.id is cast to ObjectId if filtering/aggregating
 
         const query: any = { employee: session.user.id };
+
         if (status && ['pending', 'approved', 'rejected'].includes(status)) {
             query.status = status;
         }
@@ -42,9 +56,14 @@ export async function GET(request: NextRequest) {
             LeaveRequest.countDocuments(query),
         ]);
 
-        // Get summary stats
+        // Fix Aggregation ObjectId issue
+        // Mongoose aggregation pipeline requires ObjectId types for matching if stored as ObjectId
+        const mongoose = (await import('mongoose')).default;
+        const employeeId = new mongoose.Types.ObjectId(session.user.id as string);
+
+        // Get summary stats using aggregation
         const stats = await LeaveRequest.aggregate([
-            { $match: { employee: session.user.id } },
+            { $match: { employee: employeeId } }, // Use objectId here
             {
                 $group: {
                     _id: '$status',
@@ -82,9 +101,10 @@ export async function GET(request: NextRequest) {
             },
         });
     } catch (error: any) {
-        console.error('Error fetching leave requests:', error);
+        // Error Message Hygiene
+        console.error('Error fetching leave requests:', error); // Log full error server-side
         return NextResponse.json(
-            { error: error.message || 'Failed to fetch leave requests' },
+            { error: 'Failed to fetch leave requests' }, // Generic client message
             { status: 500 }
         );
     }
@@ -166,7 +186,7 @@ export async function POST(request: NextRequest) {
     } catch (error: any) {
         console.error('Error creating leave request:', error);
         return NextResponse.json(
-            { error: error.message || 'Failed to create leave request' },
+            { error: 'Failed to create leave request' },
             { status: 500 }
         );
     }

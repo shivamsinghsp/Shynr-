@@ -19,8 +19,15 @@ export async function GET(request: NextRequest) {
         await dbConnect();
 
         const { searchParams } = new URL(request.url);
-        const page = parseInt(searchParams.get('page') || '1');
-        const limit = parseInt(searchParams.get('limit') || '20');
+
+        // Pagination Sanitization
+        let page = parseInt(searchParams.get('page') || '1');
+        let limit = parseInt(searchParams.get('limit') || '20');
+
+        // Ensure bounds and handle NaN
+        page = Math.max(1, isNaN(page) ? 1 : page);
+        limit = Math.max(1, Math.min(50, isNaN(limit) ? 20 : limit)); // Cap limit
+
         const skip = (page - 1) * limit;
         const status = searchParams.get('status') || '';
         const jobId = searchParams.get('jobId') || '';

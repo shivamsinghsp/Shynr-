@@ -2,6 +2,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface IPasswordResetToken extends Document {
     userId: mongoose.Types.ObjectId;
+    userType: 'user' | 'admin';
     token: string;
     expiresAt: Date;
     createdAt: Date;
@@ -11,8 +12,12 @@ const PasswordResetTokenSchema = new Schema<IPasswordResetToken>(
     {
         userId: {
             type: Schema.Types.ObjectId,
-            ref: 'User',
             required: true,
+        },
+        userType: {
+            type: String,
+            enum: ['user', 'admin'],
+            default: 'user',
         },
         token: {
             type: String,

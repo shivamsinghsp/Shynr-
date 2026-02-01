@@ -2,8 +2,8 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Loader2, FileText, Mail, Phone, MapPin, Briefcase, GraduationCap, Edit2, Download } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { Loader2, FileText, Mail, Phone, MapPin, Briefcase, GraduationCap, Edit2, Download, Camera, AlertTriangle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -46,6 +46,10 @@ export default function ProfilePage() {
     const router = useRouter();
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
+    const [uploadingImage, setUploadingImage] = useState(false);
+    const imageInputRef = useRef<HTMLInputElement>(null);
+
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (status === "unauthenticated") {
@@ -53,25 +57,87 @@ export default function ProfilePage() {
         }
     }, [status, router]);
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const response = await fetch("/api/users/profile");
-                const data = await response.json();
-                if (data.success) {
-                    setProfile(data.data);
-                }
-            } catch (error) {
-                console.error("Error fetching profile:", error);
-            } finally {
-                setLoading(false);
+    const fetchProfile = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const response = await fetch("/api/users/profile");
+            const data = await response.json();
+            if (data.success) {
+                setProfile(data.data);
+            } else {
+                setError(data.error || "Failed to load profile");
             }
-        };
+        } catch (error) {
+            console.error("Error fetching profile:", error);
+            setError("Unable to load profile. Please check your connection.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         if (session) {
             fetchProfile();
         }
     }, [session]);
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('Please select an image file');
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('Image must be less than 5MB');
+            return;
+        }
+
+        setUploadingImage(true);
+        try {
+            // Upload to Cloudinary
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('type', 'profile');
+
+            const uploadRes = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const uploadData = await uploadRes.json();
+
+            if (!uploadData.success) {
+                throw new Error(uploadData.error || 'Upload failed');
+            }
+
+            // Update profile with new image
+            const updateRes = await fetch('/api/users/profile', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...profile,
+                    profileImage: uploadData.data.url,
+                }),
+            });
+            const updateData = await updateRes.json();
+
+            if (updateData.success) {
+                setProfile(updateData.data);
+            } else {
+                throw new Error(updateData.error || 'Failed to update profile');
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Failed to upload image. Please try again.');
+        } finally {
+            setUploadingImage(false);
+        }
+    };
 
     if (status === "loading" || loading) {
         return (
@@ -81,10 +147,35 @@ export default function ProfilePage() {
         );
     }
 
+    if (error) {
+        return (
+            <div className="min-h-screen flex items-center justify-center p-6">
+                <div className="text-center max-w-md w-full bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <AlertTriangle className="text-red-500" size={24} />
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">Failed to load profile</h3>
+                    <p className="text-gray-600 mb-6">{error}</p>
+                    <button
+                        onClick={fetchProfile}
+                        className="bg-[#05033e] text-white px-6 py-2 rounded-xl text-sm font-medium hover:bg-[#020120] transition-colors"
+                    >
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     if (!profile) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <p className="text-gray-500">Profile not found</p>
+                <div className="text-center">
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">Profile not found</h3>
+                    <Link href="/onboarding" className="text-blue-600 hover:underline">
+                        Create your profile
+                    </Link>
+                </div>
             </div>
         );
     }
@@ -98,9 +189,9 @@ export default function ProfilePage() {
 
                 {/* Profile Info */}
                 <div className="px-6 pb-6">
-                    <div className="flex flex-col md:flex-row md:items-end gap-4 -mt-12">
-                        {/* Avatar */}
-                        <div className="relative">
+                    <div className="flex flex-col md:flex-row gap-4">
+                        {/* Avatar with upload - overlaps banner */}
+                        <div className="relative group -mt-14">
                             {profile.profileImage ? (
                                 <Image
                                     src={profile.profileImage}
@@ -114,10 +205,29 @@ export default function ProfilePage() {
                                     {profile.firstName?.[0] || profile.email[0].toUpperCase()}
                                 </div>
                             )}
+                            {/* Upload overlay */}
+                            <button
+                                onClick={() => imageInputRef.current?.click()}
+                                disabled={uploadingImage}
+                                className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                            >
+                                {uploadingImage ? (
+                                    <Loader2 className="w-8 h-8 text-white animate-spin" />
+                                ) : (
+                                    <Camera className="w-8 h-8 text-white" />
+                                )}
+                            </button>
+                            <input
+                                ref={imageInputRef}
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={handleImageUpload}
+                            />
                         </div>
 
-                        {/* Info */}
-                        <div className="flex-1 md:pb-2">
+                        {/* Info - in white section */}
+                        <div className="flex-1 pt-2">
                             <h1 className="text-2xl font-bold text-gray-900">
                                 {profile.firstName} {profile.lastName}
                             </h1>
@@ -142,7 +252,7 @@ export default function ProfilePage() {
                         </div>
 
                         {/* Actions */}
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 items-start pt-2">
                             <Link
                                 href="/onboarding"
                                 className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"

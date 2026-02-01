@@ -148,7 +148,21 @@ const JobsPage = () => {
 
 
                         {/* Content */}
-                        {loading ? (
+                        {error ? (
+                            <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
+                                <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <div className="text-red-500 font-bold text-xl">!</div>
+                                </div>
+                                <h3 className="text-lg font-bold text-gray-900 mb-2">Failed to load jobs</h3>
+                                <p className="text-gray-600 mb-6">{error}</p>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="text-[#05033e] font-medium hover:underline"
+                                >
+                                    Try refreshing the page
+                                </button>
+                            </div>
+                        ) : loading ? (
                             <div className="space-y-4">
                                 {[1, 2, 3].map(i => (
                                     <div key={i} className="h-64 bg-gray-100 rounded-2xl animate-pulse"></div>

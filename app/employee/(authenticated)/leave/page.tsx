@@ -43,15 +43,19 @@ export default function EmployeeLeavePage() {
 
     const fetchLeaves = useCallback(async () => {
         try {
+            setError('');
             const statusParam = filter !== 'all' ? `&status=${filter}` : '';
             const res = await fetch(`/api/employee/leave?limit=50${statusParam}`);
             if (res.ok) {
                 const data = await res.json();
                 setLeaves(data.leaves || []);
                 setSummary(data.summary || { pending: 0, approved: 0, rejected: 0, totalApprovedDays: 0 });
+            } else {
+                setError('Failed to load leave requests');
             }
         } catch (err) {
             console.error('Error fetching leaves:', err);
+            setError('Unable to reach server');
         } finally {
             setLoading(false);
         }
@@ -140,14 +144,14 @@ export default function EmployeeLeavePage() {
                 }
                 
                 .page-title {
-                    color: white;
+                    color: #1e293b;
                     font-size: 28px;
                     font-weight: 700;
                     margin-bottom: 8px;
                 }
                 
                 .page-subtitle {
-                    color: rgba(255, 255, 255, 0.5);
+                    color: #64748b;
                     font-size: 14px;
                 }
                 
@@ -179,22 +183,22 @@ export default function EmployeeLeavePage() {
                 }
                 
                 .stat-card {
-                    background: rgba(255, 255, 255, 0.05);
-                    backdrop-filter: blur(20px);
-                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    background: white;
+                    border: 1px solid #e2e8f0;
                     border-radius: 12px;
                     padding: 20px;
                     text-align: center;
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
                 }
                 
                 .stat-value {
-                    color: white;
+                    color: #1e293b;
                     font-size: 28px;
                     font-weight: 700;
                 }
                 
                 .stat-label {
-                    color: rgba(255, 255, 255, 0.5);
+                    color: #64748b;
                     font-size: 12px;
                     margin-top: 4px;
                 }
@@ -208,31 +212,32 @@ export default function EmployeeLeavePage() {
                 
                 .filter-tab {
                     padding: 8px 16px;
-                    background: rgba(255, 255, 255, 0.05);
-                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    background: white;
+                    border: 1px solid #e2e8f0;
                     border-radius: 8px;
-                    color: rgba(255, 255, 255, 0.6);
+                    color: #64748b;
                     font-size: 13px;
                     cursor: pointer;
                     transition: all 0.2s ease;
                 }
                 
                 .filter-tab:hover {
-                    background: rgba(255, 255, 255, 0.08);
+                    border-color: #cbd5e1;
+                    background: #f8fafc;
                 }
                 
                 .filter-tab.active {
-                    background: rgba(6, 182, 212, 0.2);
-                    border-color: rgba(6, 182, 212, 0.3);
-                    color: #06b6d4;
+                    background: #0891b2;
+                    border-color: #0891b2;
+                    color: white;
                 }
                 
                 .card {
-                    background: rgba(255, 255, 255, 0.05);
-                    backdrop-filter: blur(20px);
-                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    background: white;
+                    border: 1px solid #e2e8f0;
                     border-radius: 16px;
                     overflow: hidden;
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
                 }
                 
                 .leave-list {
@@ -242,7 +247,7 @@ export default function EmployeeLeavePage() {
                 
                 .leave-item {
                     padding: 20px 24px;
-                    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+                    border-bottom: 1px solid #f1f5f9;
                     display: grid;
                     grid-template-columns: 1fr auto;
                     gap: 16px;
@@ -251,7 +256,7 @@ export default function EmployeeLeavePage() {
                 }
                 
                 .leave-item:hover {
-                    background: rgba(255, 255, 255, 0.03);
+                    background: #f8fafc;
                 }
                 
                 .leave-item:last-child {
@@ -265,13 +270,13 @@ export default function EmployeeLeavePage() {
                 }
                 
                 .leave-type {
-                    color: white;
+                    color: #1e293b;
                     font-size: 15px;
                     font-weight: 600;
                 }
                 
                 .leave-dates {
-                    color: rgba(255, 255, 255, 0.6);
+                    color: #64748b;
                     font-size: 13px;
                     display: flex;
                     align-items: center;
@@ -280,7 +285,7 @@ export default function EmployeeLeavePage() {
                 
                 .leave-days {
                     background: rgba(6, 182, 212, 0.15);
-                    color: #06b6d4;
+                    color: #0891b2;
                     padding: 2px 8px;
                     border-radius: 4px;
                     font-size: 11px;
@@ -288,7 +293,7 @@ export default function EmployeeLeavePage() {
                 }
                 
                 .leave-reason {
-                    color: rgba(255, 255, 255, 0.5);
+                    color: #64748b;
                     font-size: 13px;
                     line-height: 1.4;
                 }
@@ -309,21 +314,21 @@ export default function EmployeeLeavePage() {
                 }
                 
                 .leave-date-applied {
-                    color: rgba(255, 255, 255, 0.4);
+                    color: #94a3b8;
                     font-size: 11px;
                 }
                 
                 .empty-state {
                     text-align: center;
                     padding: 48px;
-                    color: rgba(255, 255, 255, 0.4);
+                    color: #64748b;
                 }
                 
                 /* Form Modal */
                 .modal-overlay {
                     position: fixed;
                     inset: 0;
-                    background: rgba(0, 0, 0, 0.7);
+                    background: rgba(0, 0, 0, 0.5);
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -332,25 +337,26 @@ export default function EmployeeLeavePage() {
                 }
                 
                 .modal {
-                    background: #0d2847;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    background: white;
+                    border: 1px solid #e2e8f0;
                     border-radius: 16px;
                     width: 100%;
                     max-width: 500px;
                     max-height: 90vh;
                     overflow-y: auto;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
                 }
                 
                 .modal-header {
                     padding: 20px 24px;
-                    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                    border-bottom: 1px solid #e2e8f0;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                 }
                 
                 .modal-title {
-                    color: white;
+                    color: #1e293b;
                     font-size: 18px;
                     font-weight: 600;
                 }
@@ -358,14 +364,18 @@ export default function EmployeeLeavePage() {
                 .close-btn {
                     width: 32px;
                     height: 32px;
-                    background: rgba(255, 255, 255, 0.08);
+                    background: #f1f5f9;
                     border: none;
                     border-radius: 8px;
-                    color: rgba(255, 255, 255, 0.6);
+                    color: #64748b;
                     cursor: pointer;
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                }
+                
+                .close-btn:hover {
+                    background: #e2e8f0;
                 }
                 
                 .modal-body {
@@ -378,7 +388,7 @@ export default function EmployeeLeavePage() {
                 
                 .form-label {
                     display: block;
-                    color: rgba(255, 255, 255, 0.8);
+                    color: #475569;
                     font-size: 13px;
                     font-weight: 500;
                     margin-bottom: 8px;
@@ -389,10 +399,10 @@ export default function EmployeeLeavePage() {
                 .form-textarea {
                     width: 100%;
                     padding: 12px 14px;
-                    background: rgba(255, 255, 255, 0.08);
-                    border: 1px solid rgba(255, 255, 255, 0.15);
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
                     border-radius: 10px;
-                    color: white;
+                    color: #1e293b;
                     font-size: 14px;
                     outline: none;
                     transition: all 0.2s ease;
@@ -402,11 +412,12 @@ export default function EmployeeLeavePage() {
                 .form-select:focus,
                 .form-textarea:focus {
                     border-color: #06b6d4;
-                    background: rgba(255, 255, 255, 0.1);
+                    background: white;
+                    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
                 }
                 
                 .form-select option {
-                    background: #0d2847;
+                    background: white;
                 }
                 
                 .form-textarea {
@@ -428,15 +439,15 @@ export default function EmployeeLeavePage() {
                 }
                 
                 .alert.error {
-                    background: rgba(239, 68, 68, 0.15);
-                    border: 1px solid rgba(239, 68, 68, 0.3);
-                    color: #fca5a5;
+                    background: #fef2f2;
+                    border: 1px solid #fecaca;
+                    color: #dc2626;
                 }
                 
                 .alert.success {
-                    background: rgba(34, 197, 94, 0.15);
-                    border: 1px solid rgba(34, 197, 94, 0.3);
-                    color: #86efac;
+                    background: #f0fdf4;
+                    border: 1px solid #bbf7d0;
+                    color: #16a34a;
                 }
                 
                 .submit-btn {
@@ -503,6 +514,16 @@ export default function EmployeeLeavePage() {
                     New Request
                 </button>
             </div>
+
+            {/* Error Display */}
+            {error && !showForm && (
+                <div className="alert error" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span>{error}</span>
+                    <button onClick={() => fetchLeaves()} style={{ background: 'transparent', border: 'none', cursor: 'pointer', textDecoration: 'underline', color: 'inherit', fontSize: 'inherit' }}>
+                        Retry
+                    </button>
+                </div>
+            )}
 
             {success && <div className="alert success">{success}</div>}
 

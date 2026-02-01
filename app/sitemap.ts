@@ -3,7 +3,16 @@ import dbConnect from '@/db';
 import Job from '@/db/models/Job';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL;
+    if (!baseUrl) {
+        // Safe only in dev, but risky in prod to fallback. 
+        // Better to return empty or throw if strict. 
+        // For now, we keep localhost only if dev.
+        if (process.env.NODE_ENV === 'production') {
+            console.error('CRITICAL: NEXT_PUBLIC_APP_URL not set for sitemap generation');
+        }
+    }
+    const safeBaseUrl = baseUrl || 'http://localhost:3000';
 
     // Static routes
     const routes = [

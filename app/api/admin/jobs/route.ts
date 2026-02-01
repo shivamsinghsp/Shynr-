@@ -83,20 +83,12 @@ export async function POST(request: NextRequest) {
 
         const body = await request.json();
 
-        // Get admin user ID
-        const Admin = (await import('@/db/models/Admin')).default;
-        const admin = await Admin.findOne({ email: session.user.email });
-
-        if (!admin) {
-            return NextResponse.json(
-                { success: false, error: 'Admin not found' },
-                { status: 404 }
-            );
-        }
+        // Use the session user ID directly (already verified as admin)
+        const createdById = (session.user as any).id;
 
         const job = await Job.create({
             ...body,
-            createdBy: admin._id,
+            createdBy: createdById,
             postedDate: new Date(),
             viewCount: 0,
             applicationCount: 0,

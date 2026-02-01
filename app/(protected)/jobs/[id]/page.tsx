@@ -3,8 +3,10 @@
 import { useParams } from "next/navigation";
 import { BriefcaseBusiness, Clock, Wallet, MapPin, User, Mail, Phone, MessageSquare, Linkedin, Facebook, Globe, Share2, Loader2, Calendar, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSession } from "next-auth/react";
+import DOMPurify from "isomorphic-dompurify";
+
 
 interface Job {
     _id: string;
@@ -154,8 +156,8 @@ export default function JobDetailsPage() {
             {/* Header Section */}
             <div
                 className={`w-full border-b border-gray-100 px-6 sticky top-0 z-50 transition-all duration-300 ${isScrolled
-                        ? "bg-white/80 backdrop-blur-md shadow-md py-4"
-                        : "bg-white py-12"
+                    ? "bg-white/80 backdrop-blur-md shadow-md py-4"
+                    : "bg-white py-12"
                     }`}
             >
                 <div className="max-w-[95%] mx-auto">
@@ -248,7 +250,7 @@ export default function JobDetailsPage() {
                         <h2 className="text-2xl font-bold text-[#05033e] mb-6">Job Description</h2>
                         <div
                             className="text-gray-600 leading-relaxed text-lg mb-8 prose prose-lg max-w-none"
-                            dangerouslySetInnerHTML={{ __html: job.description || "No description provided." }}
+                            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.description || "No description provided.") }}
                         />
 
                         {job.responsibilities && job.responsibilities.length > 0 && (

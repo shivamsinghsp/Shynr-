@@ -349,9 +349,11 @@ export default function CreateJobPage() {
                             <input
                                 type="number"
                                 name="salary.min"
-                                value={formData.salary.min}
+                                value={formData.salary.min || ''}
                                 onChange={handleChange}
                                 required
+                                min="0"
+                                placeholder="e.g., 10000"
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#05033e] focus:border-transparent"
                             />
                         </div>
@@ -360,9 +362,11 @@ export default function CreateJobPage() {
                             <input
                                 type="number"
                                 name="salary.max"
-                                value={formData.salary.max}
+                                value={formData.salary.max || ''}
                                 onChange={handleChange}
                                 required
+                                min="0"
+                                placeholder="e.g., 15000"
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#05033e] focus:border-transparent"
                             />
                         </div>

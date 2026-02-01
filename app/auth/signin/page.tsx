@@ -26,22 +26,22 @@ export default function SignInPage() {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-    // Redirect if already signed in
+    // Redirect if already signed in, or clear admin session
     useEffect(() => {
         if (status === "authenticated" && session?.user) {
-            // Check if user has completed onboarding
-            const onboardingCompleted = (session.user as { onboardingCompleted?: boolean }).onboardingCompleted;
-            if (onboardingCompleted) {
-                router.push("/jobs");
-            } else {
-                router.push("/onboarding");
+            // If logged in as admin, sign out first (wrong portal)
+            if ((session.user as any).role === 'admin') {
+                signOut({ redirect: false });
+                return;
             }
+            // Redirect regular users directly to jobs
+            router.push("/jobs");
         }
     }, [status, session, router]);
 
     const handleGoogleSignIn = async () => {
         setLoading(true);
-        await signIn("google", { callbackUrl: "/onboarding" });
+        await signIn("google", { callbackUrl: "/jobs" });
     };
 
 
@@ -78,7 +78,7 @@ export default function SignInPage() {
             }
 
             // Check onboarding status and redirect
-            router.push("/onboarding");
+            router.push("/jobs");
         }
     };
 
@@ -121,7 +121,7 @@ export default function SignInPage() {
             if (result?.error) {
                 setError(result.error);
             } else {
-                router.push("/onboarding");
+                router.push("/jobs");
             }
         } catch (err) {
             setError(err instanceof Error ? err.message : "Something went wrong");

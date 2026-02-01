@@ -117,8 +117,13 @@ const sampleJobs = [
 ];
 
 export async function POST(request: NextRequest) {
+    // Block in production environment
+    if (process.env.NODE_ENV === 'production') {
+        return NextResponse.json({ error: 'Not available in production' }, { status: 403 });
+    }
+
     try {
-        // Simple auth check - in production, use proper admin authentication
+        // Simple auth check for development
         const { searchParams } = new URL(request.url);
         const secret = searchParams.get('secret');
 

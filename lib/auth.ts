@@ -5,7 +5,10 @@ import GoogleProvider from 'next-auth/providers/google';
 import bcrypt from 'bcryptjs';
 import dbConnect from '@/db';
 import User from '@/db/models/User';
-import mongoose from 'mongoose';
+import { loginRateLimiter } from './rateLimit';
+
+// Generic error message to prevent enumeration
+const GENERIC_AUTH_ERROR = 'Invalid email or password';
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -25,26 +28,68 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials) {
                 if (!credentials?.email || !credentials?.password) {
-                    throw new Error('Email and password are required');
+                    throw new Error(GENERIC_AUTH_ERROR);
+                }
+
+                const email = credentials.email.toLowerCase();
+
+                // Check rate limit BEFORE any database operations
+                const rateCheck = loginRateLimiter.check(email);
+                if (rateCheck.limited) {
+                    const retryMinutes = Math.ceil(rateCheck.retryAfterMs / 60000);
+                    throw new Error(`Too many login attempts. Try again in ${retryMinutes} minute(s).`);
                 }
 
                 await dbConnect();
 
-                const user = await User.findOne({ email: credentials.email.toLowerCase() });
+                // First, check if this is an admin login
+                const Admin = (await import('@/db/models/Admin')).default;
+                const admin = await Admin.findOne({ email });
+
+                if (admin) {
+                    // Verify admin password
+                    const isPasswordValid = await bcrypt.compare(credentials.password, admin.password);
+                    if (!isPasswordValid) {
+                        throw new Error(GENERIC_AUTH_ERROR);
+                    }
+
+                    // Reset rate limit on successful login
+                    loginRateLimiter.reset(email);
+
+                    // Update last login
+                    admin.lastLoginAt = new Date();
+                    await admin.save();
+
+                    return {
+                        id: admin._id.toString(),
+                        email: admin.email,
+                        name: `${admin.firstName} ${admin.lastName}`.trim() || admin.email,
+                        image: admin.profileImage,
+                        role: 'admin',
+                    };
+                }
+
+                // If not admin, check regular user
+                const user = await User.findOne({ email });
 
                 if (!user) {
-                    throw new Error('No account found with this email');
+                    // Use same error to prevent enumeration
+                    throw new Error(GENERIC_AUTH_ERROR);
                 }
 
                 if (!user.password) {
+                    // User exists but signed up with OAuth
                     throw new Error('Please sign in with Google');
                 }
 
                 const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
 
                 if (!isPasswordValid) {
-                    throw new Error('Invalid password');
+                    throw new Error(GENERIC_AUTH_ERROR);
                 }
+
+                // Reset rate limit on successful login
+                loginRateLimiter.reset(email);
 
                 // Update last login
                 user.lastLoginAt = new Date();
@@ -55,6 +100,7 @@ export const authOptions: NextAuthOptions = {
                     email: user.email,
                     name: `${user.firstName} ${user.lastName}`.trim() || user.email,
                     image: user.profileImage,
+                    role: user.role || 'user',
                 };
             },
         }),
@@ -81,8 +127,8 @@ export const authOptions: NextAuthOptions = {
                         lastName: (profile as { family_name?: string })?.family_name || user.name?.split(' ').slice(1).join(' ') || '',
                         profileImage: user.image || undefined,
                         emailVerified: true,
-                        onboardingCompleted: false,
-                        onboardingStep: 1,
+                        onboardingCompleted: true,
+                        onboardingStep: 'complete',
                     });
                 } else {
                     // Update last login
@@ -99,35 +145,37 @@ export const authOptions: NextAuthOptions = {
 
         async jwt({ token, user }) {
             if (user) {
+                // If the user has a role from authorize, use it directly
+                if ((user as { role?: string }).role === 'admin') {
+                    token.id = user.id;
+                    token.role = 'admin';
+                    token.onboardingCompleted = true;
+                    token.onboardingStep = 'complete';
+                    return token;
+                }
+
+                // For regular users, check the database
                 await dbConnect();
                 const email = user.email?.toLowerCase();
                 if (!email) return token;
                 const dbUser = await User.findOne({ email });
 
                 if (dbUser) {
-                    console.log('JWT Callback - User Found:', {
-                        email: dbUser.email,
-                        role: dbUser.role,
-                        id: dbUser._id,
-                        dbName: mongoose.connection.name
-                    });
                     token.id = dbUser._id.toString();
                     token.onboardingCompleted = dbUser.onboardingCompleted;
                     token.onboardingStep = dbUser.onboardingStep;
                     token.role = dbUser.role || 'user';
-                    console.log('JWT Callback - Role set:', token.role);
                 }
             }
             return token;
         },
 
         async session({ session, token }) {
-            console.log('Session Callback - Token:', JSON.stringify(token, null, 2));
             if (session.user) {
-                (session.user as any).id = token.id as string;
-                (session.user as any).onboardingCompleted = token.onboardingCompleted as boolean;
-                (session.user as any).onboardingStep = token.onboardingStep as number | string;
-                (session.user as any).role = token.role as 'user' | 'admin' | 'employee';
+                (session.user as { id?: string }).id = token.id as string;
+                (session.user as { onboardingCompleted?: boolean }).onboardingCompleted = token.onboardingCompleted as boolean;
+                (session.user as { onboardingStep?: number | string }).onboardingStep = token.onboardingStep as number | string;
+                (session.user as { role?: string }).role = token.role as 'user' | 'admin' | 'employee';
             }
             return session;
         },

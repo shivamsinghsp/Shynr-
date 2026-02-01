@@ -3,37 +3,64 @@ import dbConnect from '@/db';
 import User from '@/db/models/User';
 import bcrypt from 'bcryptjs';
 
+/**
+ * Admin seeding route - DEVELOPMENT ONLY
+ * 
+ * This route is blocked in production.
+ * Admin credentials must be provided via environment variables:
+ * - ADMIN_EMAIL
+ * - ADMIN_PASSWORD
+ * - ADMIN_FIRST_NAME
+ * - ADMIN_LAST_NAME
+ */
+
 export async function POST(request: NextRequest) {
+    // BLOCK IN PRODUCTION - NO EXCEPTIONS
+    if (process.env.NODE_ENV === 'production') {
+        return NextResponse.json(
+            { error: 'This endpoint is disabled in production' },
+            { status: 403 }
+        );
+    }
+
     try {
-        // Simple auth check
         const { searchParams } = new URL(request.url);
         const secret = searchParams.get('secret');
 
-        if (secret !== process.env.NEXTAUTH_SECRET) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        if (!secret || secret !== process.env.NEXTAUTH_SECRET) {
+            return NextResponse.json(
+                { error: 'Unauthorized' },
+                { status: 401 }
+            );
+        }
+
+        // Get admin credentials from environment variables - NOT hardcoded
+        const adminEmail = process.env.ADMIN_EMAIL;
+        const adminPassword = process.env.ADMIN_PASSWORD;
+        const adminFirstName = process.env.ADMIN_FIRST_NAME || 'Admin';
+        const adminLastName = process.env.ADMIN_LAST_NAME || 'User';
+
+        if (!adminEmail || !adminPassword) {
+            return NextResponse.json({
+                error: 'ADMIN_EMAIL and ADMIN_PASSWORD must be set in environment variables',
+                hint: 'Add ADMIN_EMAIL and ADMIN_PASSWORD to your .env file'
+            }, { status: 400 });
+        }
+
+        // Validate password strength
+        if (adminPassword.length < 12) {
+            return NextResponse.json({
+                error: 'Admin password must be at least 12 characters'
+            }, { status: 400 });
         }
 
         await dbConnect();
 
-        const results = [];
-
-        // Remove shivamsinghabc439@gmail.com from admin role (demote to regular user)
-        const oldAdmin = await User.findOne({ email: 'shivamsinghabc439@gmail.com' });
-        if (oldAdmin) {
-            oldAdmin.role = 'user';
-            await oldAdmin.save();
-            results.push({ email: 'shivamsinghabc439@gmail.com', action: 'demoted to user' });
-        }
-
-        // Set up shivam.sp2106@gmail.com as the only admin
-        const adminEmail = 'shivam.sp2106@gmail.com';
-        const adminPassword = 'Shivam@2105';
-
-        const existingAdmin = await User.findOne({ email: adminEmail });
+        const normalizedEmail = adminEmail.toLowerCase();
+        const existingAdmin = await User.findOne({ email: normalizedEmail });
 
         if (existingAdmin) {
-            // Update password and role if user exists
-            const hashedPassword = await bcrypt.hash(adminPassword, 10);
+            const hashedPassword = await bcrypt.hash(adminPassword, 12);
             existingAdmin.password = hashedPassword;
             existingAdmin.role = 'admin';
             existingAdmin.onboardingCompleted = true;
@@ -41,16 +68,19 @@ export async function POST(request: NextRequest) {
             existingAdmin.emailVerified = true;
             await existingAdmin.save();
 
-            results.push({ email: adminEmail, action: 'updated to admin' });
+            return NextResponse.json({
+                success: true,
+                message: 'Admin user updated',
+                email: normalizedEmail,
+            });
         } else {
-            // Create new admin user
-            const hashedPassword = await bcrypt.hash(adminPassword, 10);
+            const hashedPassword = await bcrypt.hash(adminPassword, 12);
 
             await User.create({
-                email: adminEmail,
+                email: normalizedEmail,
                 password: hashedPassword,
-                firstName: 'Shivam',
-                lastName: 'SP',
+                firstName: adminFirstName,
+                lastName: adminLastName,
                 role: 'admin',
                 provider: 'credentials',
                 onboardingCompleted: true,
@@ -58,84 +88,33 @@ export async function POST(request: NextRequest) {
                 emailVerified: true
             });
 
-            results.push({ email: adminEmail, action: 'created as admin' });
+            return NextResponse.json({
+                success: true,
+                message: 'Admin user created',
+                email: normalizedEmail,
+            });
         }
-
-        return NextResponse.json({
-            success: true,
-            message: 'Admin configuration updated successfully',
-            results
-        });
     } catch (error) {
         console.error('Error seeding admin:', error);
         return NextResponse.json(
-            { error: 'Failed to seed admin', details: String(error) },
+            { error: 'Failed to seed admin' },
             { status: 500 }
         );
     }
 }
 
 export async function GET(request: NextRequest) {
-    const { searchParams } = new URL(request.url);
-    const secret = searchParams.get('secret');
-
-    // Allow GET for easier testing - same logic as POST
-    if (secret !== process.env.NEXTAUTH_SECRET) {
-        return NextResponse.json({
-            error: 'Unauthorized - add ?secret=YOUR_NEXTAUTH_SECRET to the URL',
-            hint: 'Check your .env file for NEXTAUTH_SECRET value'
-        }, { status: 401 });
-    }
-
-    try {
-        await dbConnect();
-
-        const adminEmail = 'shivam.sp2106@gmail.com';
-        const adminPassword = 'Shivam@2105';
-
-        const existingAdmin = await User.findOne({ email: adminEmail });
-
-        if (existingAdmin) {
-            const hashedPassword = await bcrypt.hash(adminPassword, 10);
-            existingAdmin.password = hashedPassword;
-            existingAdmin.role = 'admin';
-            existingAdmin.onboardingCompleted = true;
-            existingAdmin.onboardingStep = 'complete';
-            existingAdmin.emailVerified = true;
-            await existingAdmin.save();
-
-            return NextResponse.json({
-                success: true,
-                message: 'Admin user updated successfully',
-                email: adminEmail,
-                action: 'updated'
-            });
-        } else {
-            const hashedPassword = await bcrypt.hash(adminPassword, 10);
-            await User.create({
-                email: adminEmail,
-                password: hashedPassword,
-                firstName: 'Shivam',
-                lastName: 'SP',
-                role: 'admin',
-                provider: 'credentials',
-                onboardingCompleted: true,
-                onboardingStep: 'complete',
-                emailVerified: true
-            });
-
-            return NextResponse.json({
-                success: true,
-                message: 'Admin user created successfully',
-                email: adminEmail,
-                action: 'created'
-            });
-        }
-    } catch (error) {
-        console.error('Error seeding admin:', error);
+    // BLOCK IN PRODUCTION
+    if (process.env.NODE_ENV === 'production') {
         return NextResponse.json(
-            { error: 'Failed to seed admin', details: String(error) },
-            { status: 500 }
+            { error: 'This endpoint is disabled in production' },
+            { status: 403 }
         );
     }
+
+    return NextResponse.json({
+        message: 'Use POST request with ?secret=YOUR_NEXTAUTH_SECRET',
+        required_env_vars: ['ADMIN_EMAIL', 'ADMIN_PASSWORD'],
+        optional_env_vars: ['ADMIN_FIRST_NAME', 'ADMIN_LAST_NAME']
+    });
 }

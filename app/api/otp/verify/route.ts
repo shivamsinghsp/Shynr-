@@ -1,15 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/db';
 import OTP from '@/db/models/OTP';
-import crypto from 'crypto';
+import { otpVerifyRateLimiter } from '@/lib/rateLimit';
 
 export async function POST(request: NextRequest) {
     try {
         const { email, otp, type } = await request.json();
 
-        if (!email || !otp) {
+        if (!email || typeof email !== 'string') {
             return NextResponse.json(
-                { error: 'Email and OTP are required' },
+                { error: 'Email is required' },
+                { status: 400 }
+            );
+        }
+
+        if (!otp || typeof otp !== 'string') {
+            return NextResponse.json(
+                { error: 'OTP is required' },
                 { status: 400 }
             );
         }
@@ -21,32 +28,40 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        const normalizedEmail = email.toLowerCase();
+
+        // Rate limit check
+        const rateCheck = otpVerifyRateLimiter.check(normalizedEmail);
+        if (rateCheck.limited) {
+            const retryMinutes = Math.ceil(rateCheck.retryAfterMs / 60000);
+            return NextResponse.json(
+                { error: `Too many attempts. Try again in ${retryMinutes} minute(s).` },
+                { status: 429 }
+            );
+        }
+
         await dbConnect();
 
         // Verify OTP
-        const result = await OTP.verifyOTP(email, otp, type);
+        const result = await OTP.verifyOTP(normalizedEmail, otp, type);
 
         if (!result.valid) {
+            // Return generic message to prevent enumeration
             return NextResponse.json(
-                { error: result.message },
+                { error: 'Invalid or expired OTP' },
                 { status: 400 }
             );
         }
 
-        // Generate a temporary token for password reset flow
-        let resetToken = null;
-        if (type === 'password_reset') {
-            // Generate a secure token that can be used for the actual password reset
-            resetToken = crypto.randomBytes(32).toString('hex');
+        // Reset rate limit on successful verification
+        otpVerifyRateLimiter.reset(normalizedEmail);
 
-            // Store this token temporarily (you could use the same OTP record or create a separate mechanism)
-            // For simplicity, we'll pass it back to be used immediately in the reset password form
-        }
-
+        // For password_reset, the OTP is marked as verified in the DB
+        // The reset-password endpoint will check for this verified OTP
         return NextResponse.json({
             success: true,
-            message: result.message,
-            ...(resetToken && { resetToken }),
+            message: 'OTP verified successfully',
+            // DO NOT return any tokens - the verified OTP in DB is the proof
         });
     } catch (error) {
         console.error('Error verifying OTP:', error);
