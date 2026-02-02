@@ -4,6 +4,14 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/db';
 import Attendance from '@/db/models/Attendance';
 import AttendanceLocation, { calculateDistance } from '@/db/models/AttendanceLocation';
+import Settings from '@/db/models/Settings';
+
+// Helper to format hour for error messages
+function formatHour(hour: number): string {
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+    return `${displayHour}:00 ${period}`;
+}
 
 // POST /api/attendance/mark - Mark check-in or check-out
 export async function POST(request: NextRequest) {
@@ -36,29 +44,36 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Time Validation
+        await dbConnect();
+
+        // Fetch dynamic time settings from database
+        const settings = await Settings.getSettings();
+        const checkInStartHour = settings.checkInStartHour;
+        const checkInEndHour = settings.checkInEndHour;
+        const checkOutStartHour = settings.checkOutStartHour;
+
+        // Time Validation using dynamic settings
         const now = new Date();
         const currentHour = now.getHours();
 
         if (action === 'check-in') {
-            // Allow only between 10:00 AM and 11:00 AM
-            if (currentHour < 10 || currentHour >= 11) {
+            // Allow only between configured check-in hours
+            if (currentHour < checkInStartHour || currentHour >= checkInEndHour) {
                 return NextResponse.json(
-                    { success: false, error: 'Check-in is only allowed between 10:00 AM and 11:00 AM.' },
+                    { success: false, error: `Check-in is only allowed between ${formatHour(checkInStartHour)} and ${formatHour(checkInEndHour)}.` },
                     { status: 400 }
                 );
             }
         } else if (action === 'check-out') {
-            // Allow only after 7:00 PM (19:00)
-            if (currentHour < 19) {
+            // Allow only after configured check-out hour
+            if (currentHour < checkOutStartHour) {
                 return NextResponse.json(
-                    { success: false, error: 'Check-out is only allowed after 07:00 PM.' },
+                    { success: false, error: `Check-out is only allowed after ${formatHour(checkOutStartHour)}.` },
                     { status: 400 }
                 );
             }
         }
 
-        await dbConnect();
 
         // Find nearby valid location
         const locations = await AttendanceLocation.find({ isActive: true });

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { v2 as cloudinary } from 'cloudinary';
-import { Readable } from 'stream';
 
 // Configure Cloudinary
 cloudinary.config({
@@ -112,7 +111,9 @@ export async function POST(request: NextRequest) {
             uploadOptions.transformation = [{ width: 200, height: 200, crop: 'fill', gravity: 'face' }];
         }
 
-        // Upload using stream (Avoiding buffer of full file)
+        // Upload using buffer (Edge Runtime compatible)
+        const fileBuffer = Buffer.from(await file.arrayBuffer());
+
         const result = await new Promise((resolve, reject) => {
             const uploadStream = cloudinary.uploader.upload_stream(
                 uploadOptions,
@@ -122,10 +123,8 @@ export async function POST(request: NextRequest) {
                 }
             );
 
-            // Convert Web Stream to Node Stream
-            // @ts-ignore - Readable.fromWeb is available in recent Node versions used by Next.js
-            const nodeStream = Readable.fromWeb(file.stream());
-            nodeStream.pipe(uploadStream);
+            // Write buffer directly to stream (Edge Runtime compatible)
+            uploadStream.end(fileBuffer);
         });
 
         return NextResponse.json({

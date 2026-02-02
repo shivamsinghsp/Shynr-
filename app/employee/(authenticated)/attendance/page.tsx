@@ -23,11 +23,18 @@ interface Location {
     radius: number;
 }
 
+interface TimeSettings {
+    checkInStartHour: number;
+    checkInEndHour: number;
+    checkOutStartHour: number;
+}
+
 export default function EmployeeAttendancePage() {
     const { data: session } = useSession();
     const [todayAttendance, setTodayAttendance] = useState<AttendanceRecord | null>(null);
     const [attendanceHistory, setAttendanceHistory] = useState<AttendanceRecord[]>([]);
     const [allowedLocations, setAllowedLocations] = useState<Location[]>([]);
+    const [timeSettings, setTimeSettings] = useState<TimeSettings>({ checkInStartHour: 10, checkInEndHour: 11, checkOutStartHour: 19 });
     const [loading, setLoading] = useState(true);
     const [marking, setMarking] = useState(false);
     const [error, setError] = useState('');
@@ -37,17 +44,27 @@ export default function EmployeeAttendancePage() {
 
     const fetchAttendanceData = useCallback(async () => {
         try {
-            const res = await fetch('/api/attendance');
-            if (res.ok) {
-                const result = await res.json();
-                // Handle both old and new API response formats
+            const [attendanceRes, settingsRes] = await Promise.all([
+                fetch('/api/attendance'),
+                fetch('/api/admin/settings')
+            ]);
+
+            if (attendanceRes.ok) {
+                const result = await attendanceRes.json();
                 const data = result.data || result;
                 setTodayAttendance(data.todayAttendance || null);
                 setAttendanceHistory(data.attendance || data.history || []);
                 setAllowedLocations(data.locations || data.allowedLocations || []);
             }
+
+            if (settingsRes.ok) {
+                const settingsData = await settingsRes.json();
+                if (settingsData.success) {
+                    setTimeSettings(settingsData.data);
+                }
+            }
         } catch (err) {
-            console.error('Error fetching attendance:', err);
+            console.error('Error fetching data:', err);
         } finally {
             setLoading(false);
         }
@@ -56,6 +73,13 @@ export default function EmployeeAttendancePage() {
     useEffect(() => {
         fetchAttendanceData();
     }, [fetchAttendanceData]);
+
+    // Helper to format hour for display
+    const formatHour = (hour: number) => {
+        const period = hour >= 12 ? 'PM' : 'AM';
+        const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+        return `${String(displayHour).padStart(2, '0')}:00 ${period}`;
+    };
 
     const getCurrentLocation = (): Promise<GeolocationPosition> => {
         return new Promise((resolve, reject) => {
@@ -75,18 +99,16 @@ export default function EmployeeAttendancePage() {
         const now = new Date();
         const currentHour = now.getHours();
 
-        // Strict Time Validation
-        // Check In: 10 AM - 11 AM (10:00 to 10:59)
+        // Dynamic Time Validation from settings
         const isCheckInAction = !todayAttendance?.checkIn;
         if (isCheckInAction) {
-            if (currentHour < 10 || currentHour >= 11) {
-                setError('Check-in is only allowed between 10:00 AM and 11:00 AM.');
+            if (currentHour < timeSettings.checkInStartHour || currentHour >= timeSettings.checkInEndHour) {
+                setError(`Check-in is only allowed between ${formatHour(timeSettings.checkInStartHour)} and ${formatHour(timeSettings.checkInEndHour)}.`);
                 return;
             }
         } else {
-            // Check Out: After 7 PM (19:00 onwards)
-            if (currentHour < 19) {
-                setError('Check-out is only allowed after 07:00 PM.');
+            if (currentHour < timeSettings.checkOutStartHour) {
+                setError(`Check-out is only allowed after ${formatHour(timeSettings.checkOutStartHour)}.`);
                 return;
             }
         }
@@ -523,12 +545,12 @@ export default function EmployeeAttendancePage() {
                         <div className="flex flex-col gap-2">
                             {!todayAttendance?.checkIn && (
                                 <p className="text-xs text-center text-gray-400">
-                                    Check-in allowed: 10:00 AM - 11:00 AM
+                                    Check-in allowed: {formatHour(timeSettings.checkInStartHour)} - {formatHour(timeSettings.checkInEndHour)}
                                 </p>
                             )}
                             {todayAttendance?.checkIn && !todayAttendance.checkOut && (
                                 <p className="text-xs text-center text-gray-400">
-                                    Check-out allowed: After 07:00 PM
+                                    Check-out allowed: After {formatHour(timeSettings.checkOutStartHour)}
                                 </p>
                             )}
 
@@ -537,10 +559,10 @@ export default function EmployeeAttendancePage() {
                                 disabled={
                                     marking ||
                                     !!todayAttendance?.checkOut ||
-                                    // Disable Check-in if not 10-11 AM
-                                    (!todayAttendance?.checkIn && (new Date().getHours() < 10 || new Date().getHours() >= 11)) ||
-                                    // Disable Check-out if before 7 PM
-                                    (!!todayAttendance?.checkIn && !todayAttendance?.checkOut && new Date().getHours() < 19)
+                                    // Disable Check-in if not within allowed hours
+                                    (!todayAttendance?.checkIn && (new Date().getHours() < timeSettings.checkInStartHour || new Date().getHours() >= timeSettings.checkInEndHour)) ||
+                                    // Disable Check-out if before allowed hour
+                                    (!!todayAttendance?.checkIn && !todayAttendance?.checkOut && new Date().getHours() < timeSettings.checkOutStartHour)
                                 }
                                 className={`mark-button ${todayAttendance?.checkIn ? 'check-out' : 'check-in'}`}
                             >
