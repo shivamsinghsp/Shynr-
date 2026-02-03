@@ -24,9 +24,8 @@ declare global {
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-if (!MONGODB_URI) {
-    throw new Error('Please define the MONGODB_URI environment variable');
-}
+
+
 
 const cached: MongooseCache = global.mongooseCache || { conn: null, promise: null };
 
@@ -92,6 +91,9 @@ async function resolveSrvUri(srvUri: string): Promise<string> {
 }
 
 async function dbConnect(retries = 3): Promise<mongoose.Mongoose> {
+    if (!MONGODB_URI) {
+        throw new Error('Please define the MONGODB_URI environment variable');
+    }
     if (cached.conn) {
         if (cached.conn.connection.readyState === 1) {
             return cached.conn;
