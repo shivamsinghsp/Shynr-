@@ -163,7 +163,7 @@ export default function EmployeeAttendancePage() {
     };
 
     const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
+        return new Date(dateString).toLocaleDateString('en-GB', {
             weekday: 'short',
             month: 'short',
             day: 'numeric',
@@ -515,7 +515,7 @@ export default function EmployeeAttendancePage() {
                                         : 'Not Checked In'}
                             </p>
                             <p className="status-subtext">
-                                {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                                {new Date().toLocaleDateString('en-GB', { weekday: 'long', month: 'long', day: 'numeric' })}
                             </p>
                         </div>
 

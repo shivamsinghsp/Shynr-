@@ -57,3 +57,20 @@ export const sendOTP = async (email: string, otp: string) => {
     `;
     return sendEmail({ to: email, subject, html });
 };
+
+export const sendWelcomeEmail = async (email: string, resetLink: string) => {
+    const subject = 'Welcome to the Team! Set Up Your Account - Shynr';
+    const html = `
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>Welcome to the Team!</h2>
+        <p>You have been promoted to an Employee role at Shynr.</p>
+        <p>To access the employee portal, you need to set up a password for your account.</p>
+        <p>Click the button below to set your password:</p>
+        <a href="${resetLink}" style="display: inline-block; background: #05033e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 16px 0;">Set Password</a>
+        <p>Or use this link: <a href="${resetLink}">${resetLink}</a></p>
+        <p>This link will expire in 24 hours.</p>
+        <p>If you have any questions, please contact the administrator.</p>
+    </div>
+    `;
+    return sendEmail({ to: email, subject, html });
+};

@@ -1,9 +1,9 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { BriefcaseBusiness, Clock, Wallet, MapPin, User, Mail, Phone, MessageSquare, Linkedin, Facebook, Globe, Share2, Loader2, Calendar, CheckCircle2 } from "lucide-react";
+import { BriefcaseBusiness, Clock, Wallet, MapPin, User, Mail, Phone, MessageSquare, Linkedin, Facebook, Globe, Share2, Loader2, Calendar, CheckCircle2, Check } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useSession } from "next-auth/react";
 import DOMPurify from "isomorphic-dompurify";
 
@@ -45,11 +45,42 @@ export default function JobDetailsPage() {
     const [error, setError] = useState<string | null>(null);
     const [isSaved, setIsSaved] = useState(false);
     const [hasApplied, setHasApplied] = useState(false);
+
     const [isScrolled, setIsScrolled] = useState(false);
+    const [copied, setCopied] = useState(false);
+
+    const handleShare = async () => {
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+        }
+    };
+
+    const handleSocialShare = (platform: 'facebook' | 'linkedin') => {
+        const url = encodeURIComponent(window.location.href);
+        let shareUrl = '';
+
+        if (platform === 'facebook') {
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        } else if (platform === 'linkedin') {
+            shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+        }
+
+        window.open(shareUrl, '_blank', 'width=600,height=400');
+    };
 
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
+            const currentScroll = window.scrollY;
+            setIsScrolled((prev) => {
+                // Aggressive Hysteresis to prevent flickering
+                if (currentScroll > 150 && !prev) return true;
+                if (currentScroll < 50 && prev) return false;
+                return prev;
+            });
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
@@ -148,15 +179,15 @@ export default function JobDetailsPage() {
     const formatDate = (dateString?: string) => {
         if (!dateString) return "Recently posted";
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+        return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
     };
 
     return (
         <div className="w-full bg-[#f4f7f7] min-h-screen pb-24">
             {/* Header Section */}
             <div
-                className={`w-full border-b border-gray-100 px-6 sticky top-0 z-50 transition-all duration-300 ${isScrolled
-                    ? "bg-white/80 backdrop-blur-md shadow-md py-4"
+                className={`w-full border-b border-gray-100 px-6 sticky top-0 z-50 transition-all duration-500 ease-in-out ${isScrolled
+                    ? "bg-white/95 backdrop-blur-md shadow-md py-4"
                     : "bg-white py-12"
                     }`}
             >
@@ -288,9 +319,27 @@ export default function JobDetailsPage() {
                         <div className="mt-8 border-t border-gray-100 pt-8">
                             <h3 className="text-lg font-bold text-[#05033e] mb-3">Share Job:</h3>
                             <div className="flex gap-4">
-                                <button className="p-3 bg-gray-50 rounded-full hover:bg-[#05033e] hover:text-white transition-colors text-[#05033e]"><Facebook size={20} /></button>
-                                <button className="p-3 bg-gray-50 rounded-full hover:bg-[#05033e] hover:text-white transition-colors text-[#05033e]"><Linkedin size={20} /></button>
-                                <button className="p-3 bg-gray-50 rounded-full hover:bg-[#05033e] hover:text-white transition-colors text-[#05033e]"><Share2 size={20} /></button>
+                                <button
+                                    onClick={() => handleSocialShare('facebook')}
+                                    className="p-3 bg-gray-50 rounded-full hover:bg-[#05033e] hover:text-white transition-colors text-[#05033e] cursor-pointer"
+                                    aria-label="Share on Facebook"
+                                >
+                                    <Facebook size={20} />
+                                </button>
+                                <button
+                                    onClick={() => handleSocialShare('linkedin')}
+                                    className="p-3 bg-gray-50 rounded-full hover:bg-[#05033e] hover:text-white transition-colors text-[#05033e] cursor-pointer"
+                                    aria-label="Share on LinkedIn"
+                                >
+                                    <Linkedin size={20} />
+                                </button>
+                                <button
+                                    onClick={handleShare}
+                                    className="p-3 bg-gray-50 rounded-full hover:bg-[#05033e] hover:text-white transition-colors text-[#05033e] cursor-pointer"
+                                    aria-label="Copy Link"
+                                >
+                                    {copied ? <Check size={20} /> : <Share2 size={20} />}
+                                </button>
                             </div>
                         </div>
                     </div>

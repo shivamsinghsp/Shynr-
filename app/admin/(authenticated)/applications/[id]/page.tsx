@@ -164,7 +164,7 @@ export default function ApplicationDetailPage({ params }: PageProps) {
     };
 
     const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
+        return new Date(dateString).toLocaleDateString('en-GB', {
             month: 'long',
             day: 'numeric',
             year: 'numeric'

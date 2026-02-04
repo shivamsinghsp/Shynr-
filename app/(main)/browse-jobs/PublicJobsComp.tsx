@@ -25,7 +25,7 @@ const formatSalary = (salary: Job['salary']) => {
     if (!salary) return 'Competitive';
     const min = (salary.min / 1000).toFixed(0);
     const max = (salary.max / 1000).toFixed(0);
-    return `$${min}k - $${max}k`;
+    return `${min}k - ${max}k`;
 };
 
 const PublicJobsComp = ({ job }: { job: Job }) => {

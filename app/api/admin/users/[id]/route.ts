@@ -3,6 +3,9 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/db';
 import User from '@/db/models/User';
+import PasswordResetToken from '@/db/models/PasswordResetToken';
+import crypto from 'crypto';
+import { sendWelcomeEmail } from '@/lib/email';
 
 interface RouteParams {
     params: Promise<{ id: string }>;
@@ -74,6 +77,37 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         // Allow role updates (user, employee, admin)
         if (role !== undefined && ['user', 'employee', 'admin'].includes(role)) {
             updateData.role = role;
+
+            // Check if promoting to employee and user has no password (e.g. Google Auth)
+            if (role === 'employee') {
+                const currentUser = await User.findById(id);
+                if (currentUser && !currentUser.password) {
+                    // User promoted to employee but has no password.
+                    // Generate reset token and send welcome email.
+                    try {
+                        const token = crypto.randomBytes(32).toString('hex');
+                        const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+                        // Clear existing tokens
+                        await PasswordResetToken.deleteMany({ userId: currentUser._id });
+
+                        await PasswordResetToken.create({
+                            userId: currentUser._id,
+                            userType: 'user', // Employees are in User collection
+                            token,
+                            expiresAt,
+                        });
+
+                        const resetUrl = `${process.env.NEXTAUTH_URL}/auth/reset-password?token=${token}`;
+                        await sendWelcomeEmail(currentUser.email, resetUrl);
+
+                        console.log(`Sent welcome email to new employee: ${currentUser.email}`);
+                    } catch (emailError) {
+                        console.error('Failed to send welcome email:', emailError);
+                        // Continue with update even if email fails, but log error
+                    }
+                }
+            }
         }
 
         const user = await User.findByIdAndUpdate(

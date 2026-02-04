@@ -9,19 +9,20 @@ const insights = [
     title: "Abhishek Kumar",
     description:
       "Founder & Managing Director. Leads business strategy, workforce solutions, and high-volume hiring operations.",
-    image: "/team/abhishek-kumar.jpg"
+    image: "/images/team/Abhishek Kumar.jpeg",
+    position: "object-top"
   },
   {
     title: "Shivanshi Verma",
     description:
       "Director. Expertise in strategic planning, governance, compliance, and organizational development.",
-    image: "/team/shivanshi-verma.jpg"
+    image: "/images/team/Shivanshi_Verma.jpg"
   },
   {
     title: "Monika Verma",
     description:
       "Director. Focuses on operations oversight, administration, internal controls, and stakeholder management.",
-    image: "/team/monika-verma.jpg"
+    image: "/images/team/Monika_Verma.png"
   }
 ]
 
@@ -89,10 +90,11 @@ export default function LeadershipPage() {
                 style={{ transitionDelay: `${500 + i * 200}ms` }}
               >
                 <div className="relative w-40 h-40 mx-auto mb-8 rounded-full overflow-hidden border-4 border-gray-200 group-hover:border-[#05033e] transition-colors">
-                  {/* Placeholder for real image, using avatar fallback */}
-                  <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-4xl font-bold text-gray-400">
-                    {member.title.charAt(0)}
-                  </div>
+                  <img
+                    src={member.image}
+                    alt={member.title}
+                    className={`w-full h-full object-cover ${member.position || ''}`}
+                  />
                 </div>
 
                 <h3 className="font-bold text-2xl text-gray-900 mb-2">{member.title}</h3>

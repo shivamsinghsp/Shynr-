@@ -133,8 +133,8 @@ export function DesktopFilterPanel({ filters, setFilters }: JobFiltersProps) {
                                 key={cat}
                                 onClick={() => handleCategoryChange(cat)}
                                 className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${filters.categories.includes(cat)
-                                        ? 'bg-[#05033e] text-white shadow-md shadow-[#05033e]/20'
-                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                    ? 'bg-[#05033e] text-white shadow-md shadow-[#05033e]/20'
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                     }`}
                             >
                                 {cat}
@@ -155,8 +155,8 @@ export function DesktopFilterPanel({ filters, setFilters }: JobFiltersProps) {
                                 key={type}
                                 onClick={() => handleJobTypeChange(type)}
                                 className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all ${filters.jobTypes.includes(type)
-                                        ? 'bg-[#05033e] text-white shadow-md shadow-[#05033e]/20'
-                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                    ? 'bg-[#05033e] text-white shadow-md shadow-[#05033e]/20'
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                     }`}
                             >
                                 {type}
@@ -183,9 +183,9 @@ export function DesktopFilterPanel({ filters, setFilters }: JobFiltersProps) {
                         />
                         <div className="flex justify-between mt-3">
                             <span className="text-sm font-semibold text-[#05033e] bg-[#05033e]/10 px-3 py-1 rounded-full">
-                                ${filters.salaryRange[0].toLocaleString()}
+                                {filters.salaryRange[0].toLocaleString()}
                             </span>
-                            <span className="text-sm text-gray-500">$200k+</span>
+                            <span className="text-sm text-gray-500">200k+</span>
                         </div>
                     </div>
                 </div>
@@ -358,8 +358,8 @@ export function MobileFilterDrawer({
                                     key={cat}
                                     onClick={() => handleCategoryChange(cat)}
                                     className={`px-3 py-3 rounded-xl text-sm font-medium transition-all ${filters.categories.includes(cat)
-                                            ? 'bg-[#05033e] text-white shadow-lg'
-                                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                        ? 'bg-[#05033e] text-white shadow-lg'
+                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                         }`}
                                 >
                                     {cat}
@@ -380,8 +380,8 @@ export function MobileFilterDrawer({
                                     key={type}
                                     onClick={() => handleJobTypeChange(type)}
                                     className={`px-4 py-3 rounded-full text-sm font-medium transition-all ${filters.jobTypes.includes(type)
-                                            ? 'bg-[#05033e] text-white shadow-lg'
-                                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                        ? 'bg-[#05033e] text-white shadow-lg'
+                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                         }`}
                                 >
                                     {type}
@@ -408,9 +408,9 @@ export function MobileFilterDrawer({
                             />
                             <div className="flex justify-between mt-3">
                                 <span className="text-base font-bold text-[#05033e] bg-[#05033e]/10 px-4 py-2 rounded-full">
-                                    ${filters.salaryRange[0].toLocaleString()}
+                                    {filters.salaryRange[0].toLocaleString()}
                                 </span>
-                                <span className="text-sm text-gray-500 py-2">$200k+</span>
+                                <span className="text-sm text-gray-500 py-2">200k+</span>
                             </div>
                         </div>
                     </div>

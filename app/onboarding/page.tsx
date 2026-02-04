@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Check, Loader2 } from "lucide-react";
 import StepOne from "@/components/onboarding/StepOne";
 import StepTwo from "@/components/onboarding/StepTwo";
@@ -77,11 +77,16 @@ const initialStepThreeData: StepThreeData = {
     profileImage: "",
 };
 
-export default function OnboardingPage() {
+function OnboardingContent() {
     const { data: session, status } = useSession();
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const isEditMode = searchParams.get("mode") === "edit";
+
     const [currentStep, setCurrentStep] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [fetchingData, setFetchingData] = useState(isEditMode);
+
     const [stepOneData, setStepOneData] = useState<StepOneData>(initialStepOneData);
     const [stepTwoData, setStepTwoData] = useState<StepTwoData>(initialStepTwoData);
     const [stepThreeData, setStepThreeData] = useState<StepThreeData>(initialStepThreeData);
@@ -89,14 +94,79 @@ export default function OnboardingPage() {
     useEffect(() => {
         if (status === "unauthenticated") {
             router.push("/auth/signin");
-        } else if (status === "authenticated" && session?.user) {
-            // Check if user has already completed onboarding
-            const onboardingCompleted = (session.user as { onboardingCompleted?: boolean }).onboardingCompleted;
-            if (onboardingCompleted) {
-                router.push("/jobs");
-            }
+            return;
         }
-    }, [status, session, router]);
+
+        const checkStatusAndFetch = async () => {
+            if (status === "authenticated" && session?.user) {
+                // If NOT in edit mode, check if already completed
+                if (!isEditMode) {
+                    const onboardingCompleted = (session.user as { onboardingCompleted?: boolean }).onboardingCompleted;
+                    if (onboardingCompleted) {
+                        router.push("/jobs");
+                        return;
+                    }
+                }
+
+                // If in Edit Mode OR we want to pre-fill from Google auth even in onboarding
+                if (isEditMode || session.user) {
+                    try {
+                        setFetchingData(true);
+                        const response = await fetch("/api/users/profile", { cache: "no-store" });
+                        const result = await response.json();
+
+                        if (result.success && result.data) {
+                            const data = result.data;
+
+                            // Map Step 1 Data
+                            setStepOneData({
+                                firstName: data.firstName || "",
+                                lastName: data.lastName || "",
+                                phone: data.phone || "",
+                                location: data.location || "",
+                                address: {
+                                    street: data.address?.street || "",
+                                    city: data.address?.city || "",
+                                    state: data.address?.state || "",
+                                    country: data.address?.country || "",
+                                    zipCode: data.address?.zipCode || "",
+                                }
+                            });
+
+                            // Map Step 2 Data
+                            setStepTwoData({
+                                headline: data.headline || "",
+                                summary: data.summary || "",
+                                skills: data.skills || [],
+                                education: data.education?.map((edu: any) => ({
+                                    ...edu,
+                                    startDate: edu.startDate ? new Date(edu.startDate).toISOString().slice(0, 7) : "",
+                                    endDate: edu.endDate ? new Date(edu.endDate).toISOString().slice(0, 7) : "",
+                                })) || [],
+                                experience: data.experience?.map((exp: any) => ({
+                                    ...exp,
+                                    startDate: exp.startDate ? new Date(exp.startDate).toISOString().slice(0, 7) : "",
+                                    endDate: exp.endDate ? new Date(exp.endDate).toISOString().slice(0, 7) : "",
+                                })) || [],
+                            });
+
+                            // Map Step 3 Data
+                            setStepThreeData({
+                                resume: data.resume || null,
+                                profileImage: data.profileImage || "",
+                            });
+                        }
+                    } catch (error) {
+                        console.error("Error fetching profile data:", error);
+                    } finally {
+                        setFetchingData(false);
+                    }
+                }
+            }
+        };
+
+        checkStatusAndFetch();
+    }, [status, session, router, isEditMode]);
 
     const saveStepData = async (skip = false) => {
         setLoading(true);
@@ -119,8 +189,13 @@ export default function OnboardingPage() {
                 throw new Error(result.error);
             }
 
-            if (result.data.onboardingCompleted) {
-                router.push("/jobs");
+            // If updating profile (Edit Mode) or Last Step
+            if (currentStep === 3 || (skip && currentStep === 3)) {
+                if (isEditMode) {
+                    router.push("/profile");
+                } else {
+                    router.push("/jobs");
+                }
             } else {
                 setCurrentStep(currentStep + 1);
             }
@@ -132,7 +207,7 @@ export default function OnboardingPage() {
         }
     };
 
-    if (status === "loading") {
+    if (status === "loading" || fetchingData) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <Loader2 className="w-8 h-8 animate-spin text-[#05033e]" />
@@ -152,10 +227,13 @@ export default function OnboardingPage() {
                 {/* Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                        Complete Your Profile
+                        {isEditMode ? "Edit Profile" : "Complete Your Profile"}
                     </h1>
                     <p className="text-gray-600">
-                        Welcome {session?.user?.name}! Let&apos;s set up your profile.
+                        {isEditMode
+                            ? "Update your information below"
+                            : `Welcome ${session?.user?.name || ""}! Let's set up your profile.`
+                        }
                     </p>
                 </div>
 
@@ -206,13 +284,18 @@ export default function OnboardingPage() {
 
                     {/* Navigation Buttons */}
                     <div className="flex justify-between mt-8 pt-6 border-t border-gray-100">
-                        <button
-                            onClick={() => saveStepData(true)}
-                            disabled={loading}
-                            className="px-6 py-3 text-gray-500 hover:text-gray-700 font-medium transition-colors disabled:opacity-50"
-                        >
-                            Skip for now
-                        </button>
+                        {!isEditMode ? (
+                            <button
+                                onClick={() => saveStepData(true)}
+                                disabled={loading}
+                                className="px-6 py-3 text-gray-500 hover:text-gray-700 font-medium transition-colors disabled:opacity-50"
+                            >
+                                Skip for now
+                            </button>
+                        ) : (
+                            <div></div> // Spacer for edit mode
+                        )}
+
                         <div className="flex gap-3">
                             {currentStep > 1 && (
                                 <button
@@ -234,7 +317,7 @@ export default function OnboardingPage() {
                                         Saving...
                                     </>
                                 ) : currentStep === 3 ? (
-                                    "Complete"
+                                    isEditMode ? "Save Changes" : "Complete"
                                 ) : (
                                     "Continue"
                                 )}
@@ -244,5 +327,17 @@ export default function OnboardingPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function OnboardingPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-[#05033e]" />
+            </div>
+        }>
+            <OnboardingContent />
+        </Suspense>
     );
 }

@@ -4,6 +4,10 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/db';
 import Attendance from '@/db/models/Attendance';
 import AttendanceLocation from '@/db/models/AttendanceLocation';
+import { toZonedTime, fromZonedTime } from 'date-fns-tz';
+import { startOfDay, endOfDay } from 'date-fns';
+
+const TIMEZONE = 'Asia/Kolkata';
 
 // GET /api/attendance - Get current user's attendance history
 export async function GET(request: NextRequest) {
@@ -50,12 +54,17 @@ export async function GET(request: NextRequest) {
             .limit(31)
             .lean();
 
-        // Get today's attendance
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        // Get today's attendance (Timezone aware)
+        const now = new Date();
+        const istTime = toZonedTime(now, TIMEZONE);
+        const istStart = startOfDay(istTime);
+        const istEnd = endOfDay(istTime);
+        const queryStart = fromZonedTime(istStart, TIMEZONE);
+        const queryEnd = fromZonedTime(istEnd, TIMEZONE);
+
         const todayAttendance = await Attendance.findOne({
             user: userId,
-            date: { $gte: today, $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000) }
+            date: { $gte: queryStart, $lt: queryEnd }
         }).lean();
 
         // Get all active locations for reference

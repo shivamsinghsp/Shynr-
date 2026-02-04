@@ -5,6 +5,10 @@ import dbConnect from '@/db';
 import Attendance from '@/db/models/Attendance';
 import AttendanceLocation, { calculateDistance } from '@/db/models/AttendanceLocation';
 import Settings from '@/db/models/Settings';
+import { toZonedTime, fromZonedTime } from 'date-fns-tz';
+import { startOfDay, endOfDay } from 'date-fns';
+
+const TIMEZONE = 'Asia/Kolkata';
 
 // Helper to format hour for error messages
 function formatHour(hour: number): string {
@@ -53,8 +57,10 @@ export async function POST(request: NextRequest) {
         const checkOutStartHour = settings.checkOutStartHour;
 
         // Time Validation using dynamic settings
+        // Convert current UTC time to IST
         const now = new Date();
-        const currentHour = now.getHours();
+        const istTime = toZonedTime(now, TIMEZONE);
+        const currentHour = istTime.getHours();
 
         if (action === 'check-in') {
             // Allow only between configured check-in hours
@@ -102,13 +108,17 @@ export async function POST(request: NextRequest) {
         }
 
         const userId = (session.user as any).id;
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+
+        // Define start and end of "Today" in IST, converted back to UTC for query
+        const istStart = startOfDay(istTime);
+        const istEnd = endOfDay(istTime);
+        const queryStart = fromZonedTime(istStart, TIMEZONE);
+        const queryEnd = fromZonedTime(istEnd, TIMEZONE);
 
         // Check if already has attendance for today
         const existingAttendance = await Attendance.findOne({
             user: userId,
-            date: { $gte: today, $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000) }
+            date: { $gte: queryStart, $lt: queryEnd }
         });
 
         if (action === 'check-in') {
@@ -121,10 +131,12 @@ export async function POST(request: NextRequest) {
             }
 
             // Create new attendance record
+            // We store `date` as the start of the day in UTC (corresponding to IST start of day)
+            // for consistency in grouping/displaying later.
             const attendance = await Attendance.create({
                 user: userId,
-                date: today,
-                checkIn: new Date(),
+                date: queryStart,
+                checkIn: now, // Real UTC timestamp of check-in
                 checkInLocation: {
                     latitude,
                     longitude,
@@ -157,7 +169,7 @@ export async function POST(request: NextRequest) {
                 }, { status: 400 });
             }
 
-            existingAttendance.checkOut = new Date();
+            existingAttendance.checkOut = now;
             existingAttendance.checkOutLocation = {
                 latitude,
                 longitude,

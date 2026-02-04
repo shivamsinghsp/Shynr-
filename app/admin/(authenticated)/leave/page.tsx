@@ -63,7 +63,7 @@ export default function AdminLeavePage() {
 
     const getTypeLabel = (t: string) => ({ annual: 'Annual', sick: 'Sick', personal: 'Personal', unpaid: 'Unpaid', other: 'Other' }[t] || t);
     const getStatusColor = (s: string) => s === 'approved' ? '#16a34a' : s === 'rejected' ? '#dc2626' : '#d97706';
-    const formatDate = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const formatDate = (d: string) => new Date(d).toLocaleDateString('en-GB', { month: 'short', day: 'numeric' });
 
     return (
         <div style={{ padding: 24 }}>

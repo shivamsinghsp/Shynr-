@@ -161,7 +161,7 @@ export default function AttendancePage() {
     };
 
     const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
+        return new Date(dateString).toLocaleDateString('en-GB', {
             weekday: 'short',
             month: 'short',
             day: 'numeric',
@@ -236,7 +236,7 @@ export default function AttendancePage() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-white/70 text-sm">Today</p>
-                                <p className="text-xl font-bold">{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+                                <p className="text-xl font-bold">{new Date().toLocaleDateString('en-GB', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
                             </div>
                             <div className={`px-4 py-2 rounded-full text-sm font-semibold ${todayAttendance?.status === 'checked-out'
                                 ? 'bg-green-500/20 text-green-200'

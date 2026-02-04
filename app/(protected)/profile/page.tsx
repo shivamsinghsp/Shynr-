@@ -61,7 +61,7 @@ export default function ProfilePage() {
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch("/api/users/profile");
+            const response = await fetch("/api/users/profile", { cache: "no-store" });
             const data = await response.json();
             if (data.success) {
                 setProfile(data.data);
@@ -253,12 +253,21 @@ export default function ProfilePage() {
 
                         {/* Actions */}
                         <div className="flex gap-2 items-start pt-2">
-                            <Link
-                                href="/onboarding"
-                                className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
-                            >
-                                <Edit2 size={16} /> Edit Profile
-                            </Link>
+                            {profile.profileCompleteness < 100 ? (
+                                <Link
+                                    href="/onboarding?mode=edit"
+                                    className="flex items-center gap-2 px-4 py-2 bg-[#05033e] text-white rounded-xl hover:bg-[#020120] transition-colors shadow-sm"
+                                >
+                                    <Edit2 size={16} /> Complete Profile
+                                </Link>
+                            ) : (
+                                <Link
+                                    href="/onboarding?mode=edit"
+                                    className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
+                                >
+                                    <Edit2 size={16} /> Edit Profile
+                                </Link>
+                            )}
                         </div>
                     </div>
 

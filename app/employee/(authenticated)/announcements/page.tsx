@@ -103,7 +103,7 @@ export default function AnnouncementsPage() {
                                         <line x1="8" y1="2" x2="8" y2="6" />
                                         <line x1="3" y1="10" x2="21" y2="10" />
                                     </svg>
-                                    {new Date(a.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                    {new Date(a.createdAt).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', year: 'numeric' })}
                                 </span>
                                 <span style={{ color: '#e2e8f0' }}>•</span>
                                 <span style={{
@@ -143,7 +143,7 @@ export default function AnnouncementsPage() {
                                 <h2 style={{ color: '#1e293b', fontSize: 20, fontWeight: 700, marginBottom: 8 }}>{selected.title}</h2>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                     <span style={{ color: '#64748b', fontSize: 13 }}>
-                                        {new Date(selected.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                                        {new Date(selected.createdAt).toLocaleDateString('en-GB', { month: 'long', day: 'numeric', year: 'numeric' })}
                                     </span>
                                     <span style={{ color: '#e2e8f0' }}>•</span>
                                     <span style={{

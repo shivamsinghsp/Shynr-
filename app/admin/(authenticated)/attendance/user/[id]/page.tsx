@@ -175,7 +175,7 @@ export default function UserAttendanceCalendarPage({ params }: { params: Promise
                         <ChevronLeft className="w-6 h-6" />
                     </button>
                     <h2 className="text-xl font-semibold w-40 text-center">
-                        {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                        {currentDate.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
                     </h2>
                     <button onClick={nextMonth} className="p-2 hover:bg-gray-100 rounded-full">
                         <ChevronRight className="w-6 h-6" />

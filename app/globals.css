@@ -56,6 +56,12 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* Hide default password toggle in Edge/IE */
+  input[type="password"]::-ms-reveal,
+  input[type="password"]::-ms-clear {
+    display: none;
+  }
 }
 
 @theme inline {

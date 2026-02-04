@@ -93,7 +93,7 @@ export default function PublicJobDetailsPage() {
     const formatDate = (dateString?: string) => {
         if (!dateString) return "Recently posted";
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+        return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
     };
 
     return (
