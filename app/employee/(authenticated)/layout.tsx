@@ -74,6 +74,7 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
     const router = useRouter();
     const pathname = usePathname();
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     useEffect(() => {
         if (status === 'unauthenticated') {
@@ -113,6 +114,10 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
     }
 
     const handleLogout = async () => {
+        setShowLogoutModal(true);
+    };
+
+    const confirmLogout = async () => {
         await signOut({ callbackUrl: '/employee' });
     };
 
@@ -324,6 +329,85 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
                     .main-content { margin-left: 0 !important; padding-top: 64px; }
                 }
             `}</style>
+
+            {/* Logout Confirmation Modal */}
+            {showLogoutModal && (
+                <div style={{
+                    position: 'fixed',
+                    inset: 0,
+                    background: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 200,
+                    backdropFilter: 'blur(4px)'
+                }}>
+                    <div style={{
+                        background: 'white',
+                        borderRadius: 16,
+                        padding: 24,
+                        width: '100%',
+                        maxWidth: 360,
+                        margin: '0 16px',
+                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+                    }}>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{
+                                width: 56,
+                                height: 56,
+                                background: '#fee2e2',
+                                borderRadius: '50%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                margin: '0 auto 16px'
+                            }}>
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                    <polyline points="16 17 21 12 16 7" />
+                                    <line x1="21" y1="12" x2="9" y2="12" />
+                                </svg>
+                            </div>
+                            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#111827', marginBottom: 8 }}>Confirm Logout</h3>
+                            <p style={{ color: '#6b7280', marginBottom: 24, fontSize: 14 }}>Are you sure you want to sign out from the employee portal?</p>
+                            <div style={{ display: 'flex', gap: 12 }}>
+                                <button
+                                    onClick={() => setShowLogoutModal(false)}
+                                    style={{
+                                        flex: 1,
+                                        padding: '10px 16px',
+                                        border: '1px solid #d1d5db',
+                                        borderRadius: 10,
+                                        background: 'white',
+                                        color: '#374151',
+                                        fontWeight: 500,
+                                        fontSize: 14,
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={confirmLogout}
+                                    style={{
+                                        flex: 1,
+                                        padding: '10px 16px',
+                                        border: 'none',
+                                        borderRadius: 10,
+                                        background: '#dc2626',
+                                        color: 'white',
+                                        fontWeight: 500,
+                                        fontSize: 14,
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -200,7 +200,7 @@ export default function DashboardPage() {
                                     </span>
                                     <span className="text-xs text-gray-500 flex items-center gap-1">
                                         <Calendar size={14} />
-                                        {new Date(app.appliedAt).toLocaleDateString()}
+                                        {new Date(app.appliedAt).toLocaleDateString('en-GB')}
                                     </span>
                                 </div>
                             </div>

@@ -649,7 +649,7 @@ export default function EmployeeDashboard() {
                                     </div>
                                     <p className="announcement-content">{announcement.content}</p>
                                     <p className="announcement-date">
-                                        {new Date(announcement.createdAt).toLocaleDateString()}
+                                        {new Date(announcement.createdAt).toLocaleDateString('en-GB')}
                                     </p>
                                 </div>
                             ))

@@ -182,7 +182,7 @@ export default function ApplicationsPage() {
                                                         <Clock size={14} /> {app.job.type}
                                                     </span>
                                                     <span className="flex items-center gap-1">
-                                                        <Calendar size={14} /> Applied {new Date(app.appliedAt).toLocaleDateString()}
+                                                        <Calendar size={14} /> Applied {new Date(app.appliedAt).toLocaleDateString('en-GB')}
                                                     </span>
                                                 </div>
                                             </>
@@ -192,7 +192,7 @@ export default function ApplicationsPage() {
                                                 <p className="text-gray-400 italic">This job listing has been removed.</p>
                                                 <div className="flex flex-wrap gap-3 mt-2 text-sm text-gray-400">
                                                     <span className="flex items-center gap-1">
-                                                        <Calendar size={14} /> Applied {new Date(app.appliedAt).toLocaleDateString()}
+                                                        <Calendar size={14} /> Applied {new Date(app.appliedAt).toLocaleDateString('en-GB')}
                                                     </span>
                                                 </div>
                                             </>
@@ -225,7 +225,7 @@ export default function ApplicationsPage() {
                                                 key={index}
                                                 className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded"
                                             >
-                                                {history.status} - {new Date(history.changedAt).toLocaleDateString()}
+                                                {history.status} - {new Date(history.changedAt).toLocaleDateString('en-GB')}
                                             </span>
                                         ))}
                                     </div>

@@ -352,9 +352,9 @@ export default function ProfilePage() {
                                         <h3 className="font-medium text-gray-900">{exp.title}</h3>
                                         <p className="text-gray-600">{exp.company}</p>
                                         <p className="text-sm text-gray-500">
-                                            {new Date(exp.startDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
+                                            {new Date(exp.startDate).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}
                                             {" - "}
-                                            {exp.current ? "Present" : exp.endDate && new Date(exp.endDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
+                                            {exp.current ? "Present" : exp.endDate && new Date(exp.endDate).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}
                                             {exp.location && ` • ${exp.location}`}
                                         </p>
                                         {exp.description && (
@@ -378,9 +378,9 @@ export default function ProfilePage() {
                                         <h3 className="font-medium text-gray-900">{edu.institution}</h3>
                                         <p className="text-gray-600">{edu.degree} in {edu.fieldOfStudy}</p>
                                         <p className="text-sm text-gray-500">
-                                            {new Date(edu.startDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
+                                            {new Date(edu.startDate).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}
                                             {" - "}
-                                            {edu.current ? "Present" : edu.endDate && new Date(edu.endDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
+                                            {edu.current ? "Present" : edu.endDate && new Date(edu.endDate).toLocaleDateString("en-GB", { month: "short", year: "numeric" })}
                                         </p>
                                     </div>
                                 ))}

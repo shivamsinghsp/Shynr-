@@ -47,6 +47,11 @@ export const authOptions: NextAuthOptions = {
                 const admin = await Admin.findOne({ email });
 
                 if (admin) {
+                    // Check if admin is active
+                    if (admin.isActive === false) {
+                        throw new Error('Your account has been deactivated. Please contact support.');
+                    }
+
                     // Verify admin password
                     const isPasswordValid = await bcrypt.compare(credentials.password, admin.password);
                     if (!isPasswordValid) {
@@ -80,6 +85,11 @@ export const authOptions: NextAuthOptions = {
                 if (!user.password) {
                     // User exists but signed up with OAuth
                     throw new Error('Please sign in with Google');
+                }
+
+                // Check if user is active
+                if (user.isActive === false) {
+                    throw new Error('Your account has been deactivated. Please contact support.');
                 }
 
                 const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
@@ -131,6 +141,11 @@ export const authOptions: NextAuthOptions = {
                         onboardingStep: 'complete',
                     });
                 } else {
+                    // Check if existing user is active
+                    if (existingUser.isActive === false) {
+                        return false; // Block login for inactive users
+                    }
+
                     // Update last login
                     existingUser.lastLoginAt = new Date();
                     if (!existingUser.profileImage && user.image) {

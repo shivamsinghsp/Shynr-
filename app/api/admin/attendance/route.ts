@@ -3,6 +3,9 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/db';
 import Attendance from '@/db/models/Attendance';
+import { fromZonedTime } from 'date-fns-tz';
+
+const TIMEZONE = 'Asia/Kolkata';
 
 // GET /api/admin/attendance - Get all attendance records
 export async function GET(request: NextRequest) {
@@ -29,17 +32,20 @@ export async function GET(request: NextRequest) {
         const query: any = {};
 
         if (startDate && endDate) {
-            const start = new Date(startDate);
-            start.setHours(0, 0, 0, 0);
-            const end = new Date(endDate);
-            end.setHours(23, 59, 59, 999);
-            query.date = { $gte: start, $lte: end };
+            // Parse dates as IST and convert to UTC for query
+            const startIST = new Date(startDate + 'T00:00:00');
+            const endIST = new Date(endDate + 'T23:59:59.999');
+            const startUTC = fromZonedTime(startIST, TIMEZONE);
+            const endUTC = fromZonedTime(endIST, TIMEZONE);
+            query.date = { $gte: startUTC, $lte: endUTC };
         } else if (date) {
-            const targetDate = new Date(date);
-            targetDate.setHours(0, 0, 0, 0);
-            const nextDay = new Date(targetDate);
-            nextDay.setDate(nextDay.getDate() + 1);
-            query.date = { $gte: targetDate, $lt: nextDay };
+            // Parse date as IST and convert to UTC for query
+            const targetIST = new Date(date + 'T00:00:00');
+            const nextDayIST = new Date(date + 'T00:00:00');
+            nextDayIST.setDate(nextDayIST.getDate() + 1);
+            const startUTC = fromZonedTime(targetIST, TIMEZONE);
+            const endUTC = fromZonedTime(nextDayIST, TIMEZONE);
+            query.date = { $gte: startUTC, $lt: endUTC };
         }
 
         if (userId) {

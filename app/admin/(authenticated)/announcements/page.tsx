@@ -113,7 +113,7 @@ export default function AdminAnnouncementsPage() {
                                 </div>
                                 <p style={{ color: '#4b5563', fontSize: 14, lineHeight: 1.6 }}>{a.content.slice(0, 200)}{a.content.length > 200 ? '...' : ''}</p>
                                 <p style={{ color: '#9ca3af', fontSize: 12, marginTop: 12 }}>
-                                    <span style={{ textTransform: 'capitalize' }}>{a.category}</span> • {new Date(a.createdAt).toLocaleDateString()}
+                                    <span style={{ textTransform: 'capitalize' }}>{a.category}</span> • {new Date(a.createdAt).toLocaleDateString('en-GB')}
                                 </p>
                             </div>
                         );

@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
                 job.location || 'N/A',
                 job.type || 'N/A',
                 app.status || 'N/A',
-                app.appliedAt ? new Date(app.appliedAt).toLocaleDateString() : 'N/A',
+                app.appliedAt ? new Date(app.appliedAt).toLocaleDateString('en-GB') : 'N/A',
                 (app.coverLetter || '').replace(/[\n\r,]/g, ' ').substring(0, 200),
             ];
         });

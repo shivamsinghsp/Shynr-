@@ -14,6 +14,7 @@ export default function AdminAuthenticatedLayout({
     const router = useRouter();
     const pathname = usePathname();
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     useEffect(() => {
         if (status === 'loading') return;
@@ -178,7 +179,7 @@ export default function AdminAuthenticatedLayout({
                 {/* Logout button - fixed at bottom */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10 bg-[#05033e]">
                     <button
-                        onClick={() => signOut({ callbackUrl: '/admin' })}
+                        onClick={() => setShowLogoutModal(true)}
                         className="flex items-center gap-3 w-full px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white rounded-lg transition-colors"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -227,6 +228,38 @@ export default function AdminAuthenticatedLayout({
                     {children}
                 </main>
             </div>
+
+            {/* Logout Confirmation Modal */}
+            {showLogoutModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[200] backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl p-6 w-full max-w-sm mx-4 shadow-2xl">
+                        <div className="text-center">
+                            <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-900 mb-2">Confirm Logout</h3>
+                            <p className="text-gray-600 mb-6">Are you sure you want to logout from the admin panel?</p>
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setShowLogoutModal(false)}
+                                    className="flex-1 px-4 py-2.5 border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={() => signOut({ callbackUrl: '/admin' })}
+                                    className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition-colors"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
+

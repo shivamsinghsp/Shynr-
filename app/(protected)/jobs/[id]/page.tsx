@@ -1,11 +1,13 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { BriefcaseBusiness, Clock, Wallet, MapPin, User, Mail, Phone, MessageSquare, Linkedin, Facebook, Globe, Share2, Loader2, Calendar, CheckCircle2, Check } from "lucide-react";
+import { BriefcaseBusiness, Clock, Wallet, MapPin, User, Loader2, Calendar, CheckCircle2, Globe } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import DOMPurify from "isomorphic-dompurify";
+import SendMessageForm from "@/components/shared/SendMessageForm";
+import ShareButtons from "@/components/shared/ShareButtons";
 
 
 interface Job {
@@ -33,120 +35,6 @@ interface Job {
     createdAt?: string;
 }
 
-// Send Message Form Component with state management
-function SendMessageForm({ jobTitle, jobId }: { jobTitle: string; jobId: string }) {
-    const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
-    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-    const [errorMessage, setErrorMessage] = useState('');
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setStatus('loading');
-        setErrorMessage('');
-
-        try {
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    firstName: formData.name,
-                    email: formData.email,
-                    phone: formData.phone,
-                    message: formData.message,
-                    jobTitle,
-                    jobId
-                })
-            });
-
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                setStatus('success');
-                setFormData({ name: '', email: '', phone: '', message: '' });
-                setTimeout(() => setStatus('idle'), 5000);
-            } else {
-                setStatus('error');
-                setErrorMessage(data.error || 'Failed to send message');
-                setTimeout(() => setStatus('idle'), 5000);
-            }
-        } catch {
-            setStatus('error');
-            setErrorMessage('Network error. Please try again.');
-            setTimeout(() => setStatus('idle'), 5000);
-        }
-    };
-
-    return (
-        <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="Full name"
-                    required
-                    className="w-full pl-12 pr-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-[#05033e]/20 bg-white"
-                />
-            </div>
-            <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    placeholder="Email Address"
-                    required
-                    className="w-full pl-12 pr-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-[#05033e]/20 bg-white"
-                />
-            </div>
-            <div className="relative">
-                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                    placeholder="Phone Number"
-                    className="w-full pl-12 pr-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-[#05033e]/20 bg-white"
-                />
-            </div>
-            <div className="relative">
-                <MessageSquare className="absolute left-4 top-4 text-gray-400" size={18} />
-                <textarea
-                    value={formData.message}
-                    onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
-                    placeholder="Your Message"
-                    rows={4}
-                    required
-                    className="w-full pl-12 pr-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-[#05033e]/20 resize-none bg-white"
-                />
-            </div>
-            <button
-                type="submit"
-                disabled={status === 'loading'}
-                className="w-full bg-[#05033e] text-white font-bold py-3 rounded-xl hover:bg-[#020120] transition-colors shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-                {status === 'loading' ? (
-                    <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        Sending...
-                    </>
-                ) : 'Send Message'}
-            </button>
-            {status === 'success' && (
-                <p className="text-green-600 text-sm text-center font-semibold">
-                    ✓ Message sent successfully!
-                </p>
-            )}
-            {status === 'error' && (
-                <p className="text-red-600 text-sm text-center font-semibold">
-                    ✕ {errorMessage}
-                </p>
-            )}
-        </form>
-    );
-}
-
 export default function JobDetailsPage() {
     const params = useParams();
     const id = params.id as string;
@@ -159,32 +47,7 @@ export default function JobDetailsPage() {
     const [error, setError] = useState<string | null>(null);
     const [isSaved, setIsSaved] = useState(false);
     const [hasApplied, setHasApplied] = useState(false);
-
     const [isScrolled, setIsScrolled] = useState(false);
-    const [copied, setCopied] = useState(false);
-
-    const handleShare = async () => {
-        try {
-            await navigator.clipboard.writeText(window.location.href);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        } catch (err) {
-            console.error('Failed to copy text: ', err);
-        }
-    };
-
-    const handleSocialShare = (platform: 'facebook' | 'linkedin') => {
-        const url = encodeURIComponent(window.location.href);
-        let shareUrl = '';
-
-        if (platform === 'facebook') {
-            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-        } else if (platform === 'linkedin') {
-            shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-        }
-
-        window.open(shareUrl, '_blank', 'width=600,height=400');
-    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -432,29 +295,10 @@ export default function JobDetailsPage() {
 
                         <div className="mt-8 border-t border-gray-100 pt-8">
                             <h3 className="text-lg font-bold text-[#05033e] mb-3">Share Job:</h3>
-                            <div className="flex gap-4">
-                                <button
-                                    onClick={() => handleSocialShare('facebook')}
-                                    className="p-3 bg-gray-50 rounded-full hover:bg-[#05033e] hover:text-white transition-colors text-[#05033e] cursor-pointer"
-                                    aria-label="Share on Facebook"
-                                >
-                                    <Facebook size={20} />
-                                </button>
-                                <button
-                                    onClick={() => handleSocialShare('linkedin')}
-                                    className="p-3 bg-gray-50 rounded-full hover:bg-[#05033e] hover:text-white transition-colors text-[#05033e] cursor-pointer"
-                                    aria-label="Share on LinkedIn"
-                                >
-                                    <Linkedin size={20} />
-                                </button>
-                                <button
-                                    onClick={handleShare}
-                                    className="p-3 bg-gray-50 rounded-full hover:bg-[#05033e] hover:text-white transition-colors text-[#05033e] cursor-pointer"
-                                    aria-label="Copy Link"
-                                >
-                                    {copied ? <Check size={20} /> : <Share2 size={20} />}
-                                </button>
-                            </div>
+                            <ShareButtons
+                                title={`${job.title} at ${job.company}`}
+                                description={job.shortDescription || `Check out this ${job.type} position at ${job.company}`}
+                            />
                         </div>
                     </div>
 
