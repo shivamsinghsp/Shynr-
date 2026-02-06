@@ -114,6 +114,7 @@ export default function EmployeeLayout({ children }: { children: React.ReactNode
     }
 
     const handleLogout = async () => {
+        setSidebarOpen(false); // Close sidebar first to prevent z-index conflict
         setShowLogoutModal(true);
     };
 

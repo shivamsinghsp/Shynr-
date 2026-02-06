@@ -120,7 +120,7 @@ const JobsComp = ({ job }: { job: Job }) => {
 
           <div className="w-full lg:w-auto flex justify-end">
             <Link href={`/jobs/${job._id}`} className="w-full lg:w-auto">
-              <button className="w-full lg:w-auto bg-[#05033e] text-white px-8 py-3 rounded-xl text-base font-bold hover:bg-[#020120] transition-colors shadow-lg hover:shadow-xl transform active:scale-95">
+              <button className="w-full lg:w-[140px] lg:h-[48px] bg-[#05033e] text-white px-6 py-3 rounded-xl text-base font-bold hover:bg-[#020120] transition-colors shadow-lg hover:shadow-xl transform active:scale-95 whitespace-nowrap overflow-hidden text-ellipsis">
                 Job Details
               </button>
             </Link>

@@ -227,20 +227,51 @@ const ContactPage = () => {
 
       </section>
 
-      {/* Google Map Section */}
       <section className="w-full relative z-10 border-t border-gray-100 py-12">
-        <div className="max-w-7xl mx-auto px-6 h-[550px] md:h-[650px]">
-          <div className="w-full h-full rounded-3xl overflow-hidden shadow-lg border border-gray-200 transition-all duration-500">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d710.3025256935434!2d80.33639478700282!3d26.477576072980895!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399c389bcaa40e41%3A0xd46dd1b7825522c7!2sRatan%20Esquire!5e0!3m2!1sen!2sin!4v1768822701984!5m2!1sen!2sin"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Shynr Office Location - Ratan Esquire"
-            ></iframe>
+        {/* Single Map Container with Two Sections */}
+        <div className="max-w-7xl mx-auto px-6 h-[500px]">
+          <div className="w-full h-full rounded-3xl overflow-hidden shadow-lg border border-gray-200 flex flex-col md:flex-row">
+
+            {/* Location 1: Mumbai */}
+            <div className="w-full md:w-1/2 h-1/2 md:h-full relative border-b md:border-b-0 md:border-r border-gray-200">
+              <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl shadow-sm border border-gray-100">
+                <h4 className="font-bold text-[#05033e] text-sm flex items-center gap-2">
+                  <MapPin className="w-4 h-4" /> Mumbai HQ
+                </h4>
+              </div>
+              <iframe
+                src="https://maps.google.com/maps?q=19.1104527,73.0158667&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Mumbai Office Location"
+                className="grayscale hover:grayscale-0 transition-all duration-500"
+              ></iframe>
+            </div>
+
+            {/* Location 2: Kanpur */}
+            <div className="w-full md:w-1/2 h-1/2 md:h-full relative">
+              <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl shadow-sm border border-gray-100">
+                <h4 className="font-bold text-[#05033e] text-sm flex items-center gap-2">
+                  <MapPin className="w-4 h-4" /> Kanpur Branch
+                </h4>
+              </div>
+              <iframe
+                src="https://maps.google.com/maps?q=26.5021054,80.267075&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Kanpur Office Location"
+                className="grayscale hover:grayscale-0 transition-all duration-500"
+              ></iframe>
+            </div>
+
           </div>
         </div>
       </section>

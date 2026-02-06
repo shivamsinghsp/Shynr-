@@ -3,13 +3,16 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/db';
 import Job from '@/db/models/Job';
+import { canAccessAdminPanel } from '@/lib/permissions';
+import { logActivity } from '@/db/models/ActivityLog';
 
 // GET /api/admin/jobs - Get all jobs for admin (including drafts, closed, etc.)
 export async function GET(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
+        const userRole = (session?.user as any)?.role;
 
-        if (!session?.user || (session.user as any).role !== 'admin') {
+        if (!session?.user || !canAccessAdminPanel(userRole)) {
             return NextResponse.json(
                 { success: false, error: 'Unauthorized' },
                 { status: 401 }
@@ -67,12 +70,13 @@ export async function GET(request: NextRequest) {
     }
 }
 
-// POST /api/admin/jobs - Create a new job (Admin only)
+// POST /api/admin/jobs - Create a new job (Admin or Sub Admin)
 export async function POST(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
+        const userRole = (session?.user as any)?.role;
 
-        if (!session?.user || (session.user as any).role !== 'admin') {
+        if (!session?.user || !canAccessAdminPanel(userRole)) {
             return NextResponse.json(
                 { success: false, error: 'Unauthorized' },
                 { status: 401 }
@@ -92,6 +96,19 @@ export async function POST(request: NextRequest) {
             postedDate: new Date(),
             viewCount: 0,
             applicationCount: 0,
+        });
+
+        // Log the activity
+        await logActivity({
+            userId: createdById,
+            userEmail: session.user.email || '',
+            userRole: userRole as 'admin' | 'sub_admin',
+            action: 'created',
+            entityType: 'job',
+            entityId: job._id.toString(),
+            entityName: job.title,
+            description: `Created job: ${job.title} at ${job.company}`,
+            metadata: { company: job.company, type: job.type },
         });
 
         return NextResponse.json({

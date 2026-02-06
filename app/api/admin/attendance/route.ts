@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/db';
 import Attendance from '@/db/models/Attendance';
 import { fromZonedTime } from 'date-fns-tz';
+import { canAccessAdminPanel } from '@/lib/permissions';
 
 const TIMEZONE = 'Asia/Kolkata';
 
@@ -11,8 +12,9 @@ const TIMEZONE = 'Asia/Kolkata';
 export async function GET(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
+        const userRole = (session?.user as any)?.role;
 
-        if (!session?.user || (session.user as any).role !== 'admin') {
+        if (!session?.user || !canAccessAdminPanel(userRole)) {
             return NextResponse.json(
                 { success: false, error: 'Unauthorized' },
                 { status: 401 }

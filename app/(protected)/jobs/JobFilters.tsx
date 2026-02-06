@@ -80,7 +80,7 @@ export function DesktopFilterPanel({ filters, setFilters }: JobFiltersProps) {
             </div>
 
             {/* Filter Content */}
-            <div className="p-5 max-h-[calc(100vh-200px)] overflow-y-auto">
+            <div className="p-5 max-h-[calc(100vh-200px)] overflow-y-auto no-scrollbar">
                 {/* Search */}
                 <div className="mb-6">
                     <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
@@ -176,7 +176,7 @@ export function DesktopFilterPanel({ filters, setFilters }: JobFiltersProps) {
                             type="range"
                             min="0"
                             max="200000"
-                            step="10000"
+                            step="1000"
                             value={filters.salaryRange[0]}
                             onChange={(e) => setFilters(prev => ({ ...prev, salaryRange: [Number(e.target.value), prev.salaryRange[1]] }))}
                             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#05033e]"
@@ -307,7 +307,7 @@ export function MobileFilterDrawer({
                 </div>
 
                 {/* Filter Content */}
-                <div className="p-5 h-[calc(100vh-180px)] overflow-y-auto">
+                <div className="p-5 h-[calc(100vh-180px)] overflow-y-auto no-scrollbar">
                     {/* Search */}
                     <div className="mb-6">
                         <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
@@ -401,7 +401,7 @@ export function MobileFilterDrawer({
                                 type="range"
                                 min="0"
                                 max="200000"
-                                step="10000"
+                                step="1000"
                                 value={filters.salaryRange[0]}
                                 onChange={(e) => setFilters(prev => ({ ...prev, salaryRange: [Number(e.target.value), prev.salaryRange[1]] }))}
                                 className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#05033e]"

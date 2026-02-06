@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/db';
 import Application from '@/db/models/Application';
 import { sendApplicationStatusEmail, isEmailConfigured } from '@/lib/mail';
+import { canAccessAdminPanel } from '@/lib/permissions';
+import { logActivity } from '@/db/models/ActivityLog';
 
 interface RouteParams {
     params: Promise<{ id: string }>;
@@ -14,7 +16,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     try {
         const session = await getServerSession(authOptions);
 
-        if (!session?.user || (session.user as any).role !== 'admin') {
+        if (!session?.user || !canAccessAdminPanel((session.user as any).role)) {
             return NextResponse.json(
                 { success: false, error: 'Unauthorized' },
                 { status: 401 }
@@ -54,7 +56,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     try {
         const session = await getServerSession(authOptions);
 
-        if (!session?.user || (session.user as any).role !== 'admin') {
+        if (!session?.user || !canAccessAdminPanel((session.user as any).role)) {
             return NextResponse.json(
                 { success: false, error: 'Unauthorized' },
                 { status: 401 }
@@ -132,6 +134,23 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             }
         }
 
+        // Log the activity
+        const userRole = (session.user as any).role;
+        await logActivity({
+            userId: (session.user as any).id,
+            userEmail: session.user.email || '',
+            userRole: userRole as 'admin' | 'sub_admin',
+            action: 'updated',
+            entityType: 'job', // Contextualizing as job-related activity
+            entityId: id,
+            entityName: `Application for ${(application.job as any)?.title}`,
+            description: `Updated application status to ${status || 'unchanged'}`,
+            metadata: {
+                applicant: `${(application.user as any)?.firstName} ${(application.user as any)?.lastName}`,
+                status: status
+            },
+        });
+
         return NextResponse.json({
             success: true,
             data: application,
@@ -151,7 +170,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     try {
         const session = await getServerSession(authOptions);
 
-        if (!session?.user || (session.user as any).role !== 'admin') {
+        if (!session?.user || !canAccessAdminPanel((session.user as any).role)) {
             return NextResponse.json(
                 { success: false, error: 'Unauthorized' },
                 { status: 401 }

@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { User as UserIcon, Shield, Briefcase, Users as UsersIcon } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { User as UserIcon, Shield, Briefcase, Users as UsersIcon, ShieldCheck } from 'lucide-react';
 
 interface User {
     _id: string;
@@ -10,7 +11,7 @@ interface User {
     email: string;
     phone?: string;
     profileImage?: string;
-    role?: 'user' | 'admin' | 'employee';
+    role?: 'user' | 'admin' | 'sub_admin' | 'employee';
     isActive?: boolean;
     emailVerified?: boolean;
     onboardingCompleted?: boolean;
@@ -22,10 +23,15 @@ interface User {
 const ROLE_OPTIONS = [
     { value: 'user', label: 'User', color: 'bg-gray-100 text-gray-800', icon: UserIcon, description: 'Regular job seeker' },
     { value: 'employee', label: 'Employee', color: 'bg-blue-100 text-blue-800', icon: Briefcase, description: 'Can mark attendance' },
-    { value: 'admin', label: 'Admin', color: 'bg-purple-100 text-purple-800', icon: Shield, description: 'Full access' },
+    { value: 'sub_admin', label: 'Sub Admin', color: 'bg-orange-100 text-orange-800', icon: ShieldCheck, description: 'Manage jobs & employees' },
+    { value: 'admin', label: 'Super Admin', color: 'bg-purple-100 text-purple-800', icon: Shield, description: 'Full access' },
 ];
 
 export default function AdminUsersPage() {
+    const { data: session } = useSession();
+    const currentUserRole = (session?.user as any)?.role;
+    const isSuperAdmin = currentUserRole === 'admin'; // Only super admin can change roles
+
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -286,16 +292,22 @@ export default function AdminUsersPage() {
                                                 {user.phone || 'N/A'}
                                             </td>
                                             <td className="px-4 py-4">
-                                                <select
-                                                    value={user.role || 'user'}
-                                                    onChange={(e) => handleRoleChange(user._id, e.target.value)}
-                                                    disabled={updatingId === user._id}
-                                                    className={`px-3 py-1.5 rounded-lg text-sm font-medium border-0 cursor-pointer disabled:opacity-50 ${roleBadge.color}`}
-                                                >
-                                                    {ROLE_OPTIONS.map(opt => (
-                                                        <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                                    ))}
-                                                </select>
+                                                {isSuperAdmin ? (
+                                                    <select
+                                                        value={user.role || 'user'}
+                                                        onChange={(e) => handleRoleChange(user._id, e.target.value)}
+                                                        disabled={updatingId === user._id || user.role === 'admin'}
+                                                        className={`px-3 py-1.5 rounded-lg text-sm font-medium border-0 cursor-pointer disabled:opacity-50 ${roleBadge.color}`}
+                                                    >
+                                                        {ROLE_OPTIONS.filter(opt => opt.value !== 'admin').map(opt => (
+                                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                                        ))}
+                                                    </select>
+                                                ) : (
+                                                    <span className={`px-3 py-1.5 rounded-lg text-sm font-medium ${roleBadge.color}`}>
+                                                        {roleBadge.label}
+                                                    </span>
+                                                )}
                                             </td>
                                             <td className="px-4 py-4">
                                                 <div className="flex flex-col gap-1">
@@ -309,22 +321,26 @@ export default function AdminUsersPage() {
                                                 {formatDate(user.createdAt)}
                                             </td>
                                             <td className="px-4 py-4">
-                                                <button
-                                                    onClick={() => handleToggleActive(user._id, user.isActive !== false)}
-                                                    disabled={updatingId === user._id}
-                                                    className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 ${user.isActive !== false
-                                                        ? 'bg-red-50 text-red-600 hover:bg-red-100'
-                                                        : 'bg-green-50 text-green-600 hover:bg-green-100'
-                                                        }`}
-                                                >
-                                                    {updatingId === user._id ? (
-                                                        <span className="flex items-center gap-1">
-                                                            <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                                                        </span>
-                                                    ) : (
-                                                        user.isActive !== false ? 'Deactivate' : 'Activate'
-                                                    )}
-                                                </button>
+                                                {isSuperAdmin && user.role !== 'admin' ? (
+                                                    <button
+                                                        onClick={() => handleToggleActive(user._id, user.isActive !== false)}
+                                                        disabled={updatingId === user._id}
+                                                        className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 ${user.isActive !== false
+                                                            ? 'bg-red-50 text-red-600 hover:bg-red-100'
+                                                            : 'bg-green-50 text-green-600 hover:bg-green-100'
+                                                            }`}
+                                                    >
+                                                        {updatingId === user._id ? (
+                                                            <span className="flex items-center gap-1">
+                                                                <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                                            </span>
+                                                        ) : (
+                                                            user.isActive !== false ? 'Deactivate' : 'Activate'
+                                                        )}
+                                                    </button>
+                                                ) : (
+                                                    <span className="text-gray-400 text-sm">—</span>
+                                                )}
                                             </td>
                                         </tr>
                                     );
@@ -367,34 +383,42 @@ export default function AdminUsersPage() {
                                     </div>
                                     <div className="flex items-center gap-2 mb-3">
                                         <span className="text-sm text-gray-600">Role:</span>
-                                        <select
-                                            value={user.role || 'user'}
-                                            onChange={(e) => handleRoleChange(user._id, e.target.value)}
-                                            disabled={updatingId === user._id}
-                                            className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium border-0 ${roleBadge.color}`}
-                                        >
-                                            {ROLE_OPTIONS.map(opt => (
-                                                <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <button
-                                        onClick={() => handleToggleActive(user._id, user.isActive !== false)}
-                                        disabled={updatingId === user._id}
-                                        className={`w-full py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 ${user.isActive !== false
-                                            ? 'bg-red-50 text-red-600 hover:bg-red-100'
-                                            : 'bg-green-50 text-green-600 hover:bg-green-100'
-                                            }`}
-                                    >
-                                        {updatingId === user._id ? (
-                                            <span className="flex items-center justify-center gap-1">
-                                                <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                                                Updating...
-                                            </span>
+                                        {isSuperAdmin ? (
+                                            <select
+                                                value={user.role || 'user'}
+                                                onChange={(e) => handleRoleChange(user._id, e.target.value)}
+                                                disabled={updatingId === user._id || user.role === 'admin'}
+                                                className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium border-0 ${roleBadge.color}`}
+                                            >
+                                                {ROLE_OPTIONS.filter(opt => opt.value !== 'admin').map(opt => (
+                                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                                ))}
+                                            </select>
                                         ) : (
-                                            user.isActive !== false ? 'Deactivate User' : 'Activate User'
+                                            <span className={`px-3 py-2 rounded-lg text-sm font-medium ${roleBadge.color}`}>
+                                                {roleBadge.label}
+                                            </span>
                                         )}
-                                    </button>
+                                    </div>
+                                    {isSuperAdmin && user.role !== 'admin' ? (
+                                        <button
+                                            onClick={() => handleToggleActive(user._id, user.isActive !== false)}
+                                            disabled={updatingId === user._id}
+                                            className={`w-full py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 ${user.isActive !== false
+                                                ? 'bg-red-50 text-red-600 hover:bg-red-100'
+                                                : 'bg-green-50 text-green-600 hover:bg-green-100'
+                                                }`}
+                                        >
+                                            {updatingId === user._id ? (
+                                                <span className="flex items-center justify-center gap-1">
+                                                    <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                                    Updating...
+                                                </span>
+                                            ) : (
+                                                user.isActive !== false ? 'Deactivate User' : 'Activate User'
+                                            )}
+                                        </button>
+                                    ) : null}
                                 </div>
                             );
                         })}

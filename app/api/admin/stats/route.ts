@@ -5,14 +5,16 @@ import dbConnect from '@/db';
 import Job from '@/db/models/Job';
 import Application from '@/db/models/Application';
 import User from '@/db/models/User';
+import { canAccessAdminPanel } from '@/lib/permissions';
 
 // GET /api/admin/stats - Get dashboard statistics
 export async function GET(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
+        const userRole = (session?.user as any)?.role;
 
-        // Check if user is admin
-        if (!session?.user || (session.user as any).role !== 'admin') {
+        // Check if user can access admin panel (admin or sub_admin)
+        if (!session?.user || !canAccessAdminPanel(userRole)) {
             return NextResponse.json(
                 { success: false, error: 'Unauthorized' },
                 { status: 401 }

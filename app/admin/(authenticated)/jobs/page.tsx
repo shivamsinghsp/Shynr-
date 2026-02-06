@@ -155,7 +155,7 @@ export default function AdminJobsPage() {
                         onChange={(e) => setFilter(e.target.value)}
                         className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#05033e] focus:border-transparent"
                     >
-                        <option value="">All Statuses</option>
+                        <option value="">All Status</option>
                         <option value="published">Published</option>
                         <option value="draft">Draft</option>
                         <option value="closed">Closed</option>

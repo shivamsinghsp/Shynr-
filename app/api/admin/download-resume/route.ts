@@ -3,13 +3,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { canAccessAdminPanel } from '@/lib/permissions';
 
 // GET /api/admin/download-resume - Proxy download from Cloudinary
 export async function GET(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
 
-        // Check if user is authenticated and is admin
+        // Check if user is authenticated
         if (!session?.user?.email) {
             return NextResponse.json(
                 { success: false, error: 'Authentication required' },
@@ -17,8 +18,8 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        const userRole = (session.user as { role?: string }).role;
-        if (userRole !== 'admin' && userRole !== 'superadmin') {
+        const userRole = (session.user as { role?: string }).role || '';
+        if (!canAccessAdminPanel(userRole)) {
             return NextResponse.json(
                 { success: false, error: 'Admin access required' },
                 { status: 403 }

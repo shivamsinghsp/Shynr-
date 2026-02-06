@@ -45,6 +45,7 @@ const JobsPage = () => {
     });
 
     const [currentPage, setCurrentPage] = useState(1);
+    const [sortBy, setSortBy] = useState<'newest' | 'salary-high' | 'salary-low'>('newest');
     const itemsPerPage = 6;
 
     // Fetch jobs from API
@@ -93,11 +94,25 @@ const JobsPage = () => {
         setCurrentPage(1);
     }, [filters]);
 
-    // Pagination Logic
-    const startResult = filteredJobs.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
-    const endResult = Math.min(currentPage * itemsPerPage, filteredJobs.length);
+    // Sort Logic - applied after filtering
+    const sortedJobs = [...filteredJobs].sort((a, b) => {
+        if (sortBy === 'salary-high') {
+            const salaryA = a.salary?.max ?? 0;
+            const salaryB = b.salary?.max ?? 0;
+            return salaryB - salaryA;
+        } else if (sortBy === 'salary-low') {
+            const salaryA = a.salary?.min ?? Number.MAX_SAFE_INTEGER;
+            const salaryB = b.salary?.min ?? Number.MAX_SAFE_INTEGER;
+            return salaryA - salaryB;
+        }
+        return 0; // 'newest' uses default order from API
+    });
 
-    const displayedJobs = filteredJobs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    // Pagination Logic
+    const startResult = sortedJobs.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
+    const endResult = Math.min(currentPage * itemsPerPage, sortedJobs.length);
+
+    const displayedJobs = sortedJobs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     return (
         <div id="job" className="w-full bg-[#f4f7f7] min-h-screen">
@@ -133,15 +148,19 @@ const JobsPage = () => {
                         {/* Controls */}
                         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                             <span className="text-gray-600 font-medium text-lg">
-                                Showing <span className="text-[#05033e] font-bold">{startResult}-{endResult}</span> of {filteredJobs.length} results
+                                Showing <span className="text-[#05033e] font-bold">{startResult}-{endResult}</span> of {sortedJobs.length} results
                             </span>
 
                             <div className="flex items-center gap-2">
                                 <span className="text-gray-500 text-sm">Sort by:</span>
-                                <select className="bg-transparent font-semibold text-[#05033e] focus:outline-none cursor-pointer">
-                                    <option>Newest</option>
-                                    <option>Salary: High to Low</option>
-                                    <option>Salary: Low to High</option>
+                                <select
+                                    value={sortBy}
+                                    onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                                    className="bg-transparent font-semibold text-[#05033e] focus:outline-none cursor-pointer"
+                                >
+                                    <option value="newest">Newest</option>
+                                    <option value="salary-high">Salary: High to Low</option>
+                                    <option value="salary-low">Salary: Low to High</option>
                                 </select>
                             </div>
                         </div>

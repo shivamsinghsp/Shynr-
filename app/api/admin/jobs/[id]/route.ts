@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/db';
 import Job from '@/db/models/Job';
+import { canAccessAdminPanel } from '@/lib/permissions';
+import { logActivity } from '@/db/models/ActivityLog';
 
 interface RouteParams {
     params: Promise<{ id: string }>;
@@ -13,7 +15,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     try {
         const session = await getServerSession(authOptions);
 
-        if (!session?.user || (session.user as any).role !== 'admin') {
+        if (!session?.user || !canAccessAdminPanel((session.user as any).role)) {
             return NextResponse.json(
                 { success: false, error: 'Unauthorized' },
                 { status: 401 }
@@ -50,7 +52,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     try {
         const session = await getServerSession(authOptions);
 
-        if (!session?.user || (session.user as any).role !== 'admin') {
+        if (!session?.user || !canAccessAdminPanel((session.user as any).role)) {
             return NextResponse.json(
                 { success: false, error: 'Unauthorized' },
                 { status: 401 }
@@ -83,6 +85,20 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             );
         }
 
+        // Log the activity
+        const userRole = (session.user as any).role;
+        await logActivity({
+            userId: (session.user as any).id,
+            userEmail: session.user.email || '',
+            userRole: userRole as 'admin' | 'sub_admin',
+            action: 'updated',
+            entityType: 'job',
+            entityId: id,
+            entityName: job.title,
+            description: `Updated job: ${job.title}`,
+            metadata: { company: job.company },
+        });
+
         return NextResponse.json({
             success: true,
             data: job,
@@ -101,7 +117,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     try {
         const session = await getServerSession(authOptions);
 
-        if (!session?.user || (session.user as any).role !== 'admin') {
+        if (!session?.user || !canAccessAdminPanel((session.user as any).role)) {
             return NextResponse.json(
                 { success: false, error: 'Unauthorized' },
                 { status: 401 }
@@ -120,6 +136,20 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
                 { status: 404 }
             );
         }
+
+        // Log the activity
+        const userRole = (session.user as any).role;
+        await logActivity({
+            userId: (session.user as any).id,
+            userEmail: session.user.email || '',
+            userRole: userRole as 'admin' | 'sub_admin',
+            action: 'deleted',
+            entityType: 'job',
+            entityId: id,
+            entityName: job.title,
+            description: `Deleted job: ${job.title}`,
+            metadata: { company: job.company },
+        });
 
         return NextResponse.json({
             success: true,

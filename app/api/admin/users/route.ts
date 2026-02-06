@@ -3,13 +3,15 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/db';
 import User from '@/db/models/User';
+import { canAccessAdminPanel } from '@/lib/permissions';
 
 // GET /api/admin/users - Get all users for admin
 export async function GET(request: NextRequest) {
     try {
         const session = await getServerSession(authOptions);
+        const userRole = (session?.user as any)?.role;
 
-        if (!session?.user || (session.user as any).role !== 'admin') {
+        if (!session?.user || !canAccessAdminPanel(userRole)) {
             return NextResponse.json(
                 { success: false, error: 'Unauthorized' },
                 { status: 401 }
@@ -33,8 +35,8 @@ export async function GET(request: NextRequest) {
         if (role) {
             query.role = role;
         } else {
-            // By default show all non-admin users (users and employees)
-            query.$or = [{ role: 'user' }, { role: 'employee' }, { role: { $exists: false } }, { role: null }];
+            // By default show all users including sub_admins (users, employees, sub_admins)
+            query.$or = [{ role: 'user' }, { role: 'employee' }, { role: 'sub_admin' }, { role: { $exists: false } }, { role: null }];
         }
 
         if (search) {

@@ -29,8 +29,8 @@ export default function SignInPage() {
     // Redirect if already signed in, or clear admin session
     useEffect(() => {
         if (status === "authenticated" && session?.user) {
-            // If logged in as admin, sign out first (wrong portal)
-            if ((session.user as any).role === 'admin') {
+            // If logged in as admin or sub_admin, sign out first (wrong portal)
+            if ((session.user as any).role === 'admin' || (session.user as any).role === 'sub_admin') {
                 signOut({ redirect: false });
                 return;
             }
@@ -66,10 +66,10 @@ export default function SignInPage() {
                 const sessionRes = await fetch('/api/auth/session');
                 const sessionData = await sessionRes.json();
 
-                if (sessionData?.user?.role === 'admin') {
+                if (sessionData?.user?.role === 'admin' || sessionData?.user?.role === 'sub_admin') {
                     // Sign out the admin user and show error
                     await signOut({ redirect: false });
-                    setError("Admin users must use the Admin Portal. Please go to /admin to login.");
+                    setError("Admin/Sub-Admin users must use the Admin Portal. Please go to /admin to login.");
                     setLoading(false);
                     return;
                 }

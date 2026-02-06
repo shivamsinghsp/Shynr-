@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import connectDB from '@/db';
 import Announcement from '@/db/models/Announcement';
 import mongoose from 'mongoose';
+import { canAccessAdminPanel } from '@/lib/permissions';
+import { logActivity } from '@/db/models/ActivityLog';
 
 // PUT - Update an announcement
 export async function PUT(
@@ -18,7 +20,7 @@ export async function PUT(
         }
 
         const userRole = (session.user as any).role;
-        if (userRole !== 'admin') {
+        if (!canAccessAdminPanel(userRole)) {
             return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
         }
 
@@ -79,7 +81,7 @@ export async function DELETE(
         }
 
         const userRole = (session.user as any).role;
-        if (userRole !== 'admin') {
+        if (!canAccessAdminPanel(userRole)) {
             return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
         }
 
@@ -95,6 +97,18 @@ export async function DELETE(
         if (!deleted) {
             return NextResponse.json({ error: 'Announcement not found' }, { status: 404 });
         }
+
+        // Log the activity
+        await logActivity({
+            userId: (session.user as any).id,
+            userEmail: session.user.email || '',
+            userRole: userRole as 'admin' | 'sub_admin',
+            action: 'deleted',
+            entityType: 'settings',
+            entityId: id,
+            entityName: deleted.title,
+            description: `Deleted announcement: ${deleted.title}`,
+        });
 
         return NextResponse.json({
             success: true,

@@ -7,8 +7,8 @@ export default withAuth(
         const token = req.nextauth.token;
         const path = req.nextUrl.pathname;
 
-        // Admin route protection
-        if (path.startsWith("/admin") && token?.role !== "admin") {
+        // Admin route protection - allow both admin (super admin) and sub_admin
+        if (path.startsWith("/admin") && token?.role !== "admin" && token?.role !== "sub_admin") {
             return NextResponse.redirect(new URL("/auth/signin", req.url));
         }
 

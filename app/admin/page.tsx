@@ -20,8 +20,9 @@ export default function AdminLoginPage() {
     // Clear any existing session when loading the login page
     useEffect(() => {
         if (status === 'authenticated' && session) {
-            // If already logged in as admin, redirect to dashboard
-            if ((session.user as any)?.role === 'admin') {
+            // If already logged in as admin or sub_admin, redirect to dashboard
+            const userRole = (session.user as any)?.role;
+            if (userRole === 'admin' || userRole === 'sub_admin') {
                 router.push('/admin/dashboard');
             } else {
                 // If logged in as user, sign out first
@@ -51,7 +52,8 @@ export default function AdminLoginPage() {
                     const sessionRes = await fetch('/api/auth/session');
                     const sessionData = await sessionRes.json();
 
-                    if (sessionData?.user?.role !== 'admin') {
+                    const userRole = sessionData?.user?.role;
+                    if (userRole !== 'admin' && userRole !== 'sub_admin') {
                         // Sign out the regular user and show error
                         await signOut({ redirect: false });
                         setError('This portal is for administrators only. Please use the regular sign-in at /auth/signin');

@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/db';
 import AttendanceLocation from '@/db/models/AttendanceLocation';
+import { canAccessAdminPanel } from '@/lib/permissions';
 
 interface RouteParams {
     params: Promise<{ id: string }>;
@@ -13,7 +14,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     try {
         const session = await getServerSession(authOptions);
 
-        if (!session?.user || (session.user as any).role !== 'admin') {
+        if (!session?.user || !canAccessAdminPanel((session.user as any).role)) {
             return NextResponse.json(
                 { success: false, error: 'Unauthorized' },
                 { status: 401 }
@@ -61,7 +62,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     try {
         const session = await getServerSession(authOptions);
 
-        if (!session?.user || (session.user as any).role !== 'admin') {
+        if (!session?.user || !canAccessAdminPanel((session.user as any).role)) {
             return NextResponse.json(
                 { success: false, error: 'Unauthorized' },
                 { status: 401 }

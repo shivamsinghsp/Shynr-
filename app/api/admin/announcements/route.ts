@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import connectDB from '@/db';
 import Announcement from '@/db/models/Announcement';
+import { canAccessAdminPanel } from '@/lib/permissions';
+import { logActivity } from '@/db/models/ActivityLog';
 
 // GET - Get all announcements (admin)
 export async function GET(request: NextRequest) {
@@ -14,7 +16,7 @@ export async function GET(request: NextRequest) {
         }
 
         const userRole = (session.user as any).role;
-        if (userRole !== 'admin') {
+        if (!canAccessAdminPanel(userRole)) {
             return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
         }
 
@@ -71,7 +73,7 @@ export async function POST(request: NextRequest) {
         }
 
         const userRole = (session.user as any).role;
-        if (userRole !== 'admin') {
+        if (!canAccessAdminPanel(userRole)) {
             return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
         }
 
@@ -98,6 +100,19 @@ export async function POST(request: NextRequest) {
         });
 
         await announcement.save();
+
+        // Log the activity
+        await logActivity({
+            userId: session.user.id as any,
+            userEmail: session.user.email || '',
+            userRole: userRole as 'admin' | 'sub_admin',
+            action: 'created',
+            entityType: 'settings', // Announcements under system settings
+            entityId: announcement._id.toString(),
+            entityName: announcement.title,
+            description: `Created announcement: ${announcement.title}`,
+            metadata: { priority: announcement.priority, targetRoles: announcement.targetRoles },
+        });
 
         return NextResponse.json({
             success: true,

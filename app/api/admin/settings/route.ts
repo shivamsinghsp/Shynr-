@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/db';
 import Settings from '@/db/models/Settings';
+import { canAccessAdminPanel } from '@/lib/permissions';
 
 // GET /api/admin/settings - Get current settings
 export async function GET(request: NextRequest) {
@@ -16,9 +17,9 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        // Allow employees to read settings (for attendance validation)
+        // Allow employees and admins (including sub_admin) to read settings (for attendance validation)
         const userRole = (session.user as any).role;
-        if (userRole !== 'admin' && userRole !== 'employee') {
+        if (userRole !== 'admin' && userRole !== 'sub_admin' && userRole !== 'employee') {
             return NextResponse.json(
                 { success: false, error: 'Access denied' },
                 { status: 403 }
@@ -60,7 +61,7 @@ export async function PUT(request: NextRequest) {
         }
 
         const userRole = (session.user as any).role;
-        if (userRole !== 'admin') {
+        if (!canAccessAdminPanel(userRole)) {
             return NextResponse.json(
                 { success: false, error: 'Only admins can update settings' },
                 { status: 403 }

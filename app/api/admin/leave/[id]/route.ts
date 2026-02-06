@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import connectDB from '@/db';
 import LeaveRequest from '@/db/models/LeaveRequest';
 import mongoose from 'mongoose';
+import { canAccessAdminPanel } from '@/lib/permissions';
+import { logActivity } from '@/db/models/ActivityLog';
 
 // PUT - Approve or reject a leave request
 export async function PUT(
@@ -18,7 +20,7 @@ export async function PUT(
         }
 
         const userRole = (session.user as any).role;
-        if (userRole !== 'admin') {
+        if (!canAccessAdminPanel(userRole)) {
             return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
         }
 
@@ -61,6 +63,22 @@ export async function PUT(
 
         await leaveRequest.save();
 
+        // Log the activity
+        await logActivity({
+            userId: (session.user as any).id,
+            userEmail: session.user.email || '',
+            userRole: userRole as 'admin' | 'sub_admin',
+            action: 'updated',
+            entityType: 'attendance', // Categorizing leave under attendance
+            entityId: id,
+            entityName: `Leave Request`,
+            description: `${status === 'approved' ? 'Approved' : 'Rejected'} leave request`,
+            metadata: {
+                status: status,
+                reviewNote: reviewNote
+            },
+        });
+
         return NextResponse.json({
             success: true,
             message: `Leave request ${status} successfully`,
@@ -88,7 +106,7 @@ export async function DELETE(
         }
 
         const userRole = (session.user as any).role;
-        if (userRole !== 'admin') {
+        if (!canAccessAdminPanel(userRole)) {
             return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
         }
 
