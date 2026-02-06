@@ -38,7 +38,7 @@ const nextConfig: NextConfig = {
       source: '/:path*',
       headers: [{
         key: 'Content-Security-Policy',
-        value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://res.cloudinary.com https://lh3.googleusercontent.com; font-src 'self' data:; frame-src 'self' https://www.google.com;",
+        value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://res.cloudinary.com https://lh3.googleusercontent.com; font-src 'self' data: https://fonts.gstatic.com; frame-src 'self' https://www.google.com; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;",
       }]
     }];
   },
