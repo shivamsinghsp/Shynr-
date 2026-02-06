@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/db';
 import User from '@/db/models/User';
+import Admin, { defaultPermissions } from '@/db/models/Admin';
 import bcrypt from 'bcryptjs';
 
 /**
@@ -57,25 +58,40 @@ export async function POST(request: NextRequest) {
         await dbConnect();
 
         const normalizedEmail = adminEmail.toLowerCase();
-        const existingAdmin = await User.findOne({ email: normalizedEmail });
+        const hashedPassword = await bcrypt.hash(adminPassword, 12);
 
-        if (existingAdmin) {
-            const hashedPassword = await bcrypt.hash(adminPassword, 12);
-            existingAdmin.password = hashedPassword;
-            existingAdmin.role = 'admin';
-            existingAdmin.onboardingCompleted = true;
-            existingAdmin.onboardingStep = 'complete';
-            existingAdmin.emailVerified = true;
-            await existingAdmin.save();
+        // Create/update in Admin collection (this is where auth checks first)
+        const existingAdminDoc = await Admin.findOne({ email: normalizedEmail });
 
-            return NextResponse.json({
-                success: true,
-                message: 'Admin user updated',
-                email: normalizedEmail,
-            });
+        if (existingAdminDoc) {
+            existingAdminDoc.password = hashedPassword;
+            existingAdminDoc.firstName = adminFirstName;
+            existingAdminDoc.lastName = adminLastName;
+            existingAdminDoc.isActive = true;
+            await existingAdminDoc.save();
         } else {
-            const hashedPassword = await bcrypt.hash(adminPassword, 12);
+            await Admin.create({
+                email: normalizedEmail,
+                password: hashedPassword,
+                firstName: adminFirstName,
+                lastName: adminLastName,
+                role: 'super_admin',
+                permissions: defaultPermissions['super_admin'],
+                isActive: true,
+            });
+        }
 
+        // Also keep User collection in sync for backward compatibility
+        const existingUser = await User.findOne({ email: normalizedEmail });
+
+        if (existingUser) {
+            existingUser.password = hashedPassword;
+            existingUser.role = 'admin';
+            existingUser.onboardingCompleted = true;
+            existingUser.onboardingStep = 'complete';
+            existingUser.emailVerified = true;
+            await existingUser.save();
+        } else {
             await User.create({
                 email: normalizedEmail,
                 password: hashedPassword,
@@ -87,13 +103,13 @@ export async function POST(request: NextRequest) {
                 onboardingStep: 'complete',
                 emailVerified: true
             });
-
-            return NextResponse.json({
-                success: true,
-                message: 'Admin user created',
-                email: normalizedEmail,
-            });
         }
+
+        return NextResponse.json({
+            success: true,
+            message: existingAdminDoc ? 'Admin updated in both collections' : 'Admin created in both collections',
+            email: normalizedEmail,
+        });
     } catch (error) {
         console.error('Error seeding admin:', error);
         return NextResponse.json(
