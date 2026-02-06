@@ -255,28 +255,33 @@ export default function ProfilePage() {
                                     borderRadius: 10, color: '#0f172a', fontSize: 14
                                 }}
                             />
-                            {/* Password Requirements List */}
-                            <div className="mt-3 space-y-1">
-                                <p className="text-xs text-gray-500 font-medium mb-1">Password must contain:</p>
-                                <ul className="text-xs space-y-1 text-gray-500 pl-1">
-                                    <li className={`flex items-center gap-1.5 ${passwordData.newPassword.length >= 8 ? 'text-green-600' : ''}`}>
-                                        <div className={`w-1.5 h-1.5 rounded-full ${passwordData.newPassword.length >= 8 ? 'bg-green-600' : 'bg-gray-300'}`} />
-                                        At least 8 characters
-                                    </li>
-                                    <li className={`flex items-center gap-1.5 ${/[A-Z]/.test(passwordData.newPassword) ? 'text-green-600' : ''}`}>
-                                        <div className={`w-1.5 h-1.5 rounded-full ${/[A-Z]/.test(passwordData.newPassword) ? 'bg-green-600' : 'bg-gray-300'}`} />
-                                        At least one uppercase letter
-                                    </li>
-                                    <li className={`flex items-center gap-1.5 ${/[0-9]/.test(passwordData.newPassword) ? 'text-green-600' : ''}`}>
-                                        <div className={`w-1.5 h-1.5 rounded-full ${/[0-9]/.test(passwordData.newPassword) ? 'bg-green-600' : 'bg-gray-300'}`} />
-                                        At least one number
-                                    </li>
-                                    <li className={`flex items-center gap-1.5 ${/[!@#$%^&*]/.test(passwordData.newPassword) ? 'text-green-600' : ''}`}>
-                                        <div className={`w-1.5 h-1.5 rounded-full ${/[!@#$%^&*]/.test(passwordData.newPassword) ? 'bg-green-600' : 'bg-gray-300'}`} />
-                                        At least one special character
-                                    </li>
-                                </ul>
-                            </div>
+                            {/* Password Requirements List - Sequential highlighting */}
+                            {(() => {
+                                const criteria = [
+                                    { met: passwordData.newPassword.length >= 8, label: 'At least 8 characters' },
+                                    { met: /[A-Z]/.test(passwordData.newPassword), label: 'At least one uppercase letter' },
+                                    { met: /[0-9]/.test(passwordData.newPassword), label: 'At least one number' },
+                                    { met: /[!@#$%^&*]/.test(passwordData.newPassword), label: 'At least one special character' }
+                                ];
+                                const fulfilledCount = criteria.filter(c => c.met).length;
+
+                                return (
+                                    <div className="mt-3 space-y-1">
+                                        <p className="text-xs text-gray-500 font-medium mb-1">Password must contain:</p>
+                                        <ul className="text-xs space-y-1 text-gray-500 pl-1">
+                                            {criteria.map((c, i) => {
+                                                const isGreen = i < fulfilledCount;
+                                                return (
+                                                    <li key={i} className={`flex items-center gap-1.5 ${isGreen ? 'text-green-600' : ''}`}>
+                                                        <div className={`w-1.5 h-1.5 rounded-full ${isGreen ? 'bg-green-600' : 'bg-gray-300'}`} />
+                                                        {c.label}
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    </div>
+                                );
+                            })()}
                         </div>
                         <div style={{ marginBottom: 20 }}>
                             <label style={{ display: 'block', color: '#475569', fontSize: 13, marginBottom: 8, fontWeight: 500 }}>Confirm New Password</label>

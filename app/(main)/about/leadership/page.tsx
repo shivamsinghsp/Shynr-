@@ -16,13 +16,13 @@ const insights = [
     title: "Shivanshi Verma",
     description:
       "Director. Expertise in strategic planning, governance, compliance, and organizational development.",
-    image: "/images/team/Shivanshi_Verma.jpg"
+    image: "/images/team/Monika_Verma.png"
   },
   {
     title: "Monika Verma",
     description:
       "Director. Focuses on operations oversight, administration, internal controls, and stakeholder management.",
-    image: "/images/team/Monika_Verma.png"
+    image: "/images/team/Shivanshi_Verma.jpg"
   }
 ]
 

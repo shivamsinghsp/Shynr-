@@ -50,6 +50,7 @@ export default function AdminApplicationsPage() {
     const [bulkLoading, setBulkLoading] = useState(false);
     const [exportLoading, setExportLoading] = useState(false);
     const [emailNotification, setEmailNotification] = useState<string | null>(null);
+    const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
     useEffect(() => {
         fetchApplications();
@@ -184,6 +185,42 @@ export default function AdminApplicationsPage() {
     const getStatusBadge = (status: string) => {
         const statusOption = STATUS_OPTIONS.find(s => s.value === status);
         return statusOption?.color || 'bg-gray-100 text-gray-800';
+    };
+
+    const handleDownloadResume = async (appId: string, resumeUrl: string, filename: string) => {
+        setDownloadingId(appId);
+        try {
+            // Use server-side proxy to avoid CORS issues
+            const params = new URLSearchParams({
+                url: resumeUrl,
+                filename: filename || 'resume.pdf'
+            });
+            const response = await fetch(`/api/admin/download-resume?${params.toString()}`);
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error || 'Failed to fetch resume');
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            // Create a temporary link and trigger download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename || 'resume.pdf';
+            document.body.appendChild(a);
+            a.click();
+
+            // Cleanup
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        } catch (error) {
+            console.error('Error downloading resume:', error);
+            alert('Failed to download resume. Please try again.');
+        } finally {
+            setDownloadingId(null);
+        }
     };
 
     const formatDate = (dateString: string) => {
@@ -370,17 +407,23 @@ export default function AdminApplicationsPage() {
                                         </td>
                                         <td className="px-4 py-4">
                                             {app.resume?.url ? (
-                                                <a
-                                                    href={app.resume.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                                <button
+                                                    onClick={() => handleDownloadResume(app._id, app.resume.url, app.resume.filename)}
+                                                    disabled={downloadingId === app._id}
+                                                    className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-medium disabled:opacity-50 disabled:cursor-wait"
                                                 >
-                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                    </svg>
-                                                    Download
-                                                </a>
+                                                    {downloadingId === app._id ? (
+                                                        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                        </svg>
+                                                    ) : (
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                        </svg>
+                                                    )}
+                                                    {downloadingId === app._id ? 'Downloading...' : 'Download'}
+                                                </button>
                                             ) : (
                                                 <span className="text-gray-400 text-sm">No resume</span>
                                             )}
@@ -442,16 +485,22 @@ export default function AdminApplicationsPage() {
                                         ))}
                                     </select>
                                     {app.resume?.url && (
-                                        <a
-                                            href={app.resume.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="p-2 bg-gray-100 rounded-lg text-gray-600 hover:bg-gray-200"
+                                        <button
+                                            onClick={() => handleDownloadResume(app._id, app.resume.url, app.resume.filename)}
+                                            disabled={downloadingId === app._id}
+                                            className="p-2 bg-gray-100 rounded-lg text-gray-600 hover:bg-gray-200 disabled:opacity-50"
                                         >
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                            </svg>
-                                        </a>
+                                            {downloadingId === app._id ? (
+                                                <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                            ) : (
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                            )}
+                                        </button>
                                     )}
                                     <Link
                                         href={`/admin/applications/${app._id}`}

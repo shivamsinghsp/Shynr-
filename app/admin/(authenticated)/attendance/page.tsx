@@ -54,26 +54,59 @@ export default function AdminAttendancePage() {
     const handleExport = async () => {
         setExporting(true);
         try {
+            // Helper function to safely format time
+            const formatTimeForExport = (dateValue: string | Date | undefined | null): string => {
+                if (!dateValue) return 'N/A';
+                try {
+                    const date = new Date(dateValue);
+                    if (isNaN(date.getTime())) return 'N/A';
+                    return date.toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: true
+                    });
+                } catch {
+                    return 'N/A';
+                }
+            };
+
+            // Helper function to safely format date
+            const formatDateForExport = (dateValue: string | Date | undefined | null): string => {
+                if (!dateValue) return 'N/A';
+                try {
+                    const date = new Date(dateValue);
+                    if (isNaN(date.getTime())) return 'N/A';
+                    return date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    });
+                } catch {
+                    return 'N/A';
+                }
+            };
+
             // Create CSV content
             const headers = ['Employee', 'Email', 'Date', 'Check In', 'Check Out', 'Location', 'Work Hours', 'Status'];
             const rows = attendance.map(record => [
                 `${record.user?.firstName || ''} ${record.user?.lastName || ''}`.trim() || 'N/A',
                 record.user?.email || 'N/A',
-                new Date(record.date).toLocaleDateString(),
-                new Date(record.checkIn).toLocaleTimeString(),
-                record.checkOut ? new Date(record.checkOut).toLocaleTimeString() : 'Not checked out',
+                formatDateForExport(record.date),
+                formatTimeForExport(record.checkIn),
+                record.checkOut ? formatTimeForExport(record.checkOut) : 'Not checked out',
                 record.checkInLocation?.locationName || 'N/A',
                 record.workHours ? record.workHours.toFixed(2) : 'N/A',
-                record.status,
+                record.status === 'checked-out' ? 'Completed' : 'In Progress',
             ]);
 
             const csvContent = [
                 headers.join(','),
-                ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+                ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
             ].join('\n');
 
             // Download
-            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;

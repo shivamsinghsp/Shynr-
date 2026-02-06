@@ -1,7 +1,21 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { Phone, Mail, Clock, MapPin } from "lucide-react"
+import { Phone, Mail, Clock, MapPin, Loader2 } from "lucide-react"
+
+interface FormData {
+  firstName: string
+  lastName: string
+  email: string
+  message: string
+}
+
+const initialFormData: FormData = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  message: ""
+}
 
 const ContactPage = () => {
   const settings = {
@@ -11,17 +25,50 @@ const ContactPage = () => {
     officeAddress: "Pan-India Operations"
   }
 
-  const [sent, setSent] = useState(false)
+  const [formData, setFormData] = useState<FormData>(initialFormData)
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const [errorMessage, setErrorMessage] = useState("")
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     setIsVisible(true)
   }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSent(true)
-    setTimeout(() => setSent(false), 3000)
+    setStatus("loading")
+    setErrorMessage("")
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setStatus("success")
+        setFormData(initialFormData) // Reset form
+        setTimeout(() => setStatus("idle"), 5000)
+      } else {
+        setStatus("error")
+        setErrorMessage(data.error || "Failed to send message. Please try again.")
+        setTimeout(() => setStatus("idle"), 5000)
+      }
+    } catch {
+      setStatus("error")
+      setErrorMessage("Network error. Please check your connection and try again.")
+      setTimeout(() => setStatus("idle"), 5000)
+    }
   }
 
   return (
@@ -110,23 +157,69 @@ const ContactPage = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input placeholder="First name" />
-              <Input placeholder="Last name" />
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                placeholder="First name"
+                required
+                className="w-full p-4 rounded-xl bg-gray-50 text-foreground border border-transparent focus:bg-white focus:border-[#05033e] focus:ring-4 focus:ring-[#05033e]/10 focus:outline-none transition-all duration-300 placeholder:text-gray-400 font-medium"
+              />
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                placeholder="Last name"
+                required
+                className="w-full p-4 rounded-xl bg-gray-50 text-foreground border border-transparent focus:bg-white focus:border-[#05033e] focus:ring-4 focus:ring-[#05033e]/10 focus:outline-none transition-all duration-300 placeholder:text-gray-400 font-medium"
+              />
             </div>
 
-            <Input type="email" placeholder="Email address" />
-            <Textarea placeholder="Your message..." />
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="Email address"
+              required
+              className="w-full p-4 rounded-xl bg-gray-50 text-foreground border border-transparent focus:bg-white focus:border-[#05033e] focus:ring-4 focus:ring-[#05033e]/10 focus:outline-none transition-all duration-300 placeholder:text-gray-400 font-medium"
+            />
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleInputChange}
+              placeholder="Your message..."
+              required
+              rows={5}
+              className="w-full p-4 rounded-xl bg-gray-50 text-foreground border border-transparent focus:bg-white focus:border-[#05033e] focus:ring-4 focus:ring-[#05033e]/10 focus:outline-none resize-none transition-all duration-300 placeholder:text-gray-400 font-medium"
+            />
 
             <button
               type="submit"
-              className="w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 border border-transparent hover:border-[#05033e] bg-[#05033e] text-white hover:bg-black hover:text-white shadow-[0_0_20px_rgba(5,3,62,0.3)] hover:shadow-[0_0_30px_rgba(5,3,62,0.5)]"
+              disabled={status === "loading"}
+              className="w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 border border-transparent hover:border-[#05033e] bg-[#05033e] text-white hover:bg-black hover:text-white shadow-[0_0_20px_rgba(5,3,62,0.3)] hover:shadow-[0_0_30px_rgba(5,3,62,0.5)] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Send Message
+              {status === "loading" ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                "Send Message"
+              )}
             </button>
 
-            {sent && (
-              <p className="text-[#05033e] text-sm text-center mt-4 font-semibold">
-                Message sent successfully
+            {status === "success" && (
+              <p className="text-green-600 text-sm text-center mt-4 font-semibold">
+                ✓ Message sent successfully! We&apos;ll get back to you soon.
+              </p>
+            )}
+
+            {status === "error" && (
+              <p className="text-red-600 text-sm text-center mt-4 font-semibold">
+                ✕ {errorMessage}
               </p>
             )}
           </form>
@@ -167,22 +260,5 @@ const Info = ({ title, value, icon }: any) => (
   </div>
 )
 
-const Input = ({ type = "text", placeholder }: any) => (
-  <input
-    type={type}
-    placeholder={placeholder}
-    required
-    className="w-full p-4 rounded-xl bg-gray-50 text-foreground border border-transparent focus:bg-white focus:border-[#05033e] focus:ring-4 focus:ring-[#05033e]/10 focus:outline-none transition-all duration-300 placeholder:text-gray-400 font-medium"
-  />
-)
-
-const Textarea = ({ placeholder }: any) => (
-  <textarea
-    placeholder={placeholder}
-    required
-    rows={5}
-    className="w-full p-4 rounded-xl bg-gray-50 text-foreground border border-transparent focus:bg-white focus:border-[#05033e] focus:ring-4 focus:ring-[#05033e]/10 focus:outline-none resize-none transition-all duration-300 placeholder:text-gray-400 font-medium"
-  />
-)
-
 export default ContactPage
+

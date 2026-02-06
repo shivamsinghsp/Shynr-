@@ -121,7 +121,7 @@ export default function AdminJobsPage() {
     return (
         <div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Jobs Management</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Jobs</h1>
                 <Link
                     href="/admin/jobs/create"
                     className="inline-flex items-center justify-center gap-2 bg-[#05033e] text-white px-4 py-2 rounded-lg hover:bg-blue-900 transition-colors"

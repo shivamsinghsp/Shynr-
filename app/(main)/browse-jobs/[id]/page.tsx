@@ -26,6 +26,120 @@ interface Job {
     createdAt?: string;
 }
 
+// Send Message Form Component with state management
+function SendMessageForm({ jobTitle, jobId }: { jobTitle: string; jobId: string }) {
+    const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
+    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setStatus('loading');
+        setErrorMessage('');
+
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    firstName: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    message: formData.message,
+                    jobTitle,
+                    jobId
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                setStatus('success');
+                setFormData({ name: '', email: '', phone: '', message: '' });
+                setTimeout(() => setStatus('idle'), 5000);
+            } else {
+                setStatus('error');
+                setErrorMessage(data.error || 'Failed to send message');
+                setTimeout(() => setStatus('idle'), 5000);
+            }
+        } catch {
+            setStatus('error');
+            setErrorMessage('Network error. Please try again.');
+            setTimeout(() => setStatus('idle'), 5000);
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="relative">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="Full name"
+                    required
+                    className="w-full pl-12 pr-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-[#05033e]/20 bg-white"
+                />
+            </div>
+            <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                    placeholder="Email Address"
+                    required
+                    className="w-full pl-12 pr-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-[#05033e]/20 bg-white"
+                />
+            </div>
+            <div className="relative">
+                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                    placeholder="Phone Number"
+                    className="w-full pl-12 pr-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-[#05033e]/20 bg-white"
+                />
+            </div>
+            <div className="relative">
+                <MessageSquare className="absolute left-4 top-4 text-gray-400" size={18} />
+                <textarea
+                    value={formData.message}
+                    onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
+                    placeholder="Your Message"
+                    rows={4}
+                    required
+                    className="w-full pl-12 pr-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-[#05033e]/20 resize-none bg-white"
+                />
+            </div>
+            <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="w-full bg-[#05033e] text-white font-bold py-3 rounded-xl hover:bg-[#020120] transition-colors shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+                {status === 'loading' ? (
+                    <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Sending...
+                    </>
+                ) : 'Send Message'}
+            </button>
+            {status === 'success' && (
+                <p className="text-green-600 text-sm text-center font-semibold">
+                    ✓ Message sent successfully!
+                </p>
+            )}
+            {status === 'error' && (
+                <p className="text-red-600 text-sm text-center font-semibold">
+                    ✕ {errorMessage}
+                </p>
+            )}
+        </form>
+    );
+}
+
 export default function PublicJobDetailsPage() {
     const params = useParams();
     const id = params.id as string;
@@ -215,13 +329,7 @@ export default function PublicJobDetailsPage() {
                     {/* Message Form */}
                     <div className="bg-[#D3E9FD] p-8 rounded-3xl">
                         <h3 className="text-xl font-bold text-[#05033e] mb-6">Send Us Message</h3>
-                        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.currentTarget); window.location.href = `mailto:shivamsingh21062005@gmail.com?subject=${encodeURIComponent(`Job Inquiry: ${job.title}`)}&body=${encodeURIComponent(`Name: ${fd.get('name')}\nEmail: ${fd.get('email')}\nPhone: ${fd.get('phone')}\n\n${fd.get('message')}`)}`; }}>
-                            <div className="relative"><User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} /><input name="name" type="text" placeholder="Full name" required className="w-full pl-12 pr-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-[#05033e]/20 bg-white" /></div>
-                            <div className="relative"><Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} /><input name="email" type="email" placeholder="Email Address" required className="w-full pl-12 pr-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-[#05033e]/20 bg-white" /></div>
-                            <div className="relative"><Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} /><input name="phone" type="tel" placeholder="Phone Number" className="w-full pl-12 pr-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-[#05033e]/20 bg-white" /></div>
-                            <div className="relative"><MessageSquare className="absolute left-4 top-4 text-gray-400" size={18} /><textarea name="message" placeholder="Your Message" rows={4} required className="w-full pl-12 pr-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-[#05033e]/20 resize-none bg-white"></textarea></div>
-                            <button type="submit" className="w-full bg-[#05033e] text-white font-bold py-3 rounded-xl hover:bg-[#020120] transition-colors shadow-lg">Send Message</button>
-                        </form>
+                        <SendMessageForm jobTitle={job.title} jobId={job._id} />
                     </div>
                 </div>
             </div>

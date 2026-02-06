@@ -164,28 +164,33 @@ function ResetPasswordForm() {
                         </button>
                     </div>
 
-                    {/* Password Requirements List */}
-                    <div className="mt-3 space-y-1">
-                        <p className="text-xs text-gray-500 font-medium mb-1">Password must contain:</p>
-                        <ul className="text-xs space-y-1 text-gray-500 pl-1">
-                            <li className={`flex items-center gap-1.5 ${password.length >= 8 ? 'text-green-600' : ''}`}>
-                                <div className={`w-1.5 h-1.5 rounded-full ${password.length >= 8 ? 'bg-green-600' : 'bg-gray-300'}`} />
-                                At least 8 characters
-                            </li>
-                            <li className={`flex items-center gap-1.5 ${/[A-Z]/.test(password) ? 'text-green-600' : ''}`}>
-                                <div className={`w-1.5 h-1.5 rounded-full ${/[A-Z]/.test(password) ? 'bg-green-600' : 'bg-gray-300'}`} />
-                                At least one uppercase letter
-                            </li>
-                            <li className={`flex items-center gap-1.5 ${/[0-9]/.test(password) ? 'text-green-600' : ''}`}>
-                                <div className={`w-1.5 h-1.5 rounded-full ${/[0-9]/.test(password) ? 'bg-green-600' : 'bg-gray-300'}`} />
-                                At least one number
-                            </li>
-                            <li className={`flex items-center gap-1.5 ${/[!@#$%^&*]/.test(password) ? 'text-green-600' : ''}`}>
-                                <div className={`w-1.5 h-1.5 rounded-full ${/[!@#$%^&*]/.test(password) ? 'bg-green-600' : 'bg-gray-300'}`} />
-                                At least one special character
-                            </li>
-                        </ul>
-                    </div>
+                    {/* Password Requirements List - Sequential highlighting */}
+                    {(() => {
+                        const criteria = [
+                            { met: password.length >= 8, label: 'At least 8 characters' },
+                            { met: /[A-Z]/.test(password), label: 'At least one uppercase letter' },
+                            { met: /[0-9]/.test(password), label: 'At least one number' },
+                            { met: /[!@#$%^&*]/.test(password), label: 'At least one special character' }
+                        ];
+                        const fulfilledCount = criteria.filter(c => c.met).length;
+
+                        return (
+                            <div className="mt-3 space-y-1">
+                                <p className="text-xs text-gray-500 font-medium mb-1">Password must contain:</p>
+                                <ul className="text-xs space-y-1 text-gray-500 pl-1">
+                                    {criteria.map((c, i) => {
+                                        const isGreen = i < fulfilledCount;
+                                        return (
+                                            <li key={i} className={`flex items-center gap-1.5 ${isGreen ? 'text-green-600' : ''}`}>
+                                                <div className={`w-1.5 h-1.5 rounded-full ${isGreen ? 'bg-green-600' : 'bg-gray-300'}`} />
+                                                {c.label}
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+                        );
+                    })()}
                 </div>
 
                 <div>
@@ -202,20 +207,28 @@ function ResetPasswordForm() {
                     />
                 </div>
 
-                {/* Password Strength Indicator */}
-                {password && (
-                    <div className="space-y-2">
-                        <div className="flex gap-1">
-                            <div className={`h-1 flex-1 rounded-full ${password.length >= 8 ? 'bg-green-500' : 'bg-gray-200'}`}></div>
-                            <div className={`h-1 flex-1 rounded-full ${password.length >= 12 ? 'bg-green-500' : 'bg-gray-200'}`}></div>
-                            <div className={`h-1 flex-1 rounded-full ${/[A-Z]/.test(password) && /[0-9]/.test(password) ? 'bg-green-500' : 'bg-gray-200'}`}></div>
-                            <div className={`h-1 flex-1 rounded-full ${/[!@#$%^&*]/.test(password) ? 'bg-green-500' : 'bg-gray-200'}`}></div>
+                {/* Password Strength Indicator - Sequential bars */}
+                {password && (() => {
+                    const criteria = [
+                        password.length >= 8,
+                        /[A-Z]/.test(password),
+                        /[0-9]/.test(password),
+                        /[!@#$%^&*]/.test(password)
+                    ];
+                    const fulfilledCount = criteria.filter(Boolean).length;
+                    const strengthLabel = fulfilledCount <= 1 ? 'Weak' : fulfilledCount <= 2 ? 'Fair' : fulfilledCount <= 3 ? 'Good' : 'Strong';
+
+                    return (
+                        <div className="space-y-2">
+                            <div className="flex gap-1">
+                                {[0, 1, 2, 3].map(i => (
+                                    <div key={i} className={`h-1 flex-1 rounded-full ${i < fulfilledCount ? 'bg-green-500' : 'bg-gray-200'}`}></div>
+                                ))}
+                            </div>
+                            <p className="text-xs text-gray-500">{strengthLabel} password</p>
                         </div>
-                        <p className="text-xs text-gray-500">
-                            {password.length < 8 ? 'Weak' : password.length < 12 ? 'Good' : 'Strong'} password
-                        </p>
-                    </div>
-                )}
+                    );
+                })()}
 
                 <button
                     type="submit"
