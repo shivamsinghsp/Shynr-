@@ -10,6 +10,7 @@ export default function MainLayout({
 }) {
     return (
         <>
+
             <TopBar />
             <Navbar />
 

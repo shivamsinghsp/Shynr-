@@ -163,92 +163,97 @@ export default function JobDetailsPage() {
         <div className="w-full bg-[#f4f7f7] min-h-screen pb-24">
             {/* Header Section */}
             <div
-                className={`w-full border-b border-gray-100 px-6 sticky top-0 z-50 transition-all duration-500 ease-in-out ${isScrolled
-                    ? "bg-white/95 backdrop-blur-md shadow-md py-4"
-                    : "bg-white py-12"
+                className={`w-full border-b border-gray-100 sticky top-0 z-40 transition-all duration-500 ease-in-out flex flex-col ${isScrolled
+                    ? "bg-white/95 backdrop-blur-md shadow-md"
+                    : "bg-white"
                     }`}
             >
-                <div className="max-w-[95%] mx-auto">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                        <div className="flex items-center gap-6">
-                            {(job.companyLogo || job.logo) ? (
-                                <img
-                                    src={job.companyLogo || job.logo}
-                                    alt={job.company}
-                                    className={`rounded-xl object-contain bg-white p-2 shadow-sm border border-gray-100 transition-all duration-300 ${isScrolled ? "w-12 h-12" : "w-20 h-20"
-                                        }`}
-                                />
-                            ) : (
-                                <div className={`bg-gray-100 rounded-xl flex items-center justify-center transition-all duration-300 ${isScrolled ? "w-12 h-12" : "w-20 h-20"
-                                    }`}>
-                                    <div className="w-8 h-8 bg-gray-200 rounded-full" />
-                                </div>
-                            )}
-                            <div>
-                                <div className={`overflow-hidden transition-all duration-300 ${isScrolled ? "h-0 opacity-0 mb-0" : "h-auto opacity-100 mb-3"
-                                    }`}>
-                                    <span className="bg-[#D3E9FD] text-[#05033e] px-4 py-1.5 rounded-full text-sm font-semibold inline-block">
-                                        {formatDate(job.createdAt || job.postedDate)}
-                                    </span>
-                                </div>
 
-                                <h1 className={`font-bold text-[#05033e] transition-all duration-300 ${isScrolled ? "text-2xl mb-0" : "text-4xl mb-2"
-                                    }`}>{job.title}</h1>
 
-                                <p className={`text-gray-500 font-medium transition-all duration-300 ${isScrolled ? "text-sm mb-0" : "text-lg mb-6"
-                                    }`}>{job.company}</p>
+                <div className={`w-full px-6 transition-all duration-500 ease-in-out ${isScrolled ? "py-3" : "py-6"}`}>
+                    <div className="max-w-[95%] mx-auto">
+                        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                            <div className="flex items-center gap-6">
+                                {(job.companyLogo || job.logo) ? (
+                                    <img
+                                        src={job.companyLogo || job.logo}
+                                        alt={job.company}
+                                        className={`rounded-xl object-contain bg-white p-2 shadow-sm border border-gray-100 transition-all duration-300 ${isScrolled ? "w-10 h-10" : "w-16 h-16"
+                                            }`}
+                                    />
+                                ) : (
+                                    <div className={`bg-gray-100 rounded-xl flex items-center justify-center transition-all duration-300 ${isScrolled ? "w-10 h-10" : "w-16 h-16"
+                                        }`}>
+                                        <div className="w-8 h-8 bg-gray-200 rounded-full" />
+                                    </div>
+                                )}
+                                <div>
+                                    <div className={`overflow-hidden transition-all duration-300 ${isScrolled ? "h-0 opacity-0 mb-0" : "h-auto opacity-100 mb-3"
+                                        }`}>
+                                        <span className="bg-[#D3E9FD] text-[#05033e] px-4 py-1.5 rounded-full text-sm font-semibold inline-block">
+                                            {formatDate(job.createdAt || job.postedDate)}
+                                        </span>
+                                    </div>
 
-                                <div className={`flex flex-wrap items-center gap-6 text-gray-600 font-medium overflow-hidden transition-all duration-300 ${isScrolled ? "max-h-0 opacity-0 mt-0" : "max-h-20 opacity-100 mt-0"
-                                    }`}>
-                                    <div className="flex items-center gap-2">
-                                        <BriefcaseBusiness size={20} className="text-[#05033e]" />
-                                        <span>{job.category}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Clock size={20} className="text-[#05033e]" />
-                                        <span>{job.type}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Wallet size={20} className="text-[#05033e]" />
-                                        <span>{formatSalary(job.salary)}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <MapPin size={20} className="text-[#05033e]" />
-                                        <span>{job.location}</span>
+                                    <h1 className={`font-bold text-[#05033e] transition-all duration-300 ${isScrolled ? "text-xl mb-0" : "text-3xl mb-1"
+                                        }`}>{job.title}</h1>
+
+                                    <p className={`text-gray-500 font-medium transition-all duration-300 ${isScrolled ? "text-xs mb-0" : "text-base mb-4"
+                                        }`}>{job.company}</p>
+
+                                    <div className={`flex flex-wrap items-center gap-4 text-sm text-gray-600 font-medium overflow-hidden transition-all duration-300 ${isScrolled ? "max-h-0 opacity-0 mt-0" : "max-h-20 opacity-100 mt-0"
+                                        }`}>
+                                        <div className="flex items-center gap-2">
+                                            <BriefcaseBusiness size={20} className="text-[#05033e]" />
+                                            <span>{job.category}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Clock size={20} className="text-[#05033e]" />
+                                            <span>{job.type}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Wallet size={20} className="text-[#05033e]" />
+                                            <span>{formatSalary(job.salary)}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <MapPin size={20} className="text-[#05033e]" />
+                                            <span>{job.location}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="flex flex-col items-end gap-3">
-                            <div className="flex flex-col sm:flex-row gap-4">
-                                {hasApplied ? (
-                                    <button disabled className={`bg-green-600 text-white font-bold rounded-xl shadow-lg opacity-80 cursor-not-allowed flex items-center gap-2 transition-all duration-300 ${isScrolled ? "py-2 px-6 text-sm" : "py-3 px-8"
-                                        }`}>
-                                        <CheckCircle2 size={isScrolled ? 16 : 20} />
-                                        Applied
-                                    </button>
-                                ) : (
-                                    <Link
-                                        href={`/jobs/${id}/apply`}
-                                        className={`bg-[#05033e] text-white font-bold rounded-xl hover:bg-[#020120] transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 text-center ${isScrolled ? "py-2 px-6 text-sm" : "py-3 px-8"
+                            <div className="flex flex-col items-end gap-3">
+                                <div className="flex flex-col sm:flex-row gap-4">
+                                    {hasApplied ? (
+                                        <button disabled className={`bg-green-600 text-white font-bold rounded-xl shadow-lg opacity-80 cursor-not-allowed flex items-center gap-2 transition-all duration-300 ${isScrolled ? "py-2 px-6 text-sm" : "py-3 px-8"
+                                            }`}>
+                                            <CheckCircle2 size={isScrolled ? 16 : 20} />
+                                            Applied
+                                        </button>
+                                    ) : (
+                                        <Link
+                                            href={`/jobs/${id}/apply`}
+                                            className={`bg-[#05033e] text-white font-bold rounded-xl hover:bg-[#020120] transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 text-center ${isScrolled ? "py-2 px-6 text-sm" : "py-3 px-8"
+                                                }`}
+                                        >
+                                            Apply Now
+                                        </Link>
+                                    )}
+                                    <button
+                                        onClick={() => setIsSaved(!isSaved)}
+                                        className={`bg-white text-[#05033e] font-bold rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 border border-gray-100 ${isScrolled ? "py-2 px-6 text-sm" : "py-3 px-8"
                                             }`}
                                     >
-                                        Apply Now
-                                    </Link>
-                                )}
-                                <button
-                                    onClick={() => setIsSaved(!isSaved)}
-                                    className={`bg-white text-[#05033e] font-bold rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 border border-gray-100 ${isScrolled ? "py-2 px-6 text-sm" : "py-3 px-8"
-                                        }`}
-                                >
-                                    {isSaved ? "Saved" : "Save Job"}
-                                </button>
+                                        {isSaved ? "Saved" : "Save Job"}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
 
             <div className="max-w-[95%] mx-auto px-4 md:px-6 mt-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
 
@@ -389,6 +394,6 @@ export default function JobDetailsPage() {
 
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Download, CheckSquare, Square, Mail } from 'lucide-react';
+import { Download, CheckSquare, Square, Mail, Trash2 } from 'lucide-react';
 
 interface Application {
     _id: string;
@@ -106,6 +106,28 @@ export default function AdminApplicationsPage() {
         }
     };
 
+    const handleDelete = async (appId: string) => {
+        if (!confirm('Are you sure you want to delete this application? This action cannot be undone.')) return;
+
+        try {
+            const res = await fetch(`/api/admin/applications/${appId}`, {
+                method: 'DELETE',
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                setApplications(applications.filter(app => app._id !== appId));
+                setSelectedIds(selectedIds.filter(id => id !== appId));
+                setEmailNotification('Application deleted successfully');
+                setTimeout(() => setEmailNotification(null), 3000);
+            } else {
+                alert(data.error || 'Failed to delete application');
+            }
+        } catch (err) {
+            alert('Failed to delete application');
+        }
+    };
+
     const handleSelectAll = () => {
         if (selectedIds.length === applications.length) {
             setSelectedIds([]);
@@ -150,6 +172,32 @@ export default function AdminApplicationsPage() {
             setBulkStatus('');
         } catch (err) {
             alert('Failed to update some applications');
+        } finally {
+            setBulkLoading(false);
+        }
+    };
+
+    const handleBulkDelete = async () => {
+        if (selectedIds.length === 0) return;
+        if (!confirm(`Are you sure you want to delete ${selectedIds.length} applications? This action cannot be undone.`)) return;
+
+        setBulkLoading(true);
+        try {
+            const promises = selectedIds.map(id =>
+                fetch(`/api/admin/applications/${id}`, {
+                    method: 'DELETE',
+                })
+            );
+
+            await Promise.all(promises);
+
+            setApplications(applications.filter(app => !selectedIds.includes(app._id)));
+            setEmailNotification(`${selectedIds.length} applications deleted successfully`);
+            setTimeout(() => setEmailNotification(null), 3000);
+
+            setSelectedIds([]);
+        } catch (err) {
+            alert('Failed to delete some applications');
         } finally {
             setBulkLoading(false);
         }
@@ -308,6 +356,20 @@ export default function AdminApplicationsPage() {
                         >
                             Clear
                         </button>
+                        <button
+                            onClick={() => setSelectedIds([])}
+                            className="px-4 py-2 bg-gray-600 text-white rounded-lg font-medium hover:bg-gray-700"
+                        >
+                            Clear
+                        </button>
+                        <button
+                            onClick={handleBulkDelete}
+                            disabled={bulkLoading}
+                            className="px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 disabled:opacity-50 flex items-center gap-2"
+                        >
+                            <Trash2 className="w-4 h-4" />
+                            Delete Selected
+                        </button>
                     </div>
                 </div>
             )}
@@ -429,12 +491,22 @@ export default function AdminApplicationsPage() {
                                             )}
                                         </td>
                                         <td className="px-4 py-4">
-                                            <Link
-                                                href={`/admin/applications/${app._id}`}
-                                                className="text-[#05033e] hover:text-blue-800 text-sm font-medium"
-                                            >
-                                                View Details
-                                            </Link>
+                                            <div className="flex items-center gap-2">
+                                                <Link
+                                                    href={`/admin/applications/${app._id}`}
+                                                    className="text-[#05033e] hover:text-blue-800 text-sm font-medium p-1 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                                    title="View Details"
+                                                >
+                                                    View Details
+                                                </Link>
+                                                <button
+                                                    onClick={() => handleDelete(app._id)}
+                                                    className="text-red-500 hover:text-red-700 p-1 sm:p-2 hover:bg-red-50 rounded-lg transition-colors"
+                                                    title="Delete Application"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -511,6 +583,12 @@ export default function AdminApplicationsPage() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                         </svg>
                                     </Link>
+                                    <button
+                                        onClick={() => handleDelete(app._id)}
+                                        className="p-2 bg-red-50 text-red-500 rounded-lg hover:bg-red-100"
+                                    >
+                                        <Trash2 className="w-5 h-5" />
+                                    </button>
                                 </div>
                             </div>
                         ))}

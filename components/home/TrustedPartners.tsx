@@ -33,11 +33,13 @@ export default function TrustedPartners() {
     { name: "JustDial", logo: "/home/justdial.png", url: "https://www.justdial.com/" },
     { name: "Digitide", logo: "/home/DIGITIDE.jpg", url: "https://www.digitidesolutions.com/" },
     { name: "Paytm", logo: "/home/Paytm.png", url: "https://paytm.com/" },
-    // { name: "AllDigi", logo: "/home/vaco.jpg", url: "" },
     // { name: "Himalaya Opticals", logo: "/home/vaco.jpg", url: "" },
+    { name: "Himalaya Opticals", logo: "/home/himalayaoptical.png", url: "https://himalayaoptical.com/" },
+    { name: "AllDigi", logo: "/home/alldigi.png", url: "https://www.alldigitech.com/" },
     { name: "Vaco Binary Semantics", logo: "/home/vaco.jpg", url: "https://vacobinarysemantics.com/" },
     // { name: "CMS", logo: "/home/vaco.jpg", url: "" },
     { name: "L&T Finance", logo: "/home/L&T_Finance.png", url: "https://www.ltfs.com/" },
+    { name: "CMS", logo: "/home/CMS.png", url: "https://cms.com/" },
     { name: "HDB Finance", logo: "/home/HDB_Finance.png", url: "https://www.hdbfs.com/" },
   ]
 
