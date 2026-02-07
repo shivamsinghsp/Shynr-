@@ -2,6 +2,7 @@
 
 import { useEffect, useState, use } from 'react';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, CheckCircle, XCircle, Clock } from 'lucide-react';
+import Link from 'next/link';
 
 interface AttendanceRecord {
     _id: string;
@@ -168,6 +169,14 @@ export default function UserAttendanceCalendarPage({ params }: { params: Promise
 
     return (
         <div className="p-6">
+            <div className="flex items-center gap-2 text-sm font-medium mb-6">
+                <Link href="/admin/attendance" className="text-gray-500 hover:text-[#05033e] transition-colors">
+                    Attendance
+                </Link>
+                <span className="text-gray-300">|</span>
+                <span className="text-[#05033e]">Calendar</span>
+            </div>
+
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-2xl font-bold text-gray-900">Attendance Calendar</h1>
                 <div className="flex items-center gap-4">

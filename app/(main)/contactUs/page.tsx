@@ -71,6 +71,35 @@ const ContactPage = () => {
     }
   }
 
+  const [locations, setLocations] = useState([
+    {
+      id: 1,
+      title: "D. N. D. Library",
+      address: "Kanpur, Uttar Pradesh",
+      embedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3574.0564919972394!2d80.40703617487699!3d26.389362482386392!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399c4177ca1f734d%3A0x88f1244f0ba283d6!2sD.%20N.%20D.%20Library!5e0!3m2!1sen!2sin!4v1770442725056!5m2!1sen!2sin"
+    },
+    {
+      id: 2,
+      title: "CSJM University",
+      address: "Kanpur, Uttar Pradesh",
+      embedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3570.720984389039!2d80.26173997872911!3d26.49692711828861!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399c37ea522f9c0d%3A0xc0670941a068aea2!2sChhatrapati%20Shahu%20Ji%20Maharaj%20University%2C%20Kanpur!5e0!3m2!1sen!2sin!4v1770442892535!5m2!1sen!2sin"
+    },
+    {
+      id: 3,
+      title: "Kalpana Plaza",
+      address: "Kanpur, Uttar Pradesh",
+      embedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3571.698245297599!2d80.35524577487958!3d26.465454079169326!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399c47e159154111%3A0xe5a9d01e3e06012e!2sKalpana%20Plaza!5e0!3m2!1sen!2sin!4v1770442946471!5m2!1sen!2sin"
+    },
+    {
+      id: 4,
+      title: "Millenium Business Park",
+      address: "Navi Mumbai, Maharashtra",
+      embedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3769.957552601997!2d73.01590922466599!3d19.10951800092055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c0e7e7a71499%3A0x98d8b38ca6db76be!2sMillenium%20Business%20Park%2C%20MIDC%20Industrial%20Area%2C%20Sector%201%2C%20Kopar%20Khairane%2C%20Navi%20Mumbai%2C%20Maharashtra%20400710!5e0!3m2!1sen!2sin!4v1770446734442!5m2!1sen!2sin"
+    }
+  ])
+
+  const [activeMap, setActiveMap] = useState<typeof locations[0] | null>(null)
+
   return (
     <main className="w-full bg-white">
 
@@ -213,7 +242,7 @@ const ContactPage = () => {
 
             {status === "success" && (
               <p className="text-green-600 text-sm text-center mt-4 font-semibold">
-                ✓ Message sent successfully! We&apos;ll get back to you soon.
+                ✓ Message sent successfully! We'll get back to you soon.
               </p>
             )}
 
@@ -227,54 +256,133 @@ const ContactPage = () => {
 
       </section>
 
-      <section className="w-full relative z-10 border-t border-gray-100 py-12">
-        {/* Single Map Container with Two Sections */}
-        <div className="max-w-7xl mx-auto px-6 h-[500px]">
-          <div className="w-full h-full rounded-3xl overflow-hidden shadow-lg border border-gray-200 flex flex-col md:flex-row">
+      {/* Our Locations */}
+      <section className="w-full relative z-10 border-t border-gray-100 py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-5xl font-bold text-[#05033e] mb-4">Our Locations</h2>
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto">Find us at these strategic locations across India</p>
+          </div>
 
-            {/* Location 1: Mumbai */}
-            <div className="w-full md:w-1/2 h-1/2 md:h-full relative border-b md:border-b-0 md:border-r border-gray-200">
-              <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl shadow-sm border border-gray-100">
-                <h4 className="font-bold text-[#05033e] text-sm flex items-center gap-2">
-                  <MapPin className="w-4 h-4" /> Mumbai HQ
-                </h4>
+          <div className="flex flex-col gap-6">
+
+            {/* Hero Map (Top) - Click to Expand */}
+            <div
+              className="w-full h-[400px] md:h-[500px] rounded-[3rem] overflow-hidden shadow-2xl relative group cursor-pointer border-4 border-white"
+              onClick={() => setActiveMap(locations[0])}
+            >
+              <div className="absolute top-6 left-6 z-20 bg-white/95 backdrop-blur-md px-6 py-4 rounded-2xl shadow-lg">
+                <h3 className="font-bold text-[#05033e] text-xl flex items-center gap-2">
+                  <MapPin className="w-6 h-6 text-[#05033e]" />
+                  {locations[0].title}
+                </h3>
+                <p className="text-gray-500 text-sm mt-1 ml-8">{locations[0].address}</p>
               </div>
+
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none z-10" />
+              <div className="absolute bottom-6 right-6 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 scale-90 group-hover:scale-100">
+                <div className="bg-white text-[#05033e] px-6 py-3 rounded-full font-bold shadow-xl flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                  Expand Map
+                </div>
+              </div>
+
               <iframe
-                src="https://maps.google.com/maps?q=19.1104527,73.0158667&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                src={locations[0].embedUrl}
                 width="100%"
                 height="100%"
-                style={{ border: 0 }}
+                style={{ border: 0, pointerEvents: "none" }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Mumbai Office Location"
-                className="grayscale hover:grayscale-0 transition-all duration-500"
-              ></iframe>
+                title={`${locations[0].title} Map`}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
             </div>
 
-            {/* Location 2: Kanpur */}
-            <div className="w-full md:w-1/2 h-1/2 md:h-full relative">
-              <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl shadow-sm border border-gray-100">
-                <h4 className="font-bold text-[#05033e] text-sm flex items-center gap-2">
-                  <MapPin className="w-4 h-4" /> Kanpur Branch
-                </h4>
-              </div>
-              <iframe
-                src="https://maps.google.com/maps?q=26.5021054,80.267075&t=&z=15&ie=UTF8&iwloc=&output=embed"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Kanpur Office Location"
-                className="grayscale hover:grayscale-0 transition-all duration-500"
-              ></iframe>
+            {/* Thumbnail Maps (Bottom) - Click to Swap */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {locations.slice(1).map((location, index) => (
+                <div
+                  key={location.id}
+                  onClick={() => {
+                    const newLocations = [...locations];
+                    // Swap index 0 with (index + 1)
+                    const temp = newLocations[0];
+                    newLocations[0] = newLocations[index + 1];
+                    newLocations[index + 1] = temp;
+                    setLocations(newLocations);
+                  }}
+                  className="h-[200px] rounded-[2rem] overflow-hidden shadow-lg relative cursor-pointer group border-2 border-white hover:border-[#05033e]/20 transition-all duration-300 hover:-translate-y-1"
+                >
+                  <div className="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-xl shadow-sm">
+                    <h3 className="font-bold text-[#05033e] text-sm flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      {location.title}
+                    </h3>
+                  </div>
+
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 z-10" />
+
+                  <iframe
+                    src={location.embedUrl}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0, pointerEvents: "none" }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title={`${location.title} Map`}
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                  />
+                </div>
+              ))}
             </div>
 
           </div>
         </div>
       </section>
+
+      {/* Map Modal */}
+      {activeMap && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-300"
+          onClick={() => setActiveMap(null)}
+        >
+          <div
+            className="bg-white w-full max-w-6xl h-[80vh] rounded-[2rem] overflow-hidden shadow-2xl relative animate-in zoom-in-95 duration-300 flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setActiveMap(null)}
+              className="absolute top-6 right-6 z-10 bg-white hover:bg-gray-100 text-black p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+
+            <div className="w-full h-full relative">
+              <iframe
+                src={activeMap.embedUrl}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title={`${activeMap.title} Full Map`}
+              />
+              <div className="absolute bottom-8 left-8 bg-white/95 backdrop-blur-md px-8 py-6 rounded-3xl shadow-2xl max-w-md">
+                <h3 className="font-bold text-2xl text-[#05033e] mb-2">{activeMap.title}</h3>
+                <p className="text-gray-600 text-lg">{activeMap.address}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </main>
   )
 }
@@ -292,4 +400,3 @@ const Info = ({ title, value, icon }: any) => (
 )
 
 export default ContactPage
-
