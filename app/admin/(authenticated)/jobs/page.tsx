@@ -35,7 +35,7 @@ export default function AdminJobsPage() {
             if (filter) params.append('status', filter);
             if (search) params.append('search', search);
 
-            const res = await fetch(`/api/admin/jobs?${params.toString()}`);
+            const res = await fetch(`/api/admin/jobs?${params.toString()}`, { cache: 'no-store' });
             const data = await res.json();
 
             if (data.success) {
@@ -121,7 +121,7 @@ export default function AdminJobsPage() {
     return (
         <div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Jobs</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Job Management</h1>
                 <Link
                     href="/admin/jobs/create"
                     className="inline-flex items-center justify-center gap-2 bg-[#05033e] text-white px-4 py-2 rounded-lg hover:bg-blue-900 transition-colors"
@@ -195,7 +195,7 @@ export default function AdminJobsPage() {
                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Apps</th>
+                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Applications</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                                 </tr>
@@ -276,7 +276,7 @@ export default function AdminJobsPage() {
                                     <span>•</span>
                                     <span>{job.type}</span>
                                     <span>•</span>
-                                    <span>{job.applicationCount} apps</span>
+                                    <span>{job.applicationCount} Applications</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Link

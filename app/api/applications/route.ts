@@ -110,6 +110,10 @@ export async function POST(request: NextRequest) {
             }]
         });
 
+        // Increment application count in Job model
+        const Job = mongoose.models.Job || mongoose.model('Job', require('@/db/models/Job').schema);
+        await Job.findByIdAndUpdate(jobId, { $inc: { applicationCount: 1 } });
+
         return NextResponse.json({
             success: true,
             data: application,

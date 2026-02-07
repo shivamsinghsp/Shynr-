@@ -51,6 +51,19 @@ export default function AdminAttendancePage() {
         }
     };
 
+    const isMissedCheckout = (record: AttendanceRecord) => {
+        if (record.checkOut) return false;
+
+        const recordDate = new Date(record.date);
+        const today = new Date();
+
+        // Create dates starting at 00:00:00 for accurate day comparison
+        const recordDay = new Date(recordDate.getFullYear(), recordDate.getMonth(), recordDate.getDate());
+        const currentDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+        return recordDay.getTime() < currentDay.getTime();
+    };
+
     const handleExport = async () => {
         setExporting(true);
         try {
@@ -89,16 +102,29 @@ export default function AdminAttendancePage() {
 
             // Create CSV content
             const headers = ['Employee', 'Email', 'Date', 'Check In', 'Check Out', 'Location', 'Work Hours', 'Status'];
-            const rows = attendance.map(record => [
-                `${record.user?.firstName || ''} ${record.user?.lastName || ''}`.trim() || 'N/A',
-                record.user?.email || 'N/A',
-                formatDateForExport(record.date),
-                formatTimeForExport(record.checkIn),
-                record.checkOut ? formatTimeForExport(record.checkOut) : 'Not checked out',
-                record.checkInLocation?.locationName || 'N/A',
-                record.workHours ? record.workHours.toFixed(2) : 'N/A',
-                record.status === 'checked-out' ? 'Completed' : 'In Progress',
-            ]);
+            const rows = attendance.map(record => {
+                let status = 'In Progress';
+                let checkOut = 'Not checked out';
+
+                if (record.status === 'checked-out') {
+                    status = 'Completed';
+                    checkOut = record.checkOut ? formatTimeForExport(record.checkOut) : 'N/A';
+                } else if (isMissedCheckout(record)) {
+                    status = 'Missed Checkout';
+                    checkOut = 'Missed Checkout';
+                }
+
+                return [
+                    `${record.user?.firstName || ''} ${record.user?.lastName || ''}`.trim() || 'N/A',
+                    record.user?.email || 'N/A',
+                    formatDateForExport(record.date),
+                    formatTimeForExport(record.checkIn),
+                    checkOut,
+                    record.checkInLocation?.locationName || 'N/A',
+                    record.workHours ? record.workHours.toFixed(2) : 'N/A',
+                    status,
+                ];
+            });
 
             const csvContent = [
                 headers.join(','),
@@ -136,7 +162,7 @@ export default function AdminAttendancePage() {
     };
 
     // Summary stats
-    const totalCheckedIn = attendance.filter(a => a.status === 'checked-in').length;
+    const totalCheckedIn = attendance.filter(a => a.status === 'checked-in' && !isMissedCheckout(a)).length;
     const totalCheckedOut = attendance.filter(a => a.status === 'checked-out').length;
     const avgHours = attendance.length > 0
         ? attendance.filter(a => a.workHours).reduce((sum, a) => sum + (a.workHours || 0), 0) /
@@ -258,6 +284,8 @@ export default function AdminAttendancePage() {
                                         <td className="px-6 py-4">
                                             {record.checkOut ? (
                                                 <p className="font-medium text-gray-900">{formatTime(record.checkOut)}</p>
+                                            ) : isMissedCheckout(record) ? (
+                                                <span className="text-red-500 font-medium bg-red-50 px-2 py-1 rounded">Missed Checkout</span>
                                             ) : (
                                                 <span className="text-yellow-600">Still working</span>
                                             )}
@@ -276,12 +304,18 @@ export default function AdminAttendancePage() {
                                             )}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${record.status === 'checked-out'
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-yellow-100 text-yellow-800'
-                                                }`}>
-                                                {record.status === 'checked-out' ? 'Completed' : 'In Progress'}
-                                            </span>
+                                            {isMissedCheckout(record) ? (
+                                                <span className="px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                    Missed Checkout
+                                                </span>
+                                            ) : (
+                                                <span className={`px-3 py-1 rounded-full text-xs font-medium ${record.status === 'checked-out'
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : 'bg-yellow-100 text-yellow-800'
+                                                    }`}>
+                                                    {record.status === 'checked-out' ? 'Completed' : 'In Progress'}
+                                                </span>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}
