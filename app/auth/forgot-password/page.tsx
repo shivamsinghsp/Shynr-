@@ -174,7 +174,7 @@ export default function ForgotPasswordPage() {
                 <div className="max-w-md w-full mx-auto">
                     {/* Logo */}
                     <Link href="/" className="inline-block mb-8">
-                        <Image src="/3.png" alt="SHYNR" width={150} height={50} className="object-contain" />
+                        <Image src="/home/shynrlogo.png" alt="SHYNR" width={180} height={60} className="object-contain" />
                     </Link>
 
                     {step === 'email' && (

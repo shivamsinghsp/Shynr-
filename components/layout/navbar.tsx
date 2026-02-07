@@ -27,13 +27,14 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
         {/* Logo */}
-        <Link href="/" className="relative flex items-center w-60 h-10">
+        {/* Logo */}
+        <Link href="/" className="flex items-center">
           <Image
-            src="/3.png"
+            src="/home/shynrlogo.png"
             alt="Shynr"
-            width={320}
-            height={130}
-            className="absolute top-[-34px] left-0 h-32 w-auto object-contain max-w-none"
+            width={250}
+            height={100}
+            className="h-14 w-auto md:h-20 object-contain my-[-10px]"
             priority
           />
         </Link>

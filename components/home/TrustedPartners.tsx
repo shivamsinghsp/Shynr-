@@ -34,7 +34,26 @@ export default function TrustedPartners() {
     { name: "Digitide", logo: "/home/DIGITIDE.jpg", url: "https://www.digitidesolutions.com/" },
     { name: "Paytm", logo: "/home/Paytm.png", url: "https://paytm.com/" },
     // { name: "Himalaya Opticals", logo: "/home/vaco.jpg", url: "" },
-    { name: "Himalaya Opticals", logo: "/home/himalayaoptical.png", url: "https://himalayaoptical.com/" },
+    {
+      name: "Himalaya Optical",
+      logo: "/home/himalayaoptical.png",
+      url: "https://himalayaoptical.com/"
+    },
+    {
+      name: "Startech",
+      logo: "/home/startech.png",
+      url: "https://www.startech.com"
+    },
+    {
+      name: "Axis Max Life Insurance",
+      logo: "/home/axis max life insurance.png",
+      url: "https://www.axismaxlife.com"
+    },
+    {
+      name: "Highspring",
+      logo: "/home/highspring.png",
+      url: "https://www.highspring.com"
+    },
     { name: "AllDigi", logo: "/home/alldigi.png", url: "https://www.alldigitech.com/" },
     { name: "Vaco Binary Semantics", logo: "/home/vaco.jpg", url: "https://vacobinarysemantics.com/" },
     // { name: "CMS", logo: "/home/vaco.jpg", url: "" },
