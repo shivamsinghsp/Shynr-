@@ -19,7 +19,7 @@ const initialFormData: FormData = {
 
 const ContactPage = () => {
   const settings = {
-    phone: "0512-4050588",
+    phone: "0612-7180789",
     email: "info@shynr.in",
     openingHours: "Mon - Fri: 9AM - 6PM",
     officeAddress: "Pan-India Operations"

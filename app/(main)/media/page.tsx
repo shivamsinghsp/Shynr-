@@ -304,8 +304,8 @@ export default function MediaPage() {
                                     <div className="p-8 bg-white rounded-3xl shadow-lg border border-gray-100 hover:bg-[#05033e] hover:border-[#05033e] transition-all duration-300 group cursor-pointer hover:-translate-y-2">
                                         <Phone className="w-10 h-10 text-[#05033e] group-hover:text-white mx-auto mb-6 transition-colors" />
                                         <h3 className="font-bold text-xl mb-2 text-[#0a0a0a] group-hover:text-white">Call Us</h3>
-                                        <Link href="tel:05124050588" className="text-lg text-[#05033e] font-semibold group-hover:text-white">
-                                            0512-4050588
+                                        <Link href="tel:06127180789" className="text-lg text-[#05033e] font-semibold group-hover:text-white">
+                                            0612-7180789
                                         </Link>
                                     </div>
                                 </div>

@@ -190,7 +190,7 @@ export default function Sidebar({ onOpenSignIn, collapsed: controlledCollapsed, 
                         />
                     ) : (
                         <Image
-                            src="/home/shynrlogo.png"
+                            src="/home/Shynr_Logo.png"
                             alt="SHYNR"
                             width={140}
                             height={40}

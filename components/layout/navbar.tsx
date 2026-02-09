@@ -30,11 +30,11 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
-            src="/home/shynrlogo.png"
+            src="/home/Shynr_Logo.png"
             alt="Shynr"
             width={250}
             height={100}
-            className="h-14 w-auto md:h-20 object-contain my-[-10px]"
+            className="h-20 w-auto md:h-28 object-contain my-[-20px] md:my-[-30px]"
             priority
           />
         </Link>

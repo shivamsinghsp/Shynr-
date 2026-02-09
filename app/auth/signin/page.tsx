@@ -146,7 +146,7 @@ export default function SignInPage() {
                 <div className="max-w-md w-full mx-auto">
                     {/* Logo */}
                     <Link href="/" className="inline-block mb-8">
-                        <Image src="/home/shynrlogo.png" alt="SHYNR" width={180} height={60} className="object-contain" />
+                        <Image src="/home/Shynr_Logo.png" alt="SHYNR" width={180} height={60} className="object-contain" />
                     </Link>
 
                     {showSignUp ? (
